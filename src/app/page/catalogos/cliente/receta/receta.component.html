@@ -1,0 +1,222 @@
+<mat-card id="mainReceta01"class="mat-elevation-z8">
+    <mat-card-header>
+        <mat-card-title>{{'recetaMedicaTranslate.receta' | translate}}</mat-card-title>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="descartarCambios('agenda')" style="cursor: pointer; stroke: none; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="descartarCambios('agenda')">{{'recetaMedicaTranslate.inicio' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a style="color: #20c4e6; cursor: pointer; top: -6px; position: relative;" (click)="descartarCambios('cliente')">{{'clienteTranslate.clientes' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a style="color: #20c4e6; top: -6px; position: relative;">{{'recetaMedicaTranslate.receta' | translate}}</a>&nbsp;
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content style="margin-top: 10px;">
+        <div class="col-lg-12" style="padding: 2%;">
+            <div class="col-lg-12">
+                <div class="col-lg-12" style="padding-bottom: 15px; display: flex;">
+                    <div id="cliente" class="col-lg-2" style="margin-top: .8%;">
+                        {{'recetaMedicaTranslate.paciente' | translate}}
+                    </div>
+                    <div class="col-lg-3">
+                        <input id="nomPaciente" style="width: 100%;" (focus)="txtfocus(1, $event, 'f', false)" (blur)="txtfocus(1, $event, 'b', false)" [(ngModel)]="receta.nombreCliente" type="text" class="form-control borderAzul" maxlength="54" />
+                    </div>
+                    <div class="col-lg-5">
+                        <label id="errornomPaciente" class="control-label" style="color: red;text-align: start !important;"></label>
+                        <label id="errordescripcion1" class="control-label" style="color: red;text-align: start !important;"></label>
+                        <label id="errordescripcion2" class="control-label" style="color: red;text-align: start !important;"></label>
+                        <label id="errorproducto1" class="control-label" style="color: red;text-align: start !important;"></label>
+                        <label id="errorproducto2" class="control-label" style="color: red;text-align: start !important;"></label>
+                    </div>
+                </div>
+                <div class="col-lg-12" style="padding-bottom: 15px; display: flex;">
+                    <div class="col-lg-2" style="margin-top: .8%;">
+                        {{'recetaMedicaTranslate.fechaNac' | translate}}
+                    </div>
+                    <div class="col-lg-3">
+                        <input id="idFecha" name="datepicker" class="form-control borderAzul" style="height: 40px;"
+                            type="date" min="01-01-1950" max="01-01-2099" maxlength="10"
+                            placeholder="dia/mes/año"
+                            [(ngModel)]="receta.fechaNacimiento"
+                            (focus)="txtfocus(1, $event, 'f', false)"
+                            (blur)="txtfocus(1, $event, 'b', false)"
+                            (keypress)="valFecha($event)"/>
+                    </div>
+                    <div class="col-lg-5">
+                        <label id="erroridFecha" class="control-label" style="color: red;text-align: start !important;"></label>
+                    </div>
+                </div>
+                <div class="col-lg-12" style="padding-bottom: 15px; display: flex;">
+                    <div class="col-lg-2" style="margin-top: .8%;">
+                        {{'recetaMedicaTranslate.atendidoPor' | translate}}
+                    </div>
+                    <div class="col-lg-3">
+                        <input id="nomAtendido" (focus)="txtfocus(1, $event, 'f', false)" (blur)="txtfocus(1, $event, 'b', false)"
+                            style="width: 100%;" [(ngModel)]="receta.nombreAtendido" type="text" class="form-control borderAzul" maxlength="150" />
+                    </div>
+                    <div class="col-lg-5">
+                        <label id="errornomAtendido" class="control-label" style="color: red;text-align: start !important;"></label>
+                    </div>
+                </div>
+                <div class="col-lg-12" style="padding-bottom: 5px; display: flex;">
+                    <div class="col-lg-2" style="margin-top: .8%;">
+                        {{'recetaMedicaTranslate.cedProf' | translate}}
+                    </div>
+                    <div class="col-lg-3">
+                        <input id="cedulaProfesional" style="width: 100%;" 
+                            [(ngModel)]="receta.cedulaProfesional" 
+                            type="text" class="form-control borderAzul" maxlength="10"/>
+                    </div>
+                    <div class="col-lg-5">
+                        <label id="errorcedulaProfesional" class="control-label" style="color: red;text-align: start !important;"></label>
+                    </div>
+                </div>
+            </div>                
+
+            <div class="col-lg-12" style="padding-top: 5px;">
+                <div class="col-lg-12" style="text-align:right; padding-right: 15px;">
+                    <mat-icon class="iconosBookipp" *ngIf="receta.bandRecetaExistente" (click)="receta.imprimir = true; guardarReceta();" svgIcon="iconImprimir" style="stroke: black; position: relative; top: 2px; cursor: pointer; margin-inline: 3px;"></mat-icon>
+                    <mat-icon class="iconosBookipp" *ngIf="receta.bandRecetaExistente" (click)="mandarCorreoRecetaElectronica()" svgIcon="iconCorreo" style="stroke: black; position: relative; top: 2px; cursor: pointer; margin-inline: 3px;"></mat-icon>
+                    <mat-icon class="iconosBookipp" (click)="exportToExcelReceta()" svgIcon="iconExcel" style="stroke: black; position: relative; top: 2px; cursor: pointer; margin-inline: 3px;"></mat-icon>
+                </div>
+                <div id="divGrid" class="mat-elevation-z8" style="width: calc(100% - 15px); margin-top: 10px; overflow: auto;">
+                    <table class="mat-table mat-elevation-z8 my-3" id="tablaReceta" style="border-radius: 7px; border: solid 1px #c5c4c4; width: 100%;">
+                        <tr class="mat-header-row">
+                            <th style="text-align: center;">
+                                <label> {{'recetaMedicaTranslate.producto' | translate}} </label>
+                            </th>
+                            <th style="text-align: center;">
+                                <label> {{'recetaMedicaTranslate.indicaciones' | translate}} </label>
+                            </th>
+                        </tr>
+    
+                        <tr class="mat-row" *ngFor="let row of receta.dataProductoGrid; index as i">
+                            <td style="text-align: center; padding-inline: 15px; width: 50%;"> 
+                                <div *ngIf="row.editable==0"><div style="width:100%;padding-left: 11px;padding-right: 11px;word-wrap: break-word;margin-top: 21px;"(click)="clickCero(row, i)">{{row.Producto}}</div></div>
+                                <input *ngIf="row.editable == 1" id="producto1" class="form-control borderAzul" style="margin-top: 0px" type="text" 
+                                    placeholder="Seleccionar Producto" 
+                                    [matAutocomplete]="etiquetasAutocompleteProducto1"
+                                    [(ngModel)]="receta.select"
+                                    (ngModelChange)="buscarEnScroll('RecetaBuscadorProducto');"
+                                    (focus)="txtfocus(1, $event, 'f', true)"
+                                    (keydown.enter)="addRegistro();"
+                                    (blur)="txtfocus(1, $event, 'b', true); resetDdl();"
+
+                                    (click)="resetInfScroll('RecetaBuscadorProducto')"/>
+                                    <mat-autocomplete #etiquetasAutocompleteProducto1="matAutocomplete" [displayWith]="displayEtiquetas" >
+                                        <cdk-virtual-scroll-viewport id="RecetaBuscadorProducto-{{i}}" [itemSize]="30" [style.height.px]="200" (scroll)="onScroll('RecetaBuscadorProducto', $event, i)">
+                                            <mat-option *cdkVirtualFor="let etiqueta of receta.dataProductoBuffer" [value]="etiqueta">
+                                                {{ etiqueta.nombre }}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+
+                                <input *ngIf="row.editable == 2" id="producto2" class="form-control borderAzul" style="margin-top: 0px" type="text" 
+                                    placeholder="Seleccionar Producto" 
+                                    [matAutocomplete]="etiquetasAutocompleteProducto2"
+                                    [(ngModel)]="receta.selectNueva"
+                                    (ngModelChange)="buscarEnScroll('RecetaBuscadorProducto2');"
+                                    (focus)="txtfocus(1, $event, 'f', true)"
+                                    (keydown.enter)="addRegistro();"
+                                    (blur)="txtfocus(1, $event, 'b', true); resetDdl();"
+                                    [disabled]="deshabilitarProducto2"
+                                    
+                                    (click)="resetInfScroll('RecetaBuscadorProducto2')"/>
+                                    <mat-autocomplete #etiquetasAutocompleteProducto2="matAutocomplete" [displayWith]="displayEtiquetas" >
+                                        <cdk-virtual-scroll-viewport id="RecetaBuscadorProducto2-{{i}}" [itemSize]="30" [style.height.px]="200" (scroll)="onScroll('RecetaBuscadorProducto2', $event, i)">
+                                            <mat-option *cdkVirtualFor="let etiqueta of receta.dataProductoBuffer" [value]="etiqueta">
+                                                {{ etiqueta.nombre }}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+                                    </mat-autocomplete>
+                            </td>
+                            <td style="text-align: center; padding-inline: 15px; padding-top: 5px; padding-bottom: 5px; width: 50%;">
+                                <div *ngIf="row.editable==0"><div style="width:100%;padding-left: 11px;padding-right: 11px;word-wrap: break-word;margin-top: 3px;" (click)="clickCero(row, i)">{{row.Indicaciones}}</div></div>
+                                <input *ngIf="row.editable==1" id="descripcion1" style="width: 100%; min-height: 55px;" type="text" [(ngModel)]="receta.descripcion" (focus)="txtfocus(1, $event, 'f', true)" (keydown.enter)="addRegistro();" (blur)="txtfocus(1, $event, 'b', true);" class="form-control borderAzul" maxlength="225"/>
+                                <input *ngIf="row.editable==2" id="descripcion2" style="width: 100%; min-height: 55px;" type="text" [(ngModel)]="receta.descripcionNueva" [disabled]="deshabilitarDescripcion2" (focus)="txtfocus(1, $event, 'f', true)"(keydown.enter)="addRegistro();" (blur)="txtfocus(1, $event, 'b', true);" class="form-control borderAzul" maxlength="500"/>
+                            </td>
+                            <div *ngIf="row.editable!=3 && row.editable !=2"  style="text-align:center;margin-top: 8px; width: 60px;">
+                                <mat-icon class="iconosBookipp" (click)="confirEliminar(row, i)" svgIcon="iconBasura" style="stroke: black; position: relative; top: 2px; cursor: pointer; margin-inline: 3px; width:29px;"></mat-icon>
+                            </div>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div id="botones" class="col-lg-12" style="text-align: center; padding-top: 10px; padding-bottom: 15px; position: static;">
+                <button id="botonGuardar" style="border: none; cursor: pointer; width: 150px; margin-right: 10px;" type="button" (click)="guardarReceta()" class="buttonEstiloBlanco">{{'recetaMedicaTranslate.guardar' | translate}}</button>
+                <button id="botonCancelar" style="border: none; cursor: pointer; width: 150px;" type="button" (click)="descartarCambios('cliente')" class="buttonEstiloBlanco">{{'recetaMedicaTranslate.regresar' | translate}}</button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!--Modal Confirm-->
+<div id="modal-confirm" style="z-index: 500000" role="dialog" aria-hidden="true" class="modal fade modal-confirm">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 600px;">            
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">   
+                <div class="col-lg-3">
+                    <button type="button" data-dismiss="modal" class="buttonEstiloBlanco" (click)="cerrarModalConfirm()" style="height: auto;">
+                        {{'recetaMedicaTranslate.no' | translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-dismiss="modal" class="buttonEstiloBlanco" (click)="removeRegistro()" style="height: auto;">
+                        {{'recetaMedicaTranslate.si' | translate}}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!--Modal Guardar-->
+<div id="modal-guardar" style="z-index: 500000" role="dialog" aria-hidden="true" class="modal fade modal-guardar">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 600px;">            
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" (click)="recargar()" data-dismiss="modal" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'recetaMedicaTranslate.aceptar' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Descartar Cambios -->
+<div id="modal-descartar" style="z-index: 500000" role="dialog" aria-hidden="true" class="modal fade modal-descartar">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 600px;">            
+            <div class="modal-body">
+			</div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-dismiss="modal" class="buttonEstiloBlanco" (click)="cerrarModalDescartar()" style="height: auto;">
+                        {{'recetaMedicaTranslate.no' | translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-dismiss="modal" class="buttonEstiloBlanco" (click)="vaciarCampos()" style="height: auto;">
+                         {{'recetaMedicaTranslate.si' | translate}}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- Apartado para la exportación de la Receta -->
+<div id="excelTableReceta" style="display: none;">
+</div>

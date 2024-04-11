@@ -1,0 +1,2942 @@
+<mat-card class="mat-elevation-z8">
+  <mat-card-header>
+    <div style="width: 100%; display: flex;">
+      <mat-card-title style="margin-right: 10px;">{{'consultaClienteTranslate.cliente' | translate}}</mat-card-title>
+      <div style="height: 30px;">
+        <!-- <li id="btnNuevo" *ngIf="accesosPantalla.clientesAccion == 1 && !isClienteNuevo" class="fa fa-plus-circle" (click)="nuevoCliente()" style="font-size: 2em; cursor: pointer; color: #78C4A7; margin-left: 8px; margin-top: 3px;"></li> -->
+        <mat-icon id="btnNuevo" class="iconosBookipp" svgIcon="iconAgregar"
+          *ngIf="accesosPantalla.clientesAccion == 1 && !isClienteNuevo" (click)="nuevoCliente()"
+          style="cursor: pointer; width: 30px; height: 30px; position: relative; left: -5px;">
+        </mat-icon>
+      </div>
+      <div style="height: 30px;">
+        <!-- <img (click)="accionImportador()" src="assets/images/system/exportar.svg" style="height: 25px; cursor:pointer; margin-top:5px; margin-left:10px;"> -->
+        <mat-icon class="iconosBookipp" svgIcon="iconNubeSubir" (click)="accionImportador()"
+          style="cursor: pointer; width: 30px; height: 30px; position: relative; left: -5px;">
+        </mat-icon>
+      </div>
+      <div style="height: 30px;">
+        <!-- <li id="botonUltimaCita" class="fa fa-calendar-plus" *ngIf="!isClienteNuevo" (click)="selectUltimaCita()" style="font-size: 2em; cursor: pointer; color: #78C4A7; margin-left: 8px; margin-top: 3px;"></li> -->
+        <mat-icon class="iconosBookipp" svgIcon="iconCalendarPlus" *ngIf="!isClienteNuevo" (click)="selectUltimaCita()"
+          style="cursor: pointer; width: 30px; height: 30px; position: relative; left: -5px;">
+        </mat-icon>
+      </div>
+      <div style="height: 30px;">
+        <!-- <li id="botonExportarPDF" class="fa fa-file" *ngIf="!isClienteNuevo" (click)="exportarPDF()" style="font-size: 2em; cursor: pointer; color: #78C4A7; margin-left: 8px; margin-top: 3px;"></li> -->
+        <mat-icon class="iconosBookipp" svgIcon="iconArchivo" *ngIf="!isClienteNuevo" (click)="exportarPDF()"
+          style="cursor: pointer; width: 30px; height: 30px; position: relative; left: -5px;">
+        </mat-icon>
+      </div>
+    </div>
+    <div style="text-align: right; width: 100%;">
+      <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="irAAgenda()"
+        style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+      <a (click)="irAAgenda()"
+        style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">{{'consultaClienteTranslate.inicio' |
+        translate}}</a>
+      <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+      <a (click)="irAClientes()" style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">Clientes</a>
+    </div>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+
+  <mat-card-content style="margin-top: 10px;">
+
+    <div>
+      <div class="col-md-12 puntosSuspensivos" *ngIf="!isClienteNuevo" style="font-size:18px;">
+        <b>{{'clienteTranslate.datosDe' | translate}}: {{cliente.nombre}}</b>
+      </div>
+
+      <mat-tab-group #tabGroup dynamicHeight="true" mat-align-tabs="center" preserveContent="true">
+        <mat-tab id="liDatosGenerales" label="{{'clienteTranslate.datosGenerales'| translate}}" style="width: 50%;">
+          <div id="datosGenerales" class="p-3" style="width: 100%;">
+            <div class="row">
+              <div style="margin-top: 1%;" class="col-md-12">
+                <div class="row" style="text-align:center;">
+                  <div class="col-md-3">
+                    <div id="imagen" style="position: relative;">
+                      <a id="btnBorrarImagen" class="fa fa-times fa-2x" aria-hidden="true" (click)="borrarImagen()"
+                        style="position: absolute; margin-left:130px; top: 0; color: white; background-color: #ababab; cursor: pointer; display: none;"></a>
+                      <img id="clienteFoto" src="assets/images/migracion/Imagen-PersonaAzul-300x300.png" height="150"
+                        width="150" />
+                    </div>
+                    <div>
+                      <button type="button" class="buttonEstiloBlanco" (click)="openImg()"
+                        style="width:151px; font-size: 14px; height: auto;">
+                        {{'importador.selectArchivo' | translate}}
+                      </button>
+                      <input id="fileFoto" (change)="fileFotoChange($event)" [hidden]="true"
+                        style="margin-top: 3%; padding: 0; width:150px; font-size: 15.4px;" type="file"
+                        accept="image/*" />
+                    </div>
+                    <label id="txtImagen" class="control-label text-left"
+                      style="height: 25px; color: red; text-align:center;"></label>
+                  </div>
+
+                  <div class="col-md-7 suprimirMargin"
+                    style="outline:gray 2px solid; height:190px; margin-left:30px; margin-top: -5px;">
+                    <div class="row">
+                      <div class="row" style="margin-top: 10px; padding:0;">
+                        <div style="margin-top: 7px; padding:0;" class="col-4">
+                          <label>{{'clienteTranslate.nombre' | translate}} :</label>
+                        </div>
+                        <div style="margin-top: 4px; border-bottom: 1px solid; min-height:18px"
+                          class="col-8 puntosSuspensivosNombre">
+                          <b>{{cliente.nombre}}</b>
+                        </div>
+                      </div>
+
+                      <div class="row" style="margin-top: 17px; padding:0;">
+                        <div style="margin-top: 7px; padding:0;" class="col-4">
+                          <label>{{'clienteTranslate.fechaNacimiento' | translate}} :</label>
+                        </div>
+                        <div style="margin-top: 4px; border-bottom: 1px solid; min-height:18px" class="col-8">
+                          <b><label style="font-weight: bold;padding: 0;margin: 0;">{{cliente.fechaNacimiento | date :
+                              'dd/MM/yyyy'}}</label></b>
+                        </div>
+                      </div>
+
+                      <div class="row" style="margin-top: 17px; padding:0;">
+                        <div style="margin-top: 7px; padding:0;" class="col-4">
+                          <label>{{'clienteTranslate.edad' | translate}} :</label>
+                        </div>
+                        <div style="margin-top: 4px; border-bottom: 1px solid; min-height:18px" class="col-8">
+                          <b><label style="font-weight: bold;padding: 0;margin: 0;">{{cliente.edad }}</label></b>
+                        </div>
+                      </div>
+                      <div class="row" style="margin-top: 17px; padding:0;" *ngIf="clienteConCitaRealizada">
+                        <div style="margin-top: 5.5px; padding:0;" class="col-4">
+                          <label>{{'clienteTranslate.calificacion' | translate}} :</label>
+                        </div>
+                        <div style="margin-top: 5.5px; padding: 0;" class="col-8">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6" style="padding-right:0px; margin-top:1%;">
+                    <div class="col-md-12" style="color:black; font-weight: bold;padding-left:0px;">
+                      {{'clienteTranslate.informacionGeneral' | translate}}
+                    </div>
+                    <div class="col-md-12" style="margin-top: -2%; margin-bottom: -2%; padding-left:0px;">
+                      <hr style="background-color: gray; height: 2px; margin-top: 2%;" />
+                    </div>
+                    <div style="margin-top: 3%; padding:0;" class="col-md-12">
+                      <div style="margin-top: 1%;" class="row">
+                        <label class="col-md-3" style="margin-top: 1.6%;">
+                          {{'clienteTranslate.activo' | translate}}
+                        </label>
+                        <div class="col-md-8">
+                          <div class="col-md-12" style="padding: 0;">
+                            <div class="onoffswitch col-md-12">
+                              <mat-slide-toggle id="switchActivo" [(ngModel)]="cliente.activo">
+                              </mat-slide-toggle>
+                              <label class="onoffswitch-label" for="switchActivo">
+                                <span id="onoffswitch1" class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div style="margin-top: 2%;" class="row">
+                        <div style="margin-top: 1.6%;" class="col-md-3">
+                          <label>{{'clienteTranslate.nombre' | translate}}</label>
+                        </div>
+                        <div class="col-md-8">
+                          <input id="txtNombre" style="width: 100%;" (focus)="txtfocus(1, $event, 'f')" type="text"
+                            [(ngModel)]="cliente.nombre" class="form-control borderAzul" maxlength="200" />
+                          <label id="errortxtNombre" class="control-label text-left" style="color: red;"></label>
+                        </div>
+                      </div>
+                      <div style="margin-top: 2%;" class="row">
+                        <div style="margin-top: 1.6%;" class="col-md-3">
+                          <label>Prefijo Pais Teléfono</label>
+                        </div>
+                        <div class="col-md-8">
+                          <input id="txtPrefijoTelefono" style="width: 100%;" (focus)="txtfocus(0, $event, 'f')"
+                            (blur)="txtfocus(0, $event, 'b')" type="text" [(ngModel)]="cliente.prefijoPaisTelefono"
+                            class="form-control borderAzul" maxlength="4"
+                            onkeypress="javascript:return validarNum(event)" />
+                          <label id="errortxtPrefijoTelefono" class="control-label text-left"
+                            style="color: red;"></label>
+                        </div>
+                      </div>
+                      <div style="margin-top: 2%;" class="row">
+                        <div style="margin-top: 1.6%;" class="col-md-3">
+                          <label>{{'clienteTranslate.telefonoCelular' | translate}}</label>
+                        </div>
+                        <div class="col-md-8">
+                          <input id="txtTelefono" (keydown)="onTelefonoKeyDown($event)" style="width: 100%;"
+                            (focus)="txtfocus(0, $event, 'f')" (blur)="txtfocus(0, $event, 'b')" type="text"
+                            [(ngModel)]="cliente.telefono" class="form-control borderAzul" pattern=".{8,14} "
+                            title="minimo 8 caracteres" required maxlength="14" />
+                          <label id="errortxtTelefono" class="control-label text-left" style="color: red;"></label>
+                        </div>
+                      </div>
+                      <div style="margin-top: 2%;" class="row">
+                        <div style="margin-top: 1.6%;" class="col-md-3">
+                          <label>{{'clienteTranslate.telefonoCasa' | translate}}</label>
+                        </div>
+                        <div class="col-md-8">
+                          <input id="txtTelefonoCasa" style="width: 100%;" (focus)="txtfocus(0, $event, 'f')"
+                            (blur)="txtfocus(0, $event, 'b')" type="text" [(ngModel)]="cliente.telefonoCasa"
+                            class="form-control borderAzul" maxlength="40" />
+                          <label id="errortxtTelefonoCasa" class="control-label text-left" style="color: red;"></label>
+                        </div>
+                      </div>
+                      <div style="margin-top: 2%;" class="row">
+                        <div style="margin-top: 1.6%;" class="col-md-3">
+                          <label>{{'clienteTranslate.email' | translate}}</label>
+                        </div>
+                        <div class="col-md-8">
+                          <input id="txtEmail" style="width: 100%;" (focus)="txtfocus(0, $event, 'f')"
+                            (blur)="txtfocus(0, $event, 'b')" type="text" [(ngModel)]="cliente.email"
+                            class="form-control borderAzul" maxlength="100" />
+                          <label id="errortxtEmail" class="control-label text-left" style="color: red;"></label>
+                        </div>
+                      </div>
+                      <div style="margin-top: 2%;" class="row">
+                        <div class="col-md-3">
+                          <label>{{'clienteTranslate.fechaNacimiento' | translate}}</label>
+                        </div>
+                        <div class="col-md-8">
+                          <!-- <input id="txtFechaNacimiento" type="text" class="form-control borderAzul" [(ngModel)]="cliente.fechaNacimiento"
+                                                            style="width: 100%" name="date" date-format="dd/MM/yyyy" bs-datepicker content="”body”"
+                                                            (blur)="txtfocus(1, $event, 'b')" ondragstart="return false" autoclose="true"  (ngModelChange)="calcularEdad()"
+                                                            placeholder="{{'clienteTranslate.formatoFecha' | translate}}"
+                                                            onkeypress="javascript:return valFecha(event)" maxlength="10" /> -->
+                          <input id="txtFecha" class="form-control borderAzul" type="date" required min="01-01-1930"
+                            max="{{hoy}}" [(ngModel)]="cliente.fechaNacimiento" />
+                        </div>
+                      </div>
+                      <div id="apartadoReferencia" style="margin-top: 2%;" class="row">
+                        <div style="margin-top: 1.6%;" class="col-md-3">
+                          <label> Referencia </label>
+                        </div>
+                        <div class="col-md-8">
+                          <ng-select id="ddlReferenciaAgenda" style="width: 100%;" [multiple]="false"
+                            appendTo="#ddlReferenciaAgenda" [searchable]="true" [(ngModel)]="referencia.id_referencia"
+                            [clearable]="true" placeholder="Seleccione la referencia"
+                            [items]="referencia.dataReferencia" bindLabel="nombre" bindValue="id_referencia">
+                          </ng-select>
+                        </div>
+                      </div>
+
+                      <div style="margin-top: 3%;" class="row">
+                        <div style="margin-top: 1.6%;" class="col-3">
+                          <a class="ls-link-b" style="cursor:pointer;"
+                            (click)="abrirModalEtiquetas()">{{'clienteTranslate.etiqueta' | translate}}</a>
+                        </div>
+                        <div id="divFiltro" class="col-8">
+                          <!-- <input id="inputEtiqueta" style="width: 100%;" type="text" [(ngModel)]="etiqueta.etiquetaSeleccionada" class="form-control borderAzul" placeholder="{{'clienteTranslate.etiquetaEjemplo' | translate}}"
+                                                            bs-options="etiqueta.nombre for etiqueta in etiqueta.dataEtiquetas" ng-enter="guardarEtiqueta()" maxlength="200" bs-typeahead/> -->
+
+                          <input id="inputEtiqueta" class="form-control borderAzul" style="margin-top: 0px" type="text"
+                            placeholder="{{'clienteTranslate.etiquetaEjemplo' | translate}}"
+                            [matAutocomplete]="etiquetasAutocomplete" [(ngModel)]="etiqueta.etiquetaSeleccionada"
+                            (ngModelChange)="filtroEtiquetas()" />
+                          <mat-autocomplete #etiquetasAutocomplete="matAutocomplete" [displayWith]="displayEtiquetas">
+                            <mat-option *ngFor="let etiqueta of etiqueta.dataEtiquetasFiltro" [value]="etiqueta">
+                              {{etiqueta.nombre}}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </div>
+                        <div class="col-1" style="padding:0; margin-top:5px;" *ngIf="mostrarBotonAgregarEtiqueta">
+                          <!-- <li class="fa fa-plus-circle"  *ngIf="accesosPantalla.clientesAccion == 1" (click)="guardarEtiqueta()" style="font-size: 1.2em; cursor: pointer; color: #78C4A7;"></li> -->
+                          <mat-icon svgIcon="iconAgregar" *ngIf="accesosPantalla.clientesAccion == 1"
+                            (click)="guardarEtiqueta()" class="iconosBookipp" style="cursor: pointer;">
+                          </mat-icon>
+                        </div>
+                      </div>
+                      <div style="margin-top: 2%; min-height: 45px;" class="row">
+                        <div class="col-xs-3 puntosSuspensivos2" style="margin-left: 2px;"
+                          *ngFor="let x of etiqueta.dataClienteEtiquetas">
+                          <a class="iconos fa fa-times" (click)="eliminarEtiquetaCliente(x.idEtiqueta)"></a>
+                          <a (click)="cambioAConsultaClientes(x.idEtiqueta)"
+                            style="cursor: pointer; text-decoration:underline !important; color:#5a97cb; margin-right: 15px;">
+                            {{x.nombre}}
+                          </a>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div class="col-md-6" style="padding-right:0px; margin-top:1%;">
+                    <div class="col-md-12" style="padding: 0; margin-bottom: 30px; display: table;"
+                      *ngFor="let s of secciones; index as i;">
+                      <div class="col-xs-12"
+                        style="color:black; font-weight: bold; padding-left:0px; margin-top: -8px;">
+                        {{s.nombre}}
+                        <!-- <li style="font-size: 1.2em; cursor:pointer; color:#337dc0;" class="iconos fa fa-trash" (click)="confirmarBorrarSeccion(s)" *ngIf="s.idCampoSeccion != null"></li> -->
+                        <mat-icon svgIcon="iconBasura" *ngIf="s.idCampoSeccion != null"
+                          (click)="confirmarBorrarSeccion(s)" class="iconosBookipp" style="cursor: pointer;">
+                        </mat-icon>
+                      </div>
+                      <div class="col-xs-12" style="margin-bottom: -2%; padding-left:0px;">
+                        <hr style="background-color: gray; height: 2px; margin-top: 0; margin-bottom: 0;" />
+                      </div>
+
+                      <div style="margin-top: 3%; padding-left:0px;" class="row"
+                        *ngFor="let x of s.camposConfigurables; index as j;">
+                        <div style="margin-top: 6px;" class="col-md-3">
+                          <div class="col-xs-12" style="word-wrap:break-word;" [ngStyle]="x.style">
+                            {{x.nombre}}
+                          </div>
+                        </div>
+                        <div class="col-md-7">
+                          <textarea rows="1" id="txtCampoValor{{x.idCampo}}" [(ngModel)]="x.valor"
+                            (ngModelChange)="cambiarAlturaDatosConfigurables(x)"
+                            style="width: 100%; resize: none; height: 32px; overflow:hidden;" type="text"
+                            class="form-control borderAzul" maxlength="5000"></textarea>
+                        </div>
+                        <div style="margin-top: 3px; text-align:center; padding:0;" class="col-md-1"
+                          *ngIf="accesosPantalla.clientesAccion == 1">
+                          <!-- <li style="font-size: 1.2em; cursor:pointer; color:#337dc0;" class="iconos fa fa-edit" (click)="mostrarModalEditarCampoConfigurable(s,x)"></li> -->
+                          <mat-icon svgIcon="iconEditar3" (click)="mostrarModalEditarCampoConfigurable(s,x)"
+                            class="iconosBookipp" style="cursor: pointer;">
+                          </mat-icon>
+                        </div>
+                        <div style="margin-top: 3px; text-align:center; padding:0;" class="col-md-1"
+                          *ngIf="accesosPantalla.clientesAccion == 1">
+                          <!-- <li style="font-size: 1.2em; cursor:pointer; color:#337dc0;" class="iconos fa fa-trash" (click)="confirmarEliminarConfigurables(x)"></li> -->
+                          <mat-icon svgIcon="iconBasura" (click)="confirmarEliminarConfigurables(x)"
+                            class="iconosBookipp" style="cursor: pointer;">
+                          </mat-icon>
+                        </div>
+                      </div>
+
+                      <div style="margin-top: 3%; padding-left:0px;" class="row">
+                        <div style="margin-top: 6px;" class="col-md-3">
+                        </div>
+                        <div class="col-md-7">
+                          <input id="inputCampoConfigurable{{s.idCampoSeccion}}" style="width: 100%;"
+                            placeholder="{{'clienteTranslate.nombreCampo' | translate}}" type="text"
+                            [(ngModel)]="s.nombreNuevoCampoConfigurable" class="form-control borderAzul"
+                            maxlength="50" />
+                        </div>
+                        <div style="margin-top: 5px; text-align: center;" class="col-md-1"
+                          *ngIf="accesosPantalla.clientesAccion == 1">
+                          <!-- <li class="fa fa-plus-circle" (click)="guardarConfigurables(s)" style="font-size: 1.2em; cursor: pointer; color: #78C4A7;"></li> -->
+                          <mat-icon svgIcon="iconAgregar" (click)="guardarConfigurables(s)" class="iconosBookipp"
+                            style="cursor: pointer;">
+                          </mat-icon>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row" style="padding: 0;">
+
+                      <div class="col-md-12">
+                        <hr style="background-color: gray; height: 2px; margin-top: 2%;" />
+                      </div>
+
+                      <div class="row" style="display: flex;">
+                        <div class="col-md-10" style="padding-left:0px;">
+                          <input id="" style="width: 100%;" placeholder="Nombre Sección" type="text"
+                            [(ngModel)]="nombreSeccion" class="form-control borderAzul" maxlength="100" />
+                        </div>
+
+                        <div style="margin-top: 5px;" class="col-md-2">
+                          <!-- <li class="fa fa-plus-circle" *ngIf="accesosPantalla.clientesAccion == 1" (click)="guardarSeccion()" style="font-size: 1.2em; cursor: pointer; color: #78C4A7;"></li> -->
+                          <mat-icon svgIcon="iconAgregar" *ngIf="accesosPantalla.clientesAccion == 1"
+                            (click)="guardarSeccion()" class="iconosBookipp" style="cursor: pointer;">
+                          </mat-icon>
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>
+                </div>
+
+                <div style="margin-top: 20px;" class="col-md-12">
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%; width:12.1%;" class="col-md-2">
+                      <label>{{'clienteTranslate.observaciones' | translate}}</label>
+                    </div>
+                    <div class="col-md-10">
+                      <textarea id="txtObservaciones" [(ngModel)]="cliente.observaciones"
+                        class="form-control borderAzul"
+                        style="width: 100%; resize:none; height: 180px; padding: 10px 10px;">
+                                                </textarea>
+                      <label id="error" class="control-label text-left" style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab id="liHistorial" label="{{'clienteTranslate.historialVenta'| translate}}" style="width: 50%;"
+          *ngIf="!isClienteNuevo">
+          <div style="margin: auto">
+            <div class="modal-body">
+              <div style="width: auto; height: auto; position: relative;">
+
+                <div class="row col-md-12" style="margin-top: 15px;">
+                  <div class="col-md-5">
+                    <div class="calendario col-xs-8">
+                      <!-- <div class="contenedor">
+                                                <i class="glyphicon glyphicon-calendar"></i> -->
+                      <!-- Para cambiar el lado de apertura del calendario cambiar clase pull-right por pull-left (ajustes en su css seran necesarios) -->
+                      <!-- <input id="reportrange" class="pull-left" type="text" readonly="readonly" name="daterange"
+                                                    [(ngModel)]="cliente.fechas" options="daterangeOptions" on="eventObject" (ngModelChange)="cliente.cambioFecha()">
+                                                <span class="subcontenedor"><i class=" fa fa-caret-down"></i></span>
+                                            </div> -->
+                      <div style="padding-left: 15px;">
+                        <mat-icon class="iconosBookipp" svgIcon="iconCalendarioEditar"
+                          style="position: absolute; margin: 8px 0px 0px 30px;"></mat-icon>
+                        <input type="text" ngxDaterangepickerMd class="borderAzul"
+                          style="cursor: pointer; height: 40px; width: 350px; padding-left: 90px; border-radius: 1.5rem;"
+                          [(ngModel)]="cliente.fechas" (ngModelChange)="cliente_cambioFecha()"
+                          [showCustomRangeLabel]="true" [alwaysShowCalendars]="true" [ranges]="this.ranges"
+                          [linkedCalendars]="true" [isInvalidDate]="isInvalidDate" [showClearButton]="false"
+                          [locale]="this.locale" placeholder="DD/MM/YYYY - DD/MM/YYYY" />
+                        <mat-icon class="iconosBookipp" svgIcon="iconFlechaAbajo"
+                          style="position: absolute; margin: 8px 0px 0px -60px;"></mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3"></div>
+                  <!-- Buscador Servicios-->
+                  <div class="col-md-4 my-2" id="busquedaServicio"
+                    style="padding-left: 15px; padding-right: 15px; float:right">
+                    <div class="col-xs-12 suprimirPadding" style="padding-left:15%">
+                      <span
+                        style="position: absolute; margin-left: 12px; color: #337dc0; font-size: 18px; margin-right:275px;">
+                        <mat-icon class="iconosBookipp" svgIcon="iconBuscar"></mat-icon>
+                      </span>
+                      <input id="inputNombres" style="height: 30px; padding-left: 35px;padding-right:initial;"
+                        type="text" [(ngModel)]="pruebaNombre" class="form-control borderAzul"
+                        (ngModelChange)="busquedaCliente(1)"
+                        placeholder="{{'consultaClienteTranslate.buscar' | translate}}" />
+                    </div>
+                  </div>
+                  <!-- Buscador Productos -->
+                  <div class="col-xs-4" id="busquedaProductos"
+                    style="padding-left: 0; padding-right:initial; float:right; display:none">
+                    <div class="col-xs-12" style="padding-left:15%">
+                      <span
+                        style="position: absolute; margin-left: 12px; color: #337dc0; font-size: 18px; margin-right:275px;">
+                        <mat-icon class="iconosBookipp" svgIcon="iconBuscar"></mat-icon>
+                      </span>
+                      <input id="Text1" style="height: 30px; padding-left: 35px;padding-right:initial;" type="text"
+                        [(ngModel)]="pruebaNombre" class="form-control borderAzul" (ngModelChange)="busquedaCliente(2)"
+                        placeholder="{{'consultaClienteTranslate.buscar' | translate}}" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div id="agenda-indicadores" class="row">
+                    <div class="col-md-3" style="margin-top: 35px;">
+                      <div class="panel" style="background: transparent; border: 1px solid #20c4e6; color: #20c4e6;">
+                        <div class="noselect indicador-toggle indicadorCard">
+                          <h4 class="indicador-title">Citas del cliente</h4>
+                          <div class="panel-body indicador-body">
+                            <h2>{{citasDia}}</h2>
+                          </div>
+                          <!-- <div style="float: right; padding: 15px; margin-top: -60px; font-size: 40px; height: 60px;"> -->
+                          <!-- <i class="icon-citasdeldia" style="cursor: pointer; width: 50px; height: 50px; position: relative; left: -5px; overflow: visible !important;"></i> -->
+                          <mat-icon class="iconosBookipp" svgIcon="iconCitasDia"
+                            style="cursor: pointer; width: 50px; height: 50px; position: relative; left: -5px; overflow: visible !important;">
+                          </mat-icon>
+                          <!-- </div> -->
+                        </div>
+
+                        <div class="panel-footer indicador-footer" (click)="ocultarIndicadores()"
+                          style="background: #20c4e6">
+                          <i class="fa-solid fa-sort-asc" style="color: white;"></i>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3" style="margin-top: 35px;">
+                      <div class="panel" style="background: transparent; border: 1px solid #57b477; color: #57b477;">
+                        <div class="noselect indicador-toggle indicadorCard">
+                          <h4 class="indicador-title">Citas Terminadas</h4>
+                          <div class="panel-body indicador-body">
+                            <h2>{{citasCompletadasDia}}</h2>
+                          </div>
+                          <!-- <div style="float: right; padding: 15px; margin-top: -60px; font-size: 40px; height: 60px;"> -->
+                          <!-- <i class="fa fa-clock"></i> -->
+                          <mat-icon class="iconosBookipp" svgIcon="iconCitasHoy"
+                            style="cursor: pointer; width: 50px; height: 50px; position: relative; left: -5px; overflow: visible !important;">
+                          </mat-icon>
+                          <!-- </div> -->
+                        </div>
+
+                        <div class="panel-footer indicador-footer" (click)="ocultarIndicadores()"
+                          style="background: #57b477">
+                          <i class="fa fa-sort-asc" style="color: white;"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3" style="margin-top: 35px;">
+                      <div class="panel" style="background: transparent; border: 1px solid #b21f31; color: #b21f31;">
+                        <div class="noselect indicador-toggle indicadorCard">
+                          <h4 class="indicador-title">Citas Canceladas</h4>
+                          <div class="panel-body indicador-body">
+                            <h2>{{citasCanceladasDia}}</h2>
+                          </div>
+                          <!-- <div style="float: right; padding: 15px; margin-top: -60px; font-size: 40px; height: 60px;"> -->
+                          <!-- <i class="fa fa-times"></i> -->
+                          <mat-icon class="iconosBookipp" svgIcon="iconCitasCanceladas"
+                            style="cursor: pointer; width: 50px; height: 50px; position: relative; left: -5px; overflow: visible !important;">
+                          </mat-icon>
+                          <!-- </div> -->
+                        </div>
+                        <div class="panel-footer indicador-footer" (click)="ocultarIndicadores()"
+                          style="background: #b21f31">
+                          <i class="fa fa-sort-asc" style="color: white;"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3" style="margin-top: 35px;">
+                      <div class="panel" style="background: transparent; border: 1px solid #337dc0; color: #337dc0;">
+                        <div class="noselect indicador-toggle indicadorCard" style="cursor: pointer;">
+                          <h4 class="indicador-title" style="text-decoration: underline;">Ingresos</h4>
+                          <div class="panel-body indicador-body">
+                            <h2>{{ingresos | currency}}</h2>
+                          </div>
+                          <!-- <div style="float: right; padding: 15px; margin-top: -60px; font-size: 40px; height: 60px;"> -->
+                          <!-- <i class="fa fa-usd"></i> -->
+                          <mat-icon class="iconosBookipp" svgIcon="iconIngresosDia"
+                            style="cursor: pointer; width: 50px; height: 50px; position: relative; left: -5px; overflow: visible !important;">
+                          </mat-icon>
+                          <!-- </div> -->
+                        </div>
+                        <div class="panel-footer indicador-footer" (click)="ocultarIndicadores()"
+                          style="background: #337dc0">
+                          <i class="fa fa-sort-asc" style="color: white;"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true">
+                  <mat-tab id="tabServicio" label="Servicios" style="width: 10%;"
+                    [hidden]="!historial.mostrarHistorial">
+                    <div class="row mx-auto mt-3" style="margin: auto;">
+                      <div class="col-md-12" id="Div2" style="margin-top:15px">
+                        <div class="col-xs-3" style="float: right; height: 35px">
+                          <span (click)="exportToExcel(1)" style="color: #337dc0; float: right;"
+                            *ngIf="accesosPantalla.descargarClientes == 1">
+                            <mat-icon class="iconosBookipp" svgIcon="iconExcel"
+                              style="cursor: pointer; font-size: 30px; overflow: visible;"></mat-icon>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="col-lg-12 overflow-auto">
+                          <div [hidden]="!consultaHistorialExitosa">
+                            <div class="mat-elevation-z8 my-2" style="min-width: 700px;">
+                              <table class="tabServicioTabla" mat-table [dataSource]="dataSourceServicio" matSort
+                                #matSortServicio="matSort" style="width: 100%;">
+
+                                <ng-container matColumnDef="fechaCita">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    {{this.consultaClienteTranslate.fechaCita | translate}}</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    {{ element.fechaCita }}
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nombreSucursal">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    {{this.sucursalTranslate.sucursal | translate}}</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    {{ element.nombreSucursal }}
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="folio">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    Folio Venta</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    <!-- <a class="nwLink2"
+                                                                            href="javascript:void(0);"
+                                                                            (click)="$root.caja.movimientos.mostrarTicketFolioVenta(element.folio)">
+                                                                            {{ element.folio }}
+                                                                        </a>   -->
+                                    <a class="nwLink2"
+                                      (click)="_ticketService.caja_movimientos_mostrarTicketFolioVenta(element.folioOriginal)">
+                                      {{ element.folio }}
+                                    </a>
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nombreServicio">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    {{this.consultaClienteTranslate.servicio | translate}}</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    {{ element.nombreServicio }}
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="montoTotal">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    {{this.consultaClienteTranslate.costoCita | translate}}</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    {{ element.montoTotal | currency }}
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="pago">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    Total Pagado</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    {{ element.pago | currency }}
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="porPagar">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    Total Por Pagar</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    {{ element.porPagar | currency }}
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nombrePersonal">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    {{this.consultaClienteTranslate.atendidoPor | translate}}</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    {{ element.nombrePersonal }}
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nota">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Nota
+                                  </th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    {{ element.nota }}
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="detalleCita">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    {{'clienteTranslate.añadirServicio' | translate}}</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    <!-- <li style="cursor:pointer; color:#337dc0;" class="fa fa-edit"
+                                                                            (click)="historial_modalPorPagar(element)"
+                                                                            *ngIf="element.idCitaEstatus != 3 && element.idCitaEstatus != 4">
+                                                                        </li> -->
+                                    <mat-icon svgIcon="iconEditar3"
+                                      *ngIf="element.idCitaEstatus != 3 && element.idCitaEstatus != 4"
+                                      (click)="historial_modalPorPagar(element)" class="iconosBookipp"
+                                      style="cursor: pointer;">
+                                    </mat-icon>
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="receta">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    {{this.consultaClienteTranslate.receta | translate}}</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    <a style="cursor:pointer; color:#20c4e6;" (click)="historial_receta(element)">
+                                      Ver
+                                    </a>
+                                  </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="archivos">
+                                  <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                    {{this.consultaClienteTranslate.archivos | translate}}</th>
+                                  <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                    <!-- <li id="gris{{element.idCita}}" style="font-size: 1.5em; cursor:pointer; color:#cbc5c5;"
+                                                                            class="fa fa-paperclip clip" *ngIf="element.archivos == 0"
+                                                                            (click)="historial_darClicArchivos(element)"></li> -->
+                                    <mat-icon id="gris{{element.idCita}}" svgIcon="iconAdjuntar"
+                                      *ngIf="element.archivos == 0" (click)="historial_darClicArchivos(element)"
+                                      class="iconosBookipp" style="cursor: pointer;">
+                                    </mat-icon>
+                                    <!-- <li id="gris{{element.idCita}}" style="font-size: 1.5em; cursor:pointer; color:rgb(51, 125, 192);"
+                                                                            class="fa fa-paperclip clip" *ngIf="element.archivos != 0"
+                                                                            (click)="historial_consultaArchivos(element,2)"></li> -->
+                                    <mat-icon id="gris{{element.idCita}}" svgIcon="iconAdjuntar"
+                                      *ngIf="element.archivos != 0" (click)="historial_consultaArchivos(element,2)"
+                                      class="iconosBookipp" style="cursor: pointer; fill: #20c4e6 !important;">
+                                    </mat-icon>
+                                  </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsServicio"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsServicio;"></tr>
+                              </table>
+                            </div>
+                            <input (change)="fileHistorialOnchange($event)" style="display: none;" type="file"
+                              id="fileHistorial" name="file[]"
+                              accept=".docx,.DOCX,.doc,.PDF,.pdf,.pptx,.PPTX,.ppt,.xlsx,.XLSX,.xls,.txt" />
+                          </div>
+                        </div>
+                        <mat-paginator #paginacionServicio [pageSizeOptions]="[10, 25, 50, 100, 200]"
+                          showFirstLastButtons aria-label="Facebook">
+                        </mat-paginator>
+                      </div>
+
+                      <div class="col-md-12" style="opacity: 0.5; text-align:right; margin-top:1%;">
+                        <label>* {{'clienteTranslate.extensionesArchivos' | translate}}</label>
+                      </div>
+                    </div>
+                  </mat-tab>
+
+                  <mat-tab id="tabProductos" label="Productos" style="width: 10%;"
+                    [hidden]="historial.mostrarProductos">
+                    <div class="row mx-auto mt-3" style="margin: auto;">
+                      <div class="col-md-12" id="Div4" style="margin-top:15px" [hidden]="!historial.gridProductos">
+                        <div class="col-xs-3" style="float: right; height: 35px">
+                          <span (click)="exportToExcel(2)" style="color: #337dc0; float: right;"
+                            *ngIf="accesosPantalla.descargarClientes == 1">
+                            <mat-icon class="iconosBookipp" svgIcon="iconExcel"
+                              style="cursor: pointer; font-size: 30px; overflow: visible;"></mat-icon>
+                          </span>
+                        </div>
+                        <!-- <div style="background-color:white; border:solid 1px black; margin-top:45px"
+                                                ui-grid="historial.gridProductos"
+                                                ng-style="{ 'height': historial.altura2 }"
+                                                class="grid"
+                                                ui-grid-auto-resize ui-grid-pagination >
+                                            </div> -->
+                        <div class="col-lg-12 overflow-auto" style="width: 100%;">
+                          <div class="mat-elevation-z8 my-2" style="min-width: 700px;">
+                            <table class="tabProductosTabla" mat-table [dataSource]="dataSourceProductos" matSort
+                              #matSortProductos="matSort" style="width: 100%;">
+
+                              <ng-container matColumnDef="fechaVenta">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Fecha
+                                </th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.fechaVenta }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="nombreSucursal">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                  Sucursal</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.nombreSucursal }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="folio">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Folio
+                                  Venta</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  <!-- <a class="nwLink2"
+                                                                        href="javascript:void(0);"
+                                                                        (click)="$root.caja.movimientos.mostrarTicketFolioVenta(row.entity.folioOriginal)">
+                                                                        {{ element.folio }}
+                                                                    </a> -->
+                                  <a class="nwLink2"
+                                    (click)="_ticketService.caja_movimientos_mostrarTicketFolioVenta(element.folioOriginal)">
+                                    {{ element.folio }}
+                                  </a>
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="nombreProducto">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                  Producto</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.nombreProducto }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="cantidadProducto">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                  Cantidad</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.cantidadProducto }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="montoTotal">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Costo
+                                  Producto</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.montoTotal | currency }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="pago">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Total
+                                  Pagado</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.pago | currency }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="porPagar">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Total
+                                  Por Pagar</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.porPagar | currency }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="nombrePersonal">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                  Vendido Por</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.nombrePersonal }}
+                                </td>
+                              </ng-container>
+
+                              <tr mat-header-row *matHeaderRowDef="displayedColumnsProductos"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumnsProductos;"></tr>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+
+                      <mat-paginator #paginacionProductos [pageSizeOptions]="[10, 25, 50, 100, 200]"
+                        showFirstLastButtons aria-label="Facebook">
+                      </mat-paginator>
+                    </div>
+
+                  </mat-tab>
+
+                  <mat-tab id="tabPaquetes" label="Paquetes" style="width: 10%;">
+                    <div class="row mx-auto mt-3" style="margin: auto;">
+                      <div class="col-md-12" id="Div8" style="margin-top:15px" *ngIf="historial.gridPaquetes">
+                        <div class="col-md-3" style="float: right; height: 35px">
+                          <span (click)="exportToExcel(3)" style="color: #337dc0; float: right;"
+                            *ngIf="accesosPantalla.descargarClientes == 1">
+                            <mat-icon class="iconosBookipp" svgIcon="iconExcel"
+                              style="cursor: pointer; font-size: 30px; overflow: visible;"></mat-icon>
+                          </span>
+                        </div>
+                        <!-- <div style="background-color:white; border:solid 1px black; margin-top:45px"
+                                                    ui-grid="historial.gridPaquetes"
+                                                    ng-style="{'height': historial.altura2}"
+                                                    class="grid"
+                                                    ui-grid-auto-resize ui-grid-pagination >
+                                                </div> -->
+                      </div>
+                      <div class="col-md-12">
+                        <div class="col-lg-12 overflow-auto">
+                          <div class="mat-elevation-z8 my-2" style="min-width: 700px;">
+                            <table class="tabPaquetesTabla" mat-table [dataSource]="dataSourcePaquetes" matSort
+                              #matSortPaquetes="matSort" style="width: 100%;">
+
+                              <ng-container matColumnDef="fechaVenta">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Fecha
+                                  Pago</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.fechaVenta }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="nombreSucursal">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                  Sucursal</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.nombreSucursal }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="folio">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Folio
+                                  Venta</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  <!-- <a class="nwLink2"
+                                                                        href="javascript:void(0);"
+                                                                        (click)="$root.caja.movimientos.mostrarTicketFolioVenta(row.entity.folioOriginal)">
+                                                                        {{ element.folio }}
+                                                                    </a> -->
+                                  <a class="nwLink2"
+                                    (click)="_ticketService.caja_movimientos_mostrarTicketFolioVenta(element.folioOriginal)">
+                                    {{ element.folio }}
+                                  </a>
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="nombrePaquete">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                  Paquete</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.nombrePaquete }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="montoTotal">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Costo
+                                  Producto</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.montoTotal | currency }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="pago">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Total
+                                  Pagado</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.pago | currency }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="porPagar">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">Total
+                                  Por Pagar</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.porPagar | currency }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="nombrePersonal">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                                  Vendido Por</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                                  {{ element.nombrePersonal }}
+                                </td>
+                              </ng-container>
+
+                              <tr mat-header-row *matHeaderRowDef="displayedColumnsPaquetes"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumnsPaquetes;"></tr>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <mat-paginator #paginacionPaquetes [pageSizeOptions]="[10, 25, 50, 100, 200]" showFirstLastButtons
+                        aria-label="Facebook">
+                      </mat-paginator>
+                    </div>
+                  </mat-tab>
+
+                </mat-tab-group>
+
+                <div id="txtErrorServicios" class="row" style="width: auto; position: absolute; margin-top:20px"
+                  *ngIf="!historial.mostrarHistorial ">
+                  {{'clienteTranslate.sinCitas' | translate}}
+                </div>
+                <div id="txtErrorProductos" class="row" style="width: auto; position: absolute; margin-top:20px;"
+                  *ngIf="!historial.mostrarProductos">
+                  No hay ventas de producto para este cliente
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab id="liNotas" label="{{'clienteTranslate.historialCliente'| translate}}" style="width: 50%;"
+          *ngIf="!isClienteNuevo">
+          <div style="margin: auto">
+            <div class="modal-body">
+
+              <div style="width: auto; height: auto; position: relative;">
+                <div class="row">
+                  <div class="col-12 col-md-6">
+                    <div class="row">
+                      <div class="col-12 col-sm-3 col-md-5 col-lg-4 col-xl=3 col-xxl-3"
+                        style="height: 50px; margin-top: 15px;" *ngIf="accesosPantalla.clientesAccion == 1">
+                        <a (click)="notas_accionNuevo()" class="btn btn-success">Nueva Nota</a>
+                      </div>
+                      <div class="col-12  col-sm-3 col-md-3 col-lg-5 col-xl=8 col-xxl-7"
+                        style="height: 50px; margin-top: 15px;" *ngIf="accesosPantalla.clientesAccion == 1 && permisos.responderFormulario">
+                        <select class="form-select" aria-label="Default select example" id="formularios"
+                          (change)="onChangeFormulario($event)">
+                          <option [value]="0" selected></option>
+                          <option *ngFor="let formulario of formularios" [value]="formulario.idFormulario">
+                            {{formulario.nombre}}</option>
+                        </select>
+                      </div>
+                      <div class="col-12 col-sm-1 col-md-4 col-lg-3 col-xl=1 col-xxl-1"
+                        style="height: 50px; margin-top: 15px;" *ngIf="accesosPantalla.clientesAccion == 1 && permisos.responderFormulario">
+                        <a (click)="contestarFormularioUsuario(idFormulario)" class="btn btn-success">Contestar</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6" style="padding-left: 5px;">
+                    <div class="row">
+                      <div class="col-12  col-sm-3 col-md-5 col-lg-4  col-xl=3 col-xxl-3"
+                        style="height: 50px; margin-top: 15px;margin-left: 10px;"
+                        *ngIf="accesosPantalla.clientesAccion == 1 && permisos.responderFormulario">
+                        <a (click)="generarLinkFormulario()" class="btn btn-success">Generar Liga</a>
+                      </div>
+                      <div class="col-12  col-sm-5 col-md-5 col-lg-6  col-xl=7 col-xxl-7"
+                        style="height: 50px; margin-top: 15px;margin-right: 10px;"
+                        *ngIf="accesosPantalla.clientesAccion == 1 && mostrarLiga">
+                        <textarea class="form-control" id="textoACopiar"
+                          style="width: 100%; resize:none; height: 30px; " readonly
+                          [(ngModel)]="textoACopiar"></textarea>
+                      </div>
+                      <div class="col-12   col-sm-1 col-md-1 col-lg-1  col-xl=1 col-xxl-1"
+                        style="height: 50px; margin-top: 15px;"
+                        *ngIf="accesosPantalla.clientesAccion == 1 && mostrarLiga">
+                        <button mat-icon-button color="primary">
+                          <mat-icon svgIcon="iconCopy" title="copiar" (click)="copiarLinkFormulario();"
+                          [ngClass]="this.BTN_CLICK_COPIAR_LINK === false ? 'iconosBookipp' : 'link-click'" style="font-size: 1.2em; cursor:pointer; width:29px;">
+                        </mat-icon>
+                        </button>
+                        <!-- <mat-icon svgIcon="iconCopy" title="copiar" (click)="copiarLinkFormulario();"
+                          class="iconosBookipp" style="font-size: 1.2em; cursor:pointer; width:29px;">
+                        </mat-icon> -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--
+                                    <div id="generarLink" [ngStyle]="{'visibility':linkVisible == true ? 'visible' : 'hidden'}" class="col-md-3 fade generarLink" style="height: 50px; margin-top: 15px;" *ngIf="accesosPantalla.clientesAccion == 1">
+                                        <a (click)="notas_accionNuevo()" class="btn btn-success">Generar Liga</a>
+                                    </div>-->
+                </div>
+
+                <div class="row" style="width: auto; position: relative;" [hidden]="notas.dataNotasVacia">
+                  <div class="col-md-12">
+                    <div class="col-lg-12 overflow-auto">
+                      <div class="mat-elevation-z8 my-2" style="min-width: 700px;">
+                        <table class="liNotasTabla" mat-table [dataSource]="dataSourceNotas" matSort
+                          #matSortNotas="matSort" style="width: 100%;">
+
+                          <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+                              {{this.consultaClienteTranslate.acciones | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                              <!-- Icono Editar  *ngIf="!element.origen"-->
+                              <mat-icon svgIcon="iconEditar3" (click)="notas_cargarNota(element)" class="iconosBookipp"
+                                style="font-size: 1.2em; cursor:pointer; width:29px;">
+                              </mat-icon>
+
+                              <mat-icon svgIcon="iconBasura" (click)="notas_preparacionBorrarNota(element)"
+                                class="iconosBookipp" style="font-size: 1.2em; cursor:pointer; width:29px;">
+                              </mat-icon>
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="fecha">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                              {{this.consultaClienteTranslate.fecha | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                              {{ element.fechaAlta | date: 'dd/MM/yyyy' }}
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="notas">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                              {{this.consultaClienteTranslate.notas | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                              {{ element.comentario }}
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="origen">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                              {{this.consultaClienteTranslate.origen | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                              {{element.origen}}
+                              <!--<i *ngIf="element.origen"
+                                                                class="fa-solid fa-mobile colorPrimario"
+                                                                style="font-size: 1.2em; cursor:pointer; width:29px;">
+                                                            </i>    -->
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="archivosRelacionados">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                              {{this.consultaClienteTranslate.archivosRelacionados | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                              <!-- <i id="camara{{element.idNota}}" style="margin-right: 50px;color:#cbc5c5;font-size: 1.5em; cursor:pointer;"
+                                                                class="fa fa-camera" *ngIf="element.fotos == 0"
+                                                                (click)="notas_fotosMultiples(element.idNota)"></i> -->
+                              <mat-icon id="camara{{element.idNota}}" svgIcon="iconCamara" *ngIf="element.fotos == 0"
+                                (click)="notas_fotosMultiples(element.idNota)" class="iconosBookipp"
+                                style="cursor: pointer;">
+                              </mat-icon>
+
+                              <!-- <i id="botonFotos{{element.idNota}}" style="margin-right: 50px;color:#337dc0;font-size: 1.5em; cursor:pointer;"
+                                                                class="fa fa-camera" *ngIf="element.fotos != 0"
+                                                                (click)="notas_accionAbrirFotos(element.idNota,2)"></i> -->
+                              <mat-icon id="botonFotos{{element.idNota}}" svgIcon="iconCamara"
+                                *ngIf="element.fotos != 0" (click)="notas_accionAbrirFotos(element.idNota,2)"
+                                class="iconosBookipp" style="cursor: pointer; fill: #20c4e6 !important;">
+                              </mat-icon>
+
+                              <!-- <i id="documentos{{element.idCita}}" style="color:#cbc5c5;font-size: 1.5em; cursor:pointer;"
+                                                                class="fa fa-paperclip" *ngIf="element.archivos == 0"
+                                                                (click)="notas_archivosMultiples(element.idNota)"></i> -->
+                              <mat-icon id="documentos{{element.idCita}}" svgIcon="iconAdjuntar"
+                                *ngIf="element.archivos == 0" (click)="notas_archivosMultiples(element.idNota)"
+                                class="iconosBookipp" style="cursor: pointer;">
+                              </mat-icon>
+
+                              <!-- <i id="botonArchivos{{element.idCita}}" style="color:#337dc0;font-size: 1.5em; cursor:pointer;"
+                                                                class="fa fa-paperclip" *ngIf="element.archivos != 0"
+                                                                (click)="notas_accionAbrirArchivos(element.idNota,2)"></i>                                                 -->
+                              <mat-icon id="botonArchivos{{element.idCita}}" svgIcon="iconAdjuntar"
+                                *ngIf="element.archivos != 0" (click)="notas_accionAbrirArchivos(element.idNota,2)"
+                                class="iconosBookipp" style="cursor: pointer; fill: #20c4e6 !important;">
+                              </mat-icon>
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="formulario">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">
+                              {{this.consultaClienteTranslate.formulario | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;" class="auto-width">
+                              <a *ngIf="element.formulario != ''" class="ls-link-b" style="cursor:pointer;"
+                                (click)="verFormularioRespuestas(element)">
+                                {{ element.formulario }}
+                              </a>
+
+                            </td>
+                          </ng-container>
+
+                          <tr mat-header-row *matHeaderRowDef="displayedColumnsNotas"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumnsNotas;"></tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <input style=" margin-left: 10%; display: none;" type="file" id="file1" name="file"
+                    accept="image/*" />
+                  <input style="display: none;" type="file" id="file2" name="file[]"
+                    accept=".docx,.DOCX,.doc,.PDF,.pdf,.pptx,.PPTX,.ppt,.xlsx,.XLSX,.xls,.txt" />
+                  <!-- </div> -->
+                  <mat-paginator #paginacionNotas [pageSizeOptions]="[10, 25, 50, 100, 200]" showFirstLastButtons
+                    aria-label="Facebook">
+                  </mat-paginator>
+                  <!-- </div> -->
+                  <div class="col-md-12" style="opacity: 0.5; text-align:right; margin-top:1%;">
+                    <label>* {{'clienteTranslate.extensionesFotos' | translate}}</label>
+                  </div>
+                  <div class="col-md-12" style="opacity: 0.5; text-align:right;">
+                    <label>* {{'clienteTranslate.extensionesArchivos' | translate}}</label>
+                  </div>
+                </div>
+                <div class="row" style="width: auto; position: relative;" *ngIf="notas.dataNotasVacia">
+                  <div class="col-md-3">
+                    {{'clienteTranslate.sinNotas' | translate}}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab id="liDatosFiscales" label="{{'clienteTranslate.datosFiscales'| translate}}" style="width: 50%;">
+          <div class="row">
+            <div style="margin-top: 1%;" class="col-md-12" id="aux001">
+              <div class="row" style="padding:0;">
+                <div style="margin-top: 1%;" class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                      Los campos marcados con un asterisco (*) son obligatorios.
+                    </div>
+                    <div class="col-md-4">
+                      <label class="control-label"
+                        style="margin-top: 9px;">{{'informacionFiscalClienteTranslate.tipoPersona' | translate}}
+                        *</label>
+                    </div>
+                    <div class="col-md-7">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="row">
+                            <div class="col-6">
+                              <mat-radio-button id="dfFisica" (click)="checkRadio(0)"
+                                style="height: 16px; padding-right: 0; margin-top: 9px; outline: none !important;"
+                                checked></mat-radio-button>
+                              <!-- <input id="dfFisica" type="radio" (click)="checkRadio(0)"
+                                                                    style="height: 16px; padding-right: 0; margin-top: 9px; outline: none !important;" checked> -->
+                              <label
+                                style="margin-top: 9px; text-align: left">{{'informacionFiscalClienteTranslate.fisica' |
+                                translate}} </label>
+                            </div>
+                            <!-- <div class="col-6">
+                                                                <label style="margin-top: 9px; text-align: left">{{'informacionFiscalClienteTranslate.fisica' | translate}} </label>
+                                                            </div> -->
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="row">
+                            <div class="col-6">
+                              <mat-radio-button id="dfMoral" (click)="checkRadio(1)"
+                                style="height: 16px; padding-right: 0; margin-top: 9px; outline: none !important;"></mat-radio-button>
+                              <label
+                                style="margin-top: 9px; text-align: left">{{'informacionFiscalClienteTranslate.moral' |
+                                translate}} </label>
+                              <!-- <input id="dfMoral" type="radio" (click)="checkRadio(1)"
+                                                                    style="height: 16px; margin-top: 9px; outline: none !important;"> -->
+                            </div>
+                            <!-- <div class="col-6">
+                                                                <label style="margin-top: 9px; text-align: left">{{'informacionFiscalClienteTranslate.moral' | translate}} </label>
+                                                            </div> -->
+                          </div>
+                        </div>
+                        <label id="errortipoPersona" class="control-label text-left"
+                          style="height: 20px; color: red;"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div style="margin-top: 1%;" class="col-md-6">
+                  <div id="divRFC" style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.rfc' | translate}} *</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <input id="txtRFCDF" type="text" maxlength="13" class="form-control borderAzul"
+                        (focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')"
+                        [(ngModel)]="datosFiscales.rfc" style="width: 100%;" content="”body”">
+                      <label id="errortxtRFCDF" class="control-label text-left"
+                        style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.nombre' | translate}} *</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <input id="txtNombreDF" type="text" maxlength="250" class="form-control borderAzul"
+                        (focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')"
+                        [(ngModel)]="datosFiscales.nombre" style="width: 100%;" content="”body”">
+                      <label id="errortxtNombreDF" class="control-label" style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.pais' | translate}} *</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <!-- <ui-select id="txtPaisDF" append-to-body="$root.mobileBrowser" search-enabled="$root.mobileBrowser" [(ngModel)]="datosFiscales.pais" theme="select2" style="width: 100%"
+                                                    (ngModelChange)="cargarEstadosPorPais()" (click)="onClickDdl('txtPaisDF')" chuy-select>
+                                                    <ui-select-match placeholder="{{'informacionFiscalClienteTranslate.placehholderPais' | translate}}">{{$select.selected.nombre}}</ui-select-match>
+                                                    <ui-select-choices repeat="pais.idPais as pais in datosFiscales.dataPaises  | filter: {nombre: $select.search}">
+                                                        <span ng-bind-html="pais.nombre"></span>
+                                                    </ui-select-choices>
+                                                </ui-select> -->
+                      <ng-select id="txtPaisDF" style="width: 100%;" [multiple]="false" appendTo="#txtPaisDF"
+                        [searchable]="false" [(ngModel)]="datosFiscales.pais" [clearable]="false"
+                        placeholder="{{'informacionFiscalClienteTranslate.placehholderPais' | translate}}"
+                        [items]="datosFiscales.dataPaises" bindLabel="nombre" bindValue="idPais"
+                        (ngModelChange)="cargarEstadosPorPais()" (click)="onClickDdl('txtPaisDF')">
+                      </ng-select>
+                      <label id="errortxtPaisDF" class="control-label text-left"
+                        style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.estado' | translate}}</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <!-- <ui-select id="txtEstadoDF" append-to-body="$root.mobileBrowser" search-enabled="!mobileBrowser" [(ngModel)]="datosFiscales.estado" theme="select2" style="width: 100%"
+                                                    (click)="onClickDdl('txtEstadoDF'); onChangeDdlEstado()" (ngModelChange)="onChangeDdlEstado()" ng-init="onChangeDdlEstado()" chuy-select>
+                                                    <ui-select-match placeholder="{{'informacionFiscalClienteTranslate.placeholderEstado' | translate}}">{{$select.selected.nombre}}</ui-select-match>
+                                                    <ui-select-choices repeat="estado.idEstado as estado in datosFiscales.dataEstados  | filter: {nombre: $select.search}">
+                                                        <span ng-bind-html="estado.nombre"></span>
+                                                    </ui-select-choices>
+                                                </ui-select> -->
+                      <ng-select id="txtEstadoDF" style="width: 100%;" [multiple]="false" appendTo="#txtEstadoDF"
+                        [searchable]="true" [(ngModel)]="datosFiscales.estado" [clearable]="false"
+                        placeholder="{{'informacionFiscalClienteTranslate.placeholderEstado' | translate}}"
+                        [items]="datosFiscales.dataEstados" bindLabel="nombre" bindValue="idEstado"
+                        (ngModelChange)="onChangeDdlEstado()" (click)="onClickDdl('txtEstadoDF'); onChangeDdlEstado();">
+                      </ng-select>
+                      <label id="errortxtEstadoDF" class="control-label text-left"
+                        style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.ciudad' | translate}}</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px; margin-bottom:20px">
+                      <!-- <ui-select id="txtCiudadDF" append-to-body="mobileBrowser" search-enabled="!mobileBrowser" chuy-select saenz-select2
+                                                        [(ngModel)]="datosFiscales.ciudad" theme="select2" style="width: 100%">
+                                                    <ui-select-match placeholder="{{'sucursalTranslate.placeholderCiudad' | translate}}">{{$select.selected.nombre}}</ui-select-match>
+                                                    <ui-select-choices repeat="ciudad.nombre as ciudad in datosFiscales.dataCiudad | filter: {nombre: $select.search}">
+                                                        <span ng-bind-html="ciudad.nombre"></span>
+                                                    </ui-select-choices>
+                                                </ui-select> -->
+                      <ng-select id="txtCiudadDF" style="width: 100%;" [multiple]="false" appendTo="#txtCiudadDF"
+                        [searchable]="true" [(ngModel)]="datosFiscales.ciudad" [clearable]="false"
+                        placeholder="{{'sucursalTranslate.placeholderCiudad' | translate}}"
+                        [items]="datosFiscales.dataCiudad" bindLabel="nombre" bindValue="nombre">
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.email' | translate}}</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <input id="txtEmailDF" type="text" maxlength="100" (focus)="txtfocus(1, $event, 'f')"
+                        class="form-control borderAzul" [(ngModel)]="datosFiscales.email" style="width: 100%;"
+                        content="”body”">
+                      <label id="errortxtEmailDF" class="control-label" style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>
+                        {{'configuracionSucursalTranslate.metodosDePago'| translate}} *
+                      </label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <!-- <ui-select id="metodosDePagoSelect" append-to-body="$root.mobileBrowser" search-enabled="!$root.mobileBrowser" [(ngModel)]="datosFiscales.metodoPago" theme="select2" style="width: 100%" chuy-select>
+                                                        <ui-select-match placeholder="Selecciona el metodo de pago">{{$select.selected.descripcion}}</ui-select-match>
+                                                        <ui-select-choices repeat="metodosDePago.idDatosFiscalesMetodoPago as metodosDePago in informacionFiscalSucursal.metodosDePago  | filter: {descripcion: $select.search}">
+                                                            <span ng-bind-html="metodosDePago.descripcion"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select> -->
+                      <ng-select id="metodosDePagoSelect" style="width: 100%;" [multiple]="false"
+                        appendTo="#metodosDePagoSelect" [searchable]="true" [(ngModel)]="datosFiscales.metodoPago"
+                        [clearable]="false" placeholder="Selecciona el metodo de pago"
+                        [items]="informacionFiscalSucursal.metodosDePago" bindLabel="descripcion"
+                        bindValue="idDatosFiscalesMetodoPago">
+                      </ng-select>
+                      <label style="height:20px"></label>
+                    </div>
+                    <label id="errorTxtMetodoPago" class="control-label text-left" style="color: red;"></label>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>
+                        {{'configuracionSucursalTranslate.formasDePago'| translate}} *
+                      </label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <!-- <ui-select id="formasDePagoSelect" append-to-body="$root.mobileBrowser" search-enabled="!$root.mobileBrowser" [(ngModel)]="datosFiscales.formaPago" theme="select2" style="width: 100%" chuy-select>
+                                                        <ui-select-match placeholder="Selecciona la forma de pago">{{$select.selected.descripcion}}</ui-select-match>
+                                                        <ui-select-choices repeat="formasDePago.idDatosFiscalesFormaPago as formasDePago in informacionFiscalSucursal.formasDePago  | filter: {descripcion: $select.search}">
+                                                            <span ng-bind-html="formasDePago.descripcion"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select> -->
+                      <ng-select id="formasDePagoSelect" style="width: 100%;" [multiple]="false"
+                        appendTo="#formasDePagoSelect" [searchable]="true" [(ngModel)]="datosFiscales.formaPago"
+                        [clearable]="false" placeholder="Selecciona la forma de pago"
+                        [items]="informacionFiscalSucursal.formasDePago" bindLabel="descripcion"
+                        bindValue="idDatosFiscalesFormaPago">
+                      </ng-select>
+                      <label style="height:20px"></label>
+                    </div>
+                    <label id="errorTxtFormaDePago" class="control-label text-left" style="color: red;"></label>
+                  </div>
+                </div>
+
+                <div style="margin-top: 1%;" class="col-md-6">
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.colonia' | translate}}</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <input id="txtColoniaDF" type="text" maxlength="50" (focus)="txtfocus(1, $event, 'f')"
+                        class="form-control borderAzul" [(ngModel)]="datosFiscales.colonia" style="width: 100%;"
+                        content="”body”">
+                      <label id="errortxtColoniaDF" class="control-label" style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.codigoPostal' | translate}}*</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <input id="txtCodigoPostalDF" type="text" maxlength="5" (focus)="txtfocus(1, $event, 'f')"
+                        class="form-control borderAzul" [(ngModel)]="datosFiscales.codigoPostal" style="width: 100%;"
+                        content="”body”">
+                      <label id="errortxtCodigoPostalDF" class="control-label"
+                        style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.calle' | translate}}</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <input id="txtCalleDF" type="text" maxlength="100" (focus)="txtfocus(1, $event, 'f')"
+                        class="form-control borderAzul" [(ngModel)]="datosFiscales.calle" style="width: 100%;"
+                        content="”body”">
+                      <label id="errortxtCalleDF" class="control-label" style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.numero' | translate}}</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <input id="txtNumeroDF" type="text" maxlength="10" (focus)="txtfocus(1, $event, 'f')"
+                        class="form-control borderAzul" [(ngModel)]="datosFiscales.numero" style="width: 100%;"
+                        content="”body”">
+                      <label id="errortxtNumeroDF" class="control-label" style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.numeroInterior' | translate}}</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <input id="txtNumeroInteriorDF" type="text" maxlength="15" (focus)="txtfocus(0, $event, 'f')"
+                        class="form-control borderAzul" [(ngModel)]="datosFiscales.numeroInterior" style="width: 100%;"
+                        content="”body”">
+                      <label id="errortxtNumeroInteriorDF" class="control-label"
+                        style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>{{'informacionFiscalClienteTranslate.telefono' | translate}}</label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <input id="txtTelefonoDF" type="text" maxlength="40" (focus)="txtfocus(1, $event, 'f')"
+                        class="form-control borderAzul" [(ngModel)]="datosFiscales.telefono" style="width: 100%;"
+                        content="”body”">
+                      <label id="errortxtTelefonoDF" class="control-label" style="height: 20px; color: red;"></label>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>
+                        {{'configuracionSucursalTranslate.usoCFDI'| translate}} *
+                      </label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <!-- <ui-select id="usoCFDISelect" append-to-body="$root.mobileBrowser" search-enabled="!$root.mobileBrowser" [(ngModel)]="datosFiscales.cfdi" theme="select2" style="width: 100%" chuy-select>
+                                                        <ui-select-match placeholder="Selecciona el uso de CFDI">{{$select.selected.descripcion}}</ui-select-match>
+                                                        <ui-select-choices repeat="usosCFDI.idDatosFiscalesUsoCFDI as usosCFDI in informacionFiscalSucursal.usosCFDI  | filter: {descripcion: $select.search}">
+                                                            <span ng-bind-html="usosCFDI.descripcion"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select> -->
+                      <ng-select id="usoCFDISelect" style="width: 100%;" [multiple]="false" appendTo="#usoCFDISelect"
+                        [searchable]="true" [(ngModel)]="datosFiscales.cfdi" [clearable]="false"
+                        placeholder="Selecciona el uso de CFDI" [items]="informacionFiscalSucursal.usosCFDI"
+                        bindLabel="descripcion" bindValue="idDatosFiscalesUsoCFDI" dropdownPosition="top">
+                      </ng-select>
+                      <label style="height:20px"></label>
+                    </div>
+                    <label id="errorTxtCFDI" class="control-label text-left" style="color: red;"></label>
+                  </div>
+                  <div style="margin-top: 2%;" class="row">
+                    <div style="margin-top: 1.6%;" class="col-md-4">
+                      <label>
+                        {{'configuracionSucursalTranslate.regimenFiscalReceptor'| translate}} *
+                      </label>
+                    </div>
+                    <div class="col-md-7" style="margin-left: 1px; padding-right: 15px;">
+                      <!-- <ui-select id="RegimenFiscalSelect" append-to-body="$root.mobileBrowser" search-enabled="!$root.mobileBrowser" [(ngModel)]="datosFiscales.regimenFiscalReceptor" theme="select2" style="width: 100%" chuy-select>
+                                                    <ui-select-match placeholder="Selecciona el uso de Regimen Fiscal">{{$select.selected.descripcion}}</ui-select-match>
+                                                        <ui-select-choices repeat="reg.idRegimenFiscal as reg in datosFiscales.dataRegimen  | filter: {descripcion: $select.search}">
+                                                            <span ng-bind-html="reg.descripcion"></span>
+                                                        </ui-select-choices>
+                                                </ui-select> -->
+                      <ng-select id="RegimenFiscalSelect" style="width: 100%;" [multiple]="false"
+                        appendTo="#RegimenFiscalSelect" [searchable]="true"
+                        [(ngModel)]="datosFiscales.regimenFiscalReceptor" [clearable]="false"
+                        placeholder="Selecciona el uso de Regimen Fiscal" [items]="datosFiscales.dataRegimen"
+                        bindLabel="descripcion" bindValue="idRegimenFiscal" dropdownPosition="top">
+                      </ng-select>
+                      <label style="height:20px"></label>
+                    </div>
+                    <label id="errorRegimenFiscal" class="control-label text-left" style="color: red;"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+
+      <div id="botones" class="col-md-12" style="text-align: center; margin-top: 45px; margin-bottom:45px;">
+        <div class="row">
+          <div class="col-lg-2">
+          </div>
+          <div class="col-lg-4 py-1">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+              <button id="botonGuardar" type="button" *ngIf="accesosPantalla.clientesAccion == 1"
+                (click)="validarCamposCliente()" class="buttonEstiloBlanco">{{'clienteTranslate.guardar' |
+                translate}}</button>
+            </div>
+            <div class="col-lg-1"></div>
+          </div>
+          <div class="col-lg-4 py-1">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+              <button id="botonCancelar" [disabled]="consultaExitosa" (click)="descartarCambios('cliente')"
+                class="buttonEstiloBlanco">Regresar</button>
+            </div>
+            <div class="col-lg-1"></div>
+          </div>
+          <div class="col-lg-2">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </mat-card-content>
+
+</mat-card>
+
+
+<!--Modal Etiquetas-->
+<div id="modalEtiquetas" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalEtiquetas">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px;">
+      <div class="modal-header" style="margin: 0px;">
+        <span>{{'clienteTranslate.administrarEtiquetas' | translate}}</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="cerrarModalEtiquetas()"
+          data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-md-2 fa-solid fa-xmark" (click)="cerrarModalEtiquetas()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i> -->
+      </div>
+      <div class="modal-body" style="min-height: 185px; overflow: auto;" [ngStyle]="etiqueta.modalStyle">
+        <div class="row">
+          <div style="height:30px;" class="col-md-6" *ngFor="let x of etiqueta.dataEtiquetasCopia">
+            <div class="row">
+              <div class="col-9 col-md-6 puntosSuspensivosNombre">
+                <a style="text-decoration: underline;">{{x.nombre}}</a>
+              </div>
+              <div class="col-1">
+                <!-- <li style="font-size: 1.5em; cursor:pointer; color:#337dc0;" class="fa fa-trash" (click)="modalEliminarEtiqueta(x.idEtiqueta)"></li> -->
+                <mat-icon svgIcon="iconBasura" (click)="modalEliminarEtiqueta(x.idEtiqueta)" class="iconosBookipp"
+                  style="cursor: pointer;">
+                </mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div id="Div10" class="row col-lg-12" style="text-align: center;">
+          <div class="col-lg-9"></div>
+          <div class="col-lg-3">
+            <button type="button" class="buttonEstiloBlanco"
+              (click)="cerrarModalEtiquetas()">{{'clienteTranslate.regresar' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalEliminarEtiqueta" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalEliminarEtiqueta"
+  style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+      <div class="modal-body">
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+            (click)="modales.modalEliminarEtiqueta.hide();" style="height: auto;">
+            {{'clienteTranslate.cancelar' | translate}}
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+            (click)="eliminarEtiqueta(); modales.modalEliminarEtiqueta.hide();" style="height: auto;">
+            {{'clienteTranslate.si' | translate}}
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--Modal Confirm-->
+<div id="modal-confirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirm"
+  style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+      <div class="modal-body">
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" (click)="modales.modalConfirm.hide();"
+            class="buttonEstiloBlanco" style="height: auto;">
+            {{'clienteTranslate.cancelar' | translate}}
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="redireccion()"
+            style="height: auto;">
+            {{'clienteTranslate.si' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal Confirm Formulario Respuesta-->
+<div id="modal-confirmFormularioRespuesta" tabindex="-1" role="dialog" aria-hidden="true"
+  class="modal fade modal-confirmFormularioRespuesta" style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+      <div class="modal-body">
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" (click)="cancelarFormularioRespuesta()"
+            class="buttonEstiloBlanco" style="height: auto;">
+            {{'clienteTranslate.cancelar' | translate}}
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="cerrarFormularioRespuesta()"
+            style="height: auto;">
+            {{'clienteTranslate.si' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="regresar-confirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade regresar-confirm"
+  style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+      <div class="modal-body">
+        {{regresarConfirmMsg}}
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+            (click)="modales.regresarConfirm.hide();" style="height: auto;">
+            {{'clienteTranslate.cancelar' | translate}}
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+            (click)="redireccion(); modales.regresarConfirm.hide();" style="height: auto;">
+            {{'clienteTranslate.si' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-alert" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-alert"
+  style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+      <div class="modal-body">
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="modales.modalAlert.hide()"
+            style="height: auto;">
+            {{'clienteTranslate.aceptar' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Borrar Confirm-->
+<div id="borrar-confirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade borrar-confirm"
+  style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+      <div class="modal-body">
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="btn btn-default" style="height: auto;">
+            {{'clienteTranslate.cancelar' | translate}}
+          </button>
+          <!-- <button type="button" data-bs-dismiss="modal" class="btn btn-primary" (click)="borrarNota()">
+                        {{'clienteTranslate.si' | translate}}</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="ligar-clienteApp" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade ligar-clienteApp"
+  style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+      <div class="modal-body">
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <!-- <button type="button" data-bs-dismiss="modal" class="btn btn-primary" (click)="redireccionLigarCliente()">
+                        Aceptar</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!------------------------------------------------------- Historial de citas ----------------------------------------------------- -->
+<div id="modal-historial" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-historial">
+  <div class="modal-dialog modal-lg" style="width:60%;">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+      <div class="modal-header" style="margin: 0px;">
+        <span>{{'clienteTranslate.archivos' | translate}}</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="historial_cerrarModalHistorial()"
+          data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-md-2 fa-solid fa-xmark" (click)="historial_cerrarModalHistorial()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i>                 -->
+      </div>
+      <div class="row modal-body" style="min-height: 210px;">
+        <div class="col-md-12" style="overflow-y: auto !important;min-height: 120px;max-height: 194px;width:100%;">
+          <div class="gallery-pages">
+            <div class="mix-grid" id="div5" style="text-align: center;">
+              <div class="row-md-3 mix photography" style="display:inline-block;padding:0px 10px"
+                *ngFor="let item of historial.dataConsultarArchivos; let $index = index;" ng-bind-html-unsafe="item">
+                <div class="hover-effect" style="width:160px;height: 140px;">
+                  <div class="img">
+                    <img src="assets/images/system/fileicon.png" style="height: 120px;width: 105px;margin-top: 9px;" />
+                  </div>
+                  <div class="info" style="padding-top:40px;padding-left:10px;padding-bottom:20px;">
+                    <a *ngIf="historial.dataConsultarArchivos.length > 0" style="cursor: pointer;"
+                      (click)="historial_documentos('d',item.idCitaArchivo)" class="mix-link iconosModalFotos">
+                      <i class="fa-solid fa-download"></i>
+                    </a>
+                    <a *ngIf="historial.dataConsultarArchivos.length > 0" style="cursor: pointer;"
+                      (click)="historial_deleteArchivo(item.idCitaArchivo,$index)" class="mix-zoom iconosModalFotos">
+                      <i class="fa-solid fa-trash"></i>
+                    </a>
+                  </div>
+                </div>
+                <div style="width:160px;text-align:center;">
+                  <h4 class="puntosSuspensivosFiltro" style="text-align:center !important;">{{item.nombre}}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" (click)="historial_archivosMultiples()" class="buttonEstiloBlanco"
+            style="height: auto;">
+            {{'clienteTranslate.cargar' | translate}}
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" (click)="historial_cerrarModalHistorial()" class="buttonEstiloBlanco"
+            style="height: auto;">
+            {{'clienteTranslate.salir' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!------------------------------------------------------------Por Pagar--------------------------------------------------------------->
+<div id="modal-porPagar" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-porPagar">
+  <div class="modal-dialog" style="width:50%;">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; min-width:360px;">
+      <div class="modal-header" style="margin: 0px;">
+        <span>{{'clienteTranslate.añadirServicio' | translate}}</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="historial_cerrarModalPorPagar()"
+          data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-lg-2 fa-solid fa-xmark " (click)="historial_cerrarModalPorPagar()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i> -->
+      </div>
+      <div class="modal-body" style="min-height: 210px">
+        <div id="pagar-servicios" style="display:inline-block;width:100%">
+          <div *ngFor="let c of aPagar; let $index = index;" style="width:100%; padding-right:5px; margin-top: 7px;"
+            class="row payment-additem-btn servicio-input">
+            <!-- <ui-select chuy-select id="Ui-select1" class="modal-personal campo-modal col-md-4" append-to-body="mobileBrowser" search-enabled="!mobileBrowser" ng-model="c.idPersonal" ng-change="getServicioModalT(c)" ng-init="getServicioModalT(c)" (click)="selectClickedModal('personal-modal-' + $index)" ng-enabled="c.servicio" theme="select2" style="width: 25%;float:left; padding-right:5px">
+                            <ui-select-match allow-clear="false" placeholder="{{'agendaTranslate.placeholderPersonal'| translate}}">{{$select.selected.nombre}}</ui-select-match>
+                            <ui-select-choices repeat="dp.idPersonal as dp in c.dataSelectPers | filter: {nombre: $select.search}">
+                                <span ng-bind-html="dp.nombre"></span>
+                            </ui-select-choices>
+                        </ui-select> -->
+            <div class="col-md-4">
+              <ng-select id="Ui-select1" style="width: 100%;" [multiple]="false" appendTo="#Ui-select1"
+                [searchable]="true" [(ngModel)]="c.idPersonal" [clearable]="false"
+                placeholder="{{'agendaTranslate.placeholderPersonal' | translate}}" [items]="c.dataSelectPers"
+                bindLabel="nombre" bindValue="idPersonal" (change)="getServicioModalT(c)"
+                (click)="selectClickedModal('personal-modal-' + $index)">
+              </ng-select>
+            </div>
+            <!-- <ui-select  chuy-select class="select-payment col-md-4" append-to-body="mobileBrowser" search-enabled="!mobileBrowser" ng-model="c.idServicio" ng-change="cambiarPrecioTerminar($select.selected, c); getPersonalModalT(c.dp)" ng-init="getPersonalModalT(c)"  theme="select2" style="width:25% !important; margin-left:5px; padding-right:5px; ">
+                            <ui-select-match placeholder="{{'agendaTranslate.placeholderServicio'| translate}}">{{$select.selected.nombre}}</ui-select-match>
+                            <ui-select-choices repeat="dr.idServicio as dr in c.dataSelectServ  | filter: {nombre: $select.search}">
+                            <span ng-bind-html="dr.nombre"></span>
+                            </ui-select-choices>
+                        </ui-select> -->
+            <div class="col-md-4">
+              <ng-select style="width: 100%;" [multiple]="false" [searchable]="false" [(ngModel)]="c.idServicio"
+                [clearable]="false" placeholder="{{'agendaTranslate.placeholderServicio' | translate}}"
+                [items]="c.dataSelectServ" bindLabel="nombre" bindValue="idServicio"
+                (change)="cambiarPrecioTerminar($event, c); getPersonalModalT(c.dp)" (click)="getPersonalModalT(c)">
+              </ng-select>
+            </div>
+
+            <div class="col-md-4">
+              <div class="row">
+                <label class="payment-company-currency col-md-1" style="margin-top: 5px; text-align:right">$</label>
+                <input class="payment-additem-input form-control col-md-6 borderAzul" maxlength="10"
+                  [(ngModel)]="c.costo" style="width:50% !important" ng-keypress="return (c.idServicio > 0)"
+                  decimals-only />
+                <!-- <a class="payment-remove" (click)="removerServicioTerminar(c.id)" *ngIf="c.eliminar" style="float:right; cursor: pointer;">x</a> -->
+
+                <a class="col-md-3 payment-remove" (click)="removerServicioTerminar(c.id)" *ngIf="c.eliminar"
+                  style="float:right; cursor: pointer;">
+                  <mat-icon svgIcon="iconCruzCudrado" class="iconosBookipp"></mat-icon>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Agregar servicio -->
+        <div style="margin-top:10px;margin-left:5px; align-items: center; display: flex;">
+          <a (click)="agregarServicioTerminar()" style="cursor:pointer;">Agregar servicio</a>
+          <!-- <i (click)="agregarServicioTerminar()" class="fa fa-plus-circle" style="font-size:14px;color:#57b477;cursor:pointer;"></i> -->
+          <mat-icon svgIcon="iconAgregar" (click)="agregarServicioTerminar()" class="iconosBookipp"
+            style="cursor: pointer;">
+          </mat-icon>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button id="btnSalir" class="buttonEstiloBlanco" (click)="historial_cerrarModalPorPagar()" type="button"
+            style="height: auto;">Cancelar</button>
+        </div>
+        <div class="col-3">
+          <button id="btnPorPagar" class="buttonEstiloBlanco" (click)="serviciosPorPagar()" type="button"
+            [disabled]="pagar.submitted" style="height: auto;">Por pagar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-------------------------------------------------------------- Notas ----------------------------------------------------------- -->
+<div id="borrar-nota" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade borrar-nota"
+  style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+      <div class="modal-body">
+        {{borrarNotaMsg}}
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" class="buttonEstiloBlanco" (click)="notas_borrarNota('cancelar')" style="height: auto;">
+            {{'consultaClienteTranslate.cancelar' | translate}}
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" class="buttonEstiloBlanco" (click)="notas_borrarNota('si')" style="height: auto;">
+            {{'consultaClienteTranslate.si' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Nueva Nota del cliente-->
+<div id="modalNuevaNota" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalNuevaNota">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; min-height: 800px; width: auto;">
+      <div class="modal-header" style="margin: 0;">
+        <span>{{'consultaClienteTranslate.notasCliente' | translate}}</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="notas_accionCancelar()"
+          data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-md-2 fa-solid fa-xmark" (click)="notas_accionCancelar()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i> -->
+      </div>
+
+      <div class="modal-body" style="min-height:700px;">
+        <div style="width: 100%; position: relative;">
+          <div style="margin-top: 1%;" class="row">
+            <div class="col-md-10 offset-md-1" style="margin-top: 1%;">
+              <div class="col-md-12">
+                <label>{{'consultaClienteTranslate.cliente' | translate}}</label><label
+                  style="margin-left:25%;">{{notas.nombreCliente}}</label>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1%;" class="row">
+            <div class="col-md-10 offset-md-1" style="margin-top: 1%;">
+              <div class="row" style="padding:0px">
+                <div class="col-md-4" style="margin-top: 0.8%;">
+                  <label>{{'consultaClienteTranslate.esAlerta' | translate}}</label>
+                </div>
+
+                <div class="onoffswitch col-md-4">
+                  <!-- <input id="switch1" type="checkbox" [(ngModel)]="notas.esAlerta"
+                                            cd-true-value="1" cd-false-value="0"
+                                            name="onoffswitch" class="onoffswitch-checkbox"
+                                        data-ng-disabled="notas.vistaPrevia" checked > -->
+                  <mat-slide-toggle id="switch001" [(ngModel)]="notas.esAlerta" [disabled]="notas.vistaPrevia" checked>
+                  </mat-slide-toggle>
+                  <!-- <label class="onoffswitch-label" for="switch1" >
+                                        <span id="Span1" class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1%;" class="row">
+            <div class="col-md-10 offset-md-1" style="margin-top: 1%;">
+              <div style="margin-top: 0.8%;" class="col-md-4">
+                <label style="margin-top: 1px;">{{'consultaClienteTranslate.nota' | translate}}</label>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1%;" class="col-md-12">
+            <div class="col-md-10 offset-md-1">
+              <div class="col-md-12">
+                <textarea id="txtComentarioNota" class="form-control borderAzul" [(ngModel)]="notas.comentario"
+                  ng-blur="blur('txtComentarioNota')" ng-focus="focus('txtComentarioNota')"
+                  style="width: 100%; resize:none; height: 500px; padding: 10px 10px;"
+                  [disabled]="notas.vistaPrevia"></textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div id="Div1" class="col-3" style="text-align: center;" *ngIf="notas.nuevaNota">
+          <button type="button" (click)="notas_accionGuardar()" class="buttonEstiloBlanco" style="height: auto;">
+            {{'consultaClienteTranslate.guardar' | translate}}
+          </button>
+        </div>
+        <div id="Div7" class="col-3" style="text-align: center;" *ngIf="!notas.nuevaNota">
+          <button type="button" (click)="notas_accionActualizar()" class="buttonEstiloBlanco" style="height: auto;">
+            {{'consultaClienteTranslate.guardar' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Fotos del cliente-->
+<div id="modalFotos" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalFotos">
+  <div class="modal-dialog modal-lg" style="width:60%;">
+    <div class="row modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;min-width: 213px;">
+      <div class="modal-header" style="margin: 0;">
+        <span>{{'clienteTranslate.fotos' | translate}}</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="notas_accionSalir()" data-bs-dismiss="modal"
+          style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-md-2 fa-solid fa-xmark" (click)="notas_accionSalir()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i> -->
+      </div>
+
+      <div class="row modal-body" style="min-height: 210px;min-width: 211px;">
+        <div class="col-md-12" style="overflow-y: hidden !important;min-height: 160px;max-height: 215px;width:100%;">
+          <div class="gallery-pages">
+            <div class="mix-grid" id="divImagenes" style="padding-left:16px; display:flex;"
+              [ngStyle]="{'width': notas.largoGaleria}">
+              <div class="row-md-4 mix photography" style="display:inline-block;padding:0px 10px"
+                *ngFor="let item of notas.dataConsultarFotos; let $index = index;" ng-bind-html-unsafe="item">
+                <div class="hover-effect" style="width:160px;height: 160px;">
+                  <div class="img">
+                    <img id="{{'img'+ item.idNotasArchivo}}" src="{{item.source}}" class="img-responsive">
+                  </div>
+                  <div class="info" style="padding-top:40px;padding-bottom:20px;">
+                    <a *ngIf="notas.dataConsultarFotos.length > 0"
+                      (click)="notas_imagenes('v',item.idNotasArchivo, item)" style="cursor: pointer;"
+                      class="iconosModalFotos">
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                    </a>
+                    <a *ngIf="notas.dataConsultarFotos.length > 0" style="cursor: pointer;"
+                      (click)="notas_imagenes('d',item.idNotasArchivo, item)" class="iconosModalFotos">
+                      <i class="fa-solid fa-download"></i>
+                    </a>
+                    <a *ngIf="notas.dataConsultarFotos.length > 0" style="cursor: pointer;"
+                      (click)="notas_deleteArchivo(item.idNotasArchivo, $index, 1)" class="iconosModalFotos">
+                      <i class="fa-solid fa-trash"></i>
+                    </a>
+                  </div>
+                </div>
+                <div style="width:160px;text-align:center;">
+                  <h4 class="puntosSuspensivosFiltro" style="text-align:center !important;">{{item.nombre}}</h4>
+                </div>
+              </div>
+              <div style="overflow-x:auto !important;padding-top:200px;padding-bottom:200px">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div id="Div3" class="col-3" style="text-align: center;">
+          <button type="button" (click)="notas_cargarFotos(notas.idNota)" class="buttonEstiloBlanco"
+            style="height: auto;">
+            {{'clienteTranslate.cargar' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalImagen" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalImagen"
+  style="background-color: rgba(0, 0, 0, 0.58);">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+      <!-- <div id="imagenZoom" class="row modal-content" style="border-radius: 8px !important;"> -->
+      <div class="modal-header" style="height:35px; margin: 0px;">
+        <div class="col-md-10"></div>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal"
+          style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-md-2 fa-solid fa-xmark"  style="cursor: pointer;float: right; font-size: 16px;" data-bs-dismiss="modal" (click)="modales.modalImagen.hide()"></i>                 -->
+      </div>
+      <div class="row modal-body" style="text-align: center;overflow:auto;">
+        <img id="imgCompleta" style="border-radius: 6px;" src="">
+      </div>
+      <!-- </div> -->
+    </div>
+  </div>
+</div>
+
+<!--Modal Formulario Respuestas-->
+<div id="modalFormularioRespuesta" tabindex="-1" role="dialog" aria-hidden="true"
+  class="modal fade modalFormularioRespuesta">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; min-height: 800px; width: 120%;">
+      <div class="modal-header" style="margin: 0;">
+        <span *ngIf="formulario_cliente.length > 0">{{formulario_cliente[0]?.nombre}}</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="notas_cerrarModalFormularioRespuesta()"
+          data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-md-2 fa-solid fa-xmark" (click)="notas_accionCancelar()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i> -->
+      </div>
+
+      <div class="modal-body" style="min-height:700px; padding: 1.5rem;">
+        <form>
+          <!-- Secciones -->
+          <div class="row" *ngFor="let seccion of secciones_cliente_formulario">
+            <div *ngIf="seccion.seccionDefault == 0" class="col-xl-12 m-2">
+              <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 m2" style="display: inline;">
+                  <div style="width: 60px;float: left;">
+                  </div>
+                  <div style="float: left;margin-left: -5px;">
+                    <label *ngIf="seccion.nombre != ''" class="control-label"> <b> {{seccion.nombre}}: </b> </label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-12 col-xl-12 m-2">
+              <!-- Campos -->
+              <div class="row" *ngFor="let campo of campos_cliente">
+                <!-- Opción Multiple - Respuesta Multiple -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 1 && seccion.idFormularioSeccion== campo.idFormularioSeccion"
+                  style="position: relative; left: 10px;">
+                  <div class="row">
+                    <div class="col-12 col-ms-3 col-md-3 col-xl-3">
+                      <label *ngIf="campo.descripcion != ''" class="control-label"
+                        id="preguntaR{{campo.idFormularioElemento}}"
+                        style="margin-top: 3px;">{{campo.descripcion}}:</label>
+                    </div>
+                    <div class="col-12 col-ms-9 col-md-9 col-xl-9" style="text-align: left;">
+                      <div class="col-12 col-ms-12 col-md-12 col-xl-12" style="text-align: left; padding-left: 12px;">
+                        <div class="form-check form-check-inline" style="padding: 12px;"
+                          *ngFor="let detalle_check of campos_detalle_cliente_check | respuestasFormulario:campo.idFormularioElemento">
+                          <input class="form-check-input" type="checkbox" id="checkRES{{detalle_check.descripcion}}"
+                            value="{{detalle_check.descripcion}}" name="OMRES-{{detalle_check.idFormularioOpcion}}"
+                            id="OMRES-{{detalle_check.idFormularioOpcion}}" [checked]="detalle_check.activo" disabled>
+                          <label class="form-check-label"
+                            for="inlineRES{{detalle_check.descripcion}}">{{detalle_check.descripcion}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Opción Multiple - Respuesta Sencilla -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 2 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div class="col-12 col-ms-3 col-md-3 col-xl-3">
+                      <label *ngIf="campo.descripcion != ''" class="control-label"
+                        id="RES{{campo.idFormularioElemento}}" style="margin-top: 3px;">{{campo.descripcion}}:</label>
+                    </div>
+                    <div class="col-12 col-ms-9 col-md-9 col-xl-9" style="text-align: left;">
+
+                      <!-- Opciones -->
+                      <div class="form-check form-check-inline"
+                        *ngFor="let detalle_opcion of campos_detalle_cliente_om | respuestasFormulario:campo.idFormularioElemento">
+                        <input class="form-check-input" type="radio" [value]="detalle_opcion.idFormularioElemento"
+                          name="OPRES-{{campo.idFormularioElemento}}" id="OPRES-{{detalle_opcion.idFormularioOpcion}}"
+                          [checked]="detalle_opcion.activo" disabled>
+                        <label class="form-check-label"
+                          for="inlineRES{{detalle_opcion.descripcion}}">{{detalle_opcion.descripcion}}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Texto -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 3 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div *ngIf="campo.descripcion != ''" class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3">
+                      {{campo.descripcion}}:
+                    </div>
+                    <div class="col-12 col-ms-9 col-md-9 col-lg-9 col-xl-9 pe-3">
+                      <textarea name="TEXTRES{{campo.idFormularioElemento}}" id="TEXTRES-{{campo.idFormularioElemento}}"
+                        class="form-control borderAzul" aria-label="With textarea"
+                        style="width: 90%; resize:none; height: 80px; " readonly>{{campo.respuesta}}</textarea>
+                      <!-- <textarea id="txt{{campo.descripcion}}" aria-label="With textarea" name="{{campo.idFormularioElemento}}" id="TEXT-{{campo.idFormularioElemento}}" class="form-control borderAzul"
+                                                style="width: 100%; resize:none; height: 80px;overflow:hidden;">
+                                        </textarea>-->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Lista Desplegable -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 4 && seccion.idFormularioSeccion== campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <!-- JNINO - ¿Por qué está esto? -->
+                    <!-- <div class="col-12 col-ms-1 col-md-1 col-lg-1 col-xl-2 text-center"
+                                            style="width: 88px;">
+
+                                        </div> -->
+                    <div *ngIf="campo.descripcion != ''" class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3">
+                      {{campo.descripcion}}:
+                    </div>
+                    <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4">
+                      <select class="form-select" aria-label="Default select example"
+                        id="LISTRES-{{campo.idFormularioElemento}}" disabled>
+                        <option value="0"></option>
+                        <option
+                          *ngFor="let lista of campos_detalle_cliente_ld | respuestasFormulario:campo.idFormularioElemento"
+                          value="{{lista.idFormularioOpcion}}"
+                          [selected]="lista.idFormularioOpcion === lista.seleccionado"> {{lista.descripcion}}</option>
+                      </select>
+
+                      <!--<ng-select id="LIST-{{campo.idFormularioElemento}}" style="height: 100%; width: 100%;"
+                                                placeholder="Historial">
+
+                                                    <ng-option *ngFor="let lista of campos_detalle_ld | opcionesRespuestas:campo.idFormularioElemento"
+
+                                                        [value]="lista.idFormularioOpcion">
+                                                        {{lista.descripcion}}
+                                                    </ng-option>
+
+
+                                            </ng-select>-->
+                    </div>
+                    <!-- JNINO - ¿Por qué está esto? -->
+                    <!-- <div class="col-12 col-ms-4 col-md-1 col-lg-3 col-xl-4"></div> -->
+                  </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 5 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div class="col-12 col-ms-12 col-md-12 col-lg-12 col-xl-12 pe-3">
+                      <label id="LABELRES-{{campo.idFormularioElemento}}"
+                        style="width: 90%;text-align: justify">{{campo.descripcion}}</label>
+                      <!-- <textarea id="txt{{campo.descripcion}}" aria-label="With textarea" name="{{campo.idFormularioElemento}}" id="TEXT-{{campo.idFormularioElemento}}" class="form-control borderAzul"
+                                                style="width: 100%; resize:none; height: 80px;overflow:hidden;">
+                                        </textarea>-->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Texto Completo -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 6 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div class="col-12 col-ms-12 col-md-12 col-lg-12 col-xl-12 pe-3">
+                      <textarea name="TEXTRES{{campo.idFormularioElemento}}" id="TEXTRES-{{campo.idFormularioElemento}}"
+                        class="form-control borderAzul" aria-label="With textarea"
+                        style="width: 90%; resize:none; height: 80px;" readonly>{{campo.respuesta}}</textarea>
+                      <!-- <textarea id="txt{{campo.descripcion}}" aria-label="With textarea" name="{{campo.idFormularioElemento}}" id="TEXT-{{campo.idFormularioElemento}}" class="form-control borderAzul"
+                                                style="width: 100%; resize:none; height: 80px;overflow:hidden;">
+                                        </textarea>-->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Iamagen -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario === 7 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3 div-centrado">
+                      {{campo.descripcion}}:
+                    </div>
+                    <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" *ngIf="campo.imagenPath && campo.imagenPath?.length > 0" style="text-align: center;">
+                      <img id="img-elemento-{{campo.idFormularioElemento}}"
+                        name="img-elemento-{{campo.idFormularioElemento}}"
+                        style="cursor: pointer; margin-top: 3px; border-radius: 45px; height: 300px; width: 300px;"
+                        [src]="campo.imagenPath" alt="Image no content">
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- Dibujo -->
+                <div class="col-xl-12 my-2" style="position: relative;padding-left: 10px;"
+                  *ngIf="campo.idTipoElementoFormulario === 8 &&  seccion.idFormularioSeccion === campo.idFormularioSeccion">
+                  <div class="row">
+                    <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                    </div>
+                    <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4" style="text-align: center;">
+                      <img id="img-elemento-{{campo.idFormularioElemento}}" *ngIf="campo.imagenPath && campo.imagenPath?.length > 0"
+                        style="cursor: pointer; margin-top: 3px; border-radius: 45px; height: 300px; width: 300px;"
+                        [src]="campo.imagenPath"
+                        alt="Image no content">
+                      <p>{{campo.descripcion}}</p>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+
+
+              </div>
+            </div>
+          </div>
+          <div class="row p-5">
+            <div class="col-xl-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+            </div>
+            <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+              <button type="button" *ngIf="formulario_cliente.length > 0" class="btn btn-primary text-center"
+                (click)="imprimirFormularioRespuesta()" style="width: 100%;">Imprimir</button>
+            </div>
+            <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal Responder formulario Usuario-->
+<div id="modalFormularioResponderUsuario" tabindex="-1" role="dialog" aria-hidden="true"
+  class="modal fade modalFormularioResponderUsuario">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; min-height: 800px; width: 120%;">
+      <div class="modal-header" style="margin: 0;">
+        <span *ngIf="formulario_cliente.length > 0">{{formulario_cliente[0]?.nombre}}</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo"
+          (click)="notas_cerrarModalFormularioRespuestaUsuario()"
+          style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-md-2 fa-solid fa-xmark" (click)="notas_accionCancelar()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i> -->
+      </div>
+
+      <div class="modal-body" style="min-height:700px; padding: 1.5rem;">
+        <form id="respuestasForm">
+          <!-- Secciones -->
+          <div class="row" *ngFor="let seccion of secciones_cliente_formulario">
+            <div *ngIf="seccion.seccionDefault == 0" class="col-xl-12 m-2">
+              <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 m2" style="display: inline;">
+                  <div style="width: 60px;float: left;">
+                  </div>
+                  <div style="float: left;margin-left: -5px;">
+                    <label *ngIf="seccion.nombre != ''" class="control-label"> <b> {{seccion.nombre}}: </b> </label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-12 col-xl-12 m-2">
+              <!-- Campos -->
+              <div class="row" *ngFor="let campo of campos_cliente">
+                <!-- Opción Multiple - Respuesta Multiple -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 1 && seccion.idFormularioSeccion== campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div class="col-12 col-ms-3 col-md-3 col-xl-3">
+                      <label *ngIf="campo.descripcion != ''" class="control-label"
+                        id="pregunta{{campo.idFormularioElemento}}"
+                        style="margin-top: 3px;">{{campo.descripcion}}:</label>
+                    </div>
+                    <div class="col-12 col-ms-9 col-md-9 col-xl-9" style="text-align: left;">
+                      <div class="col-12 col-ms-12 col-md-12 col-xl-12" style="text-align: left; padding-left: 12px;">
+                        <div class="form-check form-check-inline" style="padding: 12px;"
+                          *ngFor="let detalle_check of campos_detalle_cliente_check | respuestasFormulario:campo.idFormularioElemento">
+                          <input class="form-check-input" type="checkbox"
+                            (change)="onChangeOpcionMultiple(campo.idFormularioElemento,campo.esRequerido)"
+                            id="check{{detalle_check.descripcion}}" value="{{detalle_check.descripcion}}"
+                            name="OM-{{detalle_check.idFormularioOpcion}}" id="OM-{{detalle_check.idFormularioOpcion}}">
+                          <label class="form-check-label"
+                            for="inline{{detalle_check.descripcion}}">{{detalle_check.descripcion}}</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="width: 65%;text-align: center;">
+                      <label id="error{{campo.idFormularioElemento}}" class="control-label text-left"
+                        style="color: red;"></label>
+
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Opción Multiple - Respuesta Sencilla -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 2 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div class="col-12 col-ms-3 col-md-3 col-xl-3">
+                      <label *ngIf="campo.descripcion != ''" class="control-label" id="{{campo.idFormularioElemento}}"
+                        style="margin-top: 3px;">{{campo.descripcion}}:</label>
+                    </div>
+                    <div class="col-12 col-ms-9 col-md-9 col-xl-9" style="text-align: left;">
+
+                      <!-- Opciones -->
+                      <div class="form-check form-check-inline"
+                        *ngFor="let detalle_opcion of campos_detalle_cliente_om | respuestasFormulario:campo.idFormularioElemento">
+                        <input class="form-check-input"
+                          (change)="onChangeOpcion(campo.idFormularioElemento,campo.esRequerido)" type="radio"
+                          [value]="detalle_opcion.idFormularioElemento" name="OP-{{campo.idFormularioElemento}}"
+                          id="OP-{{detalle_opcion.idFormularioOpcion}}">
+                        <label class="form-check-label"
+                          for="inline{{detalle_opcion.descripcion}}">{{detalle_opcion.descripcion}}</label>
+                      </div>
+                    </div>
+                    <div style="width: 65%;text-align: center;">
+                      <label id="error{{campo.idFormularioElemento}}" class="control-label text-left"
+                        style="color: red;"></label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Texto -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 3 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div *ngIf="campo.descripcion != ''" class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3">
+                      {{campo.descripcion}}:
+                    </div>
+                    <div class="col-12 col-ms-9 col-md-9 col-lg-9 col-xl-9 pe-3">
+                      <textarea name="{{campo.idFormularioElemento}}" id="TEXT-{{campo.idFormularioElemento}}"
+                        class="form-control borderAzul" aria-label="With textarea"
+                        (change)="onChangeText(campo.idFormularioElemento,campo.esRequerido)"
+                        style="width: 90%; resize:none; height: 80px;"></textarea>
+                      <!-- <textarea id="txt{{campo.descripcion}}" aria-label="With textarea" name="{{campo.idFormularioElemento}}" id="TEXT-{{campo.idFormularioElemento}}" class="form-control borderAzul"
+                                                style="width: 100%; resize:none; height: 80px;overflow:hidden;">
+                                        </textarea>-->
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <!-- Iamagen -->
+
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario === 7 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row" *ngIf="campo.imagenPath?.length <= 0 || !campo.imagenPath">
+                    <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                      {{campo.descripcion}}:
+                    </div>
+                    <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4" style="text-align: center;">
+                      <div [id]="'botonImagenPromocion-' + campo.idFormularioElemento"
+                        style="width: 100%; height: 250px; max-width: 250px; margin: 10px auto; padding: 0; display: flex; border: 2px solid #20c4e6">
+                        <label [for]="'archivoImagenPromocion-' + campo.idFormularioElemento" class="buttonNewImagen"
+                          style="margin: auto auto; display: flex; cursor: pointer !important;">
+                          <i class="fa fa-camera" style="margin: auto auto; font-size: 50px;"></i>
+                        </label>
+
+                        <input [id]="'archivoImagenPromocion-' + campo.idFormularioElemento" (change)="imagePreview($event, campo);" type="file"
+                          accept="image/png, image/gif, image/jpeg" style="display: none;" />
+                      </div>
+                      <p style="color: red;"
+                        *ngIf="(campo.esRequerido === 1 && (campo.imagenPath?.lenght <= 0 || !campo.imagenPath?.length)) && this.BTN_CLICK_RESPONDER_FORM === true   ">
+                        * Requerido.</p>
+
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="campo.imagenPath?.length > 0">
+                    <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                      {{campo.descripcion}}:
+                    </div>
+                    <div (click)="profilePictureInput.click();" class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="text-align: center;">
+                      <img id="img-elemento-{{campo.idFormularioElemento}}"
+                        style="cursor: pointer; margin-top: 3px; border-radius: 5px; height: 250px; width: 250px; max-width: 250px;"
+                        [src]="campo.imagenPath" alt="Image no content">
+                      <input [alt]="campo.descripcion" type="file" accept="image/*"
+                        (change)="imagePreview($event, campo);" #profilePictureInput type="file" hidden />
+                    </div>
+                    <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3 div-centrado">
+                      <button type="button" class="buttonEstiloBlanco" (click)="campo.imagenPath = '';"
+                        style="width:151px; font-size: 14px; height: auto;">
+                        Limpiar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+                <!-- Dibujo-->
+                <div class="col-xl-12 my-2" style="position: relative;padding-left: 10px;"
+                  *ngIf="campo.idTipoElementoFormulario === 8 &&  seccion.idFormularioSeccion === campo.idFormularioSeccion">
+                  <div class="row">
+                    <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                    </div>
+                    <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4" style="text-align: center;">
+                      <signature-pad class="form-control" #signature [options]="signaturePadOptions"
+                        (drawStart)="drawStart($event);"
+                        (drawEnd)="drawComplete($event, signature.toDataURL(), campo);"></signature-pad>
+                      <p>{{campo.descripcion}}</p>
+                      <p style="color: red;"
+                        *ngIf="(campo.esRequerido === 1 && (campo.imagenPath?.lenght <= 0 || !campo.imagenPath?.length))  && this.BTN_CLICK_RESPONDER_FORM === true">
+                        * Requerido.</p>
+                    </div>
+                    <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3 div-centrado">
+                      <button type="button" class="buttonEstiloBlanco"
+                        (click)="signature.clear(); limpiarDibujo(campo);"
+                        style="width:151px; font-size: 14px; height: auto;">
+                        Limpiar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+
+
+
+
+                <!-- Lista Desplegable -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 4 && seccion.idFormularioSeccion== campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3">
+                      {{campo.descripcion}}:
+                    </div>
+                    <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4">
+                      <select class="form-select" aria-label="Default select example"
+                        id="LIST-{{campo.idFormularioElemento}}"
+                        (change)="onChangeLista(campo.idFormularioElemento,campo.esRequerido)">
+                        <option value="0" selected></option>
+                        <option
+                          *ngFor="let lista of campos_detalle_cliente_ld | respuestasFormulario:campo.idFormularioElemento"
+                          value="{{lista.idFormularioOpcion}}"> {{lista.descripcion}}</option>
+                      </select>
+
+                      <!--<ng-select id="LIST-{{campo.idFormularioElemento}}" style="height: 100%; width: 100%;"
+                                                placeholder="Historial">
+
+                                                    <ng-option *ngFor="let lista of campos_detalle_ld | opcionesRespuestas:campo.idFormularioElemento"
+
+                                                        [value]="lista.idFormularioOpcion">
+                                                        {{lista.descripcion}}
+                                                    </ng-option>
+
+
+                                            </ng-select>-->
+                    </div>
+                    <!-- JNINO - ¿Por qué está esto? -->
+                    <!-- <div class="col-12 col-ms-4 col-md-1 col-lg-3 col-xl-4"></div> -->
+                  </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 5 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div class="col-12 col-ms-12 col-md-12 col-lg-12 col-xl-12 pe-3">
+                      <label id="LABEL-{{campo.idFormularioElemento}}"
+                        style="width: 90%;text-align: justify">{{campo.descripcion}}</label>
+                      <!-- <textarea id="txt{{campo.descripcion}}" aria-label="With textarea" name="{{campo.idFormularioElemento}}" id="TEXT-{{campo.idFormularioElemento}}" class="form-control borderAzul"
+                                                style="width: 100%; resize:none; height: 80px;overflow:hidden;">
+                                        </textarea>-->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Texto Completo -->
+                <div class="col-xl-12 m-2"
+                  *ngIf="campo.idTipoElementoFormulario == 6 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                  style="position: relative;left: 10px;">
+                  <div class="row">
+                    <div class="col-12 col-ms-12 col-md-12 col-lg-12 col-xl-12 pe-3">
+                      <textarea name="{{campo.idFormularioElemento}}" id="TEXTSI-{{campo.idFormularioElemento}}"
+                        class="form-control borderAzul" aria-label="With textarea"
+                        (change)="onChangeTextSinInput(campo.idFormularioElemento,campo.esRequerido)"
+                        style="width: 90%; resize:none; height: 80px;"></textarea>
+                      <!-- <textarea id="txt{{campo.descripcion}}" aria-label="With textarea" name="{{campo.idFormularioElemento}}" id="TEXT-{{campo.idFormularioElemento}}" class="form-control borderAzul"
+                                                style="width: 100%; resize:none; height: 80px;overflow:hidden;">
+                                        </textarea>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row p-5">
+            <div class="col-2 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            </div>
+            <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+              <button type="button" *ngIf="formulario_cliente.length > 0" class="btn btn-primary text-center"
+                (click)="imprimirFormulario()" style="width: 100%;">Imprimir</button>
+            </div>
+            <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+              <button type="button" *ngIf="formulario_cliente.length > 0" class="btn btn-primary text-center"
+                (click)="guardarRespuesta(1)" style="width: 100%;">Contestar</button>
+            </div>
+            <div class="col-2 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Descartar cambios en la calificación y comentarios sobre el cliente-->
+<div id="cerrarModalConfirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade cerrarModalConfirm"
+  style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+      <div class="modal-body">
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="height: auto;">
+            {{'consultaClienteTranslate.cancelar' | translate}}
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="notas_cerrarModal()"
+            style="height: auto;">
+            {{'consultaClienteTranslate.si' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Archivos del cliente-->
+<div id="modal-archivos" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-archivos">
+  <div class="modal-dialog modal-lg" style="width:60%;">
+    <div class="row modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+      <div class="modal-header">
+        <span>{{'clienteTranslate.archivos' | translate}}</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="notas_accionSalir()" data-bs-dismiss="modal"
+          style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-md-2 fa-solid fa-xmark" (click)="notas_accionSalir()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i> -->
+      </div>
+
+      <div class="modal-body" style="min-height: 210px;">
+        <div class="col-md-12" style="overflow-y: auto !important;min-height: 120px;max-height: 194px;width:100%;">
+          <div class="gallery-pages">
+            <div class="mix-grid" id="divArchivos" style="text-align: center;">
+              <div class="row-md-3 mix photography" style="display:inline-block;padding:0px 10px"
+                *ngFor="let item of notas.dataConsultarArchivos; let $index = index;" ng-bind-html-unsafe="item">
+                <div class="hover-effect" style="width:160px;height: 140px;">
+                  <div class="img"><img src="assets/images/system/fileicon.png"
+                      style="height: 120px;width: 105px;margin-top: 9px;" /></div>
+                  <div id="glyphiconArchivos" class="info" style="padding-top:30px;padding-bottom:20px;">
+                    <a *ngIf="item.permitirZoom" (click)="notas_documentos('v', item.idNotasArchivo)"
+                      style="cursor: pointer;" class="iconosModalFotos">
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                    </a>
+                    <a *ngIf="notas.dataConsultarArchivos.length > 0" style="cursor: pointer;"
+                      (click)="notas_documentos('d',item.idNotasArchivo)" class="iconosModalFotos">
+                      <i class="fa-solid fa-download"></i>
+                    </a>
+                    <a *ngIf="notas.dataConsultarArchivos.length > 0" style="cursor: pointer;"
+                      (click)="notas_deleteArchivo(item.idNotasArchivo, $index, 2)" class="iconosModalFotos">
+                      <i class="fa-solid fa-trash"></i>
+                    </a>
+                  </div>
+                </div>
+                <div style="width:160px;text-align:center;">
+                  <h4 class="puntosSuspensivosFiltro" style="text-align:center !important;">{{item.nombre}}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div id="botones2" class="col-3" style="text-align: center;">
+          <button type="button" (click)="notas_cargarArchivos(notas.idNota)" class="buttonEstiloBlanco"
+            style="height: auto;">
+            {{'clienteTranslate.cargar' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalDocumento" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalDocumento"
+  style="background-color: rgba(0, 0, 0, 0.58);">
+  <div class="modal-dialog" style="min-width: 1200px;">
+    <div id="documentoZoom" class="row modal-content" style="border-radius: 8px !important;">
+      <div class="modal-header" style="height:35px;">
+        <div></div>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal"
+          style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-md-2 fa-solid fa-xmark"  style="cursor: pointer;float: right; margin-top: -7px; font-size: 16px;" data-bs-dismiss="modal" (click)="modales.modalDocumento.hide()"></i>                 -->
+      </div>
+      <div class="modal-body" style="text-align: center;overflow:auto; height:720px;">
+        <iframe id="documentoCompleto" style="border-radius: 6px; width:100%; height: 100%;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Div en el que se vacian los datos para exportar a excel y CSV-->
+<div id="excelTable" style="display: none">
+</div>
+
+<!-- Modal para ticket -->
+<div id="ticket-venta" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade ticket-venta"
+  style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content md-modal" style="margin: 0 auto; font-weight: 400;">
+      <div class="modal-header">
+        <span>{{'agendaTranslate.reciboMayus'| translate}}</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal"
+          style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="icon-cerrar" data-bs-dismiss="modal" style="cursor: pointer; float: right; margin-top: 4px; font-size: 16px;"></i> -->
+      </div>
+      <div class="modal-body">
+        <div class="recibo-pago"
+          style="border: 1px solid #bcbcbc; margin: 10px 20px 20px 20px; padding: 15px 20px 20px 20px;">
+          <p style="font-size: 16px; font-weight: 500; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">
+            {{'agendaTranslate.recibo'| translate}}</p>
+          <div style="display: inline-block; width: 100%; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">
+            <div style="float: left; width: 100%">
+              <label style="width: 25%;">{{'agendaTranslate.cliente'| translate}}</label>
+              <span style="width: 75%">{{ticket.cliente}}</span>
+            </div>
+            <div style="float: left; width: 100%">
+              <label style="width: 25%;">{{'agendaTranslate.folio'| translate}}</label>
+              <span style="width: 75%">{{ticket.folio}}</span>
+            </div>
+            <div style="float: left; width: 100%">
+              <label style="width: 25%;">{{'agendaTranslate.fecha'| translate}}</label>
+              <span style="width: 75%">{{ticket.fecha}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.paquetes.length > 0">
+              <label style="width: 26%;">Paquete</label>
+              <span *ngFor="let c of ticket.paquetes"
+                style="overflow: hidden; word-break: keep-all; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{c.pago
+                | currency}} - {{c.descripcion}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.productos.length > 0">
+              <label style="width: 26%;">{{'agendaTranslate.cargos'| translate}}</label>
+              <span *ngFor="let c of ticket.productos"
+                style="overflow: hidden; word-break: keep-all; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{c.pago
+                | currency}} - {{c.descripcion}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.descuento.pago">
+              <label style="width: 26%;">{{'agendaTranslate.descuento'| translate}}</label>
+              <span style="width: 74%; float: right; margin-bottom: 5px">-{{ticket.descuento.pago * -1 |
+                currency}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.promocion.length">
+              <label style="width: 26%;">{{'agendaTranslate.promocion'| translate}}</label>
+              <span *ngFor="let p of ticket.promocion"
+                style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">-{{p.pago
+                * -1 | currency}} - {{p.descripcion}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.propina.pago">
+              <label style="width: 26%;">{{'agendaTranslate.propina'| translate}}</label>
+              <span style="width: 74%; float: right; margin-bottom: 5px">{{ticket.propina.pago | currency}}</span>
+            </div>
+          </div>
+          <div style="margin-top: 10px;border-bottom: 1px dashed #bcbcbc;height: 27px;">
+            <label style="width: 15%; float: left; text-align: right">{{'agendaTranslate.totalMay'| translate}} </label>
+            <span style="margin-left: 30px">{{ticket.total | currency}}</span>
+          </div>
+          <div style="margin-top: 10px">
+            <label style="width: 50%">{{'pagoTranslate.metodoPago'| translate}}</label>
+          </div>
+          <div *ngFor="let mp of ticket.metodoPago">
+            <label style="width:70%;">{{mp.descripcion}}</label>
+            <span style="width:30%;margin-bottom: 5px">{{mp.pago | currency}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--MODAL TICKET CITA-->
+<div id="ticket-cita" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade ticket-cita"
+  style="z-index: 500000">
+  <div class="modal-dialog">
+    <div class="modal-content md-modal" style="margin: 0 auto; font-weight: 400;">
+      <div class="modal-header">
+        <span>{{'agendaTranslate.reciboCitaMayus'| translate}}</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal"
+          style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+
+        <!-- <i class="icon-cerrar" data-bs-dismiss="modal" style="cursor: pointer; float: right; margin-top: 4px; font-size: 16px;"></i> -->
+      </div>
+      <div class="modal-body">
+        <div class="recibo-pago"
+          style="border: 1px solid #bcbcbc; margin: 10px 20px 20px 20px; padding: 15px 20px 20px 20px;">
+          <p style="font-size: 16px; font-weight: 500; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">
+            {{'agendaTranslate.reciboPago'| translate}}</p>
+          <div style="display: inline-block; width: 100%; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">
+            <div style="float: left; width: 100%">
+              <label style="width: 25%;">{{'agendaTranslate.cliente'| translate}}</label>
+              <span style="width: 75%">{{ticket.cliente}}</span>
+            </div>
+            <div style="float: left; width: 100%">
+              <label style="width: 25%;">{{'agendaTranslate.folio'| translate}}</label>
+              <span style="width: 75%">{{ticket.folio}}</span>
+            </div>
+            <div style="float: left; width: 100%">
+              <label style="width: 25%;">{{'agendaTranslate.fecha'| translate}}</label>
+              <span style="width: 75%">{{ticket.fecha}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.paquetes.length > 0">
+              <label style="width: 26%;">Paquete</label>
+              <span *ngFor="let c of ticket.paquetes"
+                style="overflow: hidden; word-break: keep-all; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{c.pago
+                | currency}} - {{c.descripcion}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.cargos.length > 0">
+              <label style="width: 26%;">{{'agendaTranslate.cargos'| translate}}</label>
+              <span *ngFor="let c of ticket.cargos"
+                style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{c.pago
+                | currency}} - {{c.descripcion}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.productos.length >0">
+              <label style="width: 26%;">{{'producto.productos'| translate}}</label>
+              <span *ngFor="let p of ticket.productos"
+                style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{p.pago
+                | currency}} - {{p.descripcion}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.descuento.pago">
+              <label style="width: 26%;">{{'agendaTranslate.descuento'| translate}}</label>
+              <span style="width: 74%; float: right; margin-bottom: 5px">-{{ticket.descuento.pago * -1 |
+                currency}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.promocion.length">
+              <label style="width: 26%;">{{'agendaTranslate.promocion'| translate}}</label>
+              <span *ngFor="let p of ticket.promocion"
+                style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">-{{p.pago
+                * -1 | currency}} - {{p.descripcion}}</span>
+            </div>
+            <div style="float: left; width: 100%" *ngIf="ticket.propina.pago">
+              <label style="width: 26%;">{{'agendaTranslate.propina'| translate}}</label>
+              <span style="width: 74%; float: right; margin-bottom: 5px">{{ticket.propina.pago | currency}}</span>
+            </div>
+          </div>
+          <div style="margin-top: 10px;border-bottom: 1px dashed #bcbcbc;height: 27px;">
+            <label style="width: 15%; float: left; text-align: right">{{'agendaTranslate.totalMay'| translate}} </label>
+            <span style="margin-left: 30px">{{ticket.total | currency}}</span>
+          </div>
+          <div style="margin-top: 10px">
+            <label style="width: 50%">{{'pagoTranslate.metodoPago'| translate}}</label>
+          </div>
+          <div *ngFor="let mp of ticket.metodoPago">
+            <label style="width:70%;">{{mp.descripcion}}</label>
+            <span style="width:30%;margin-bottom: 5px">{{mp.pago | currency}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modalEditarCampoConfigurable" tabindex="-1" role="dialog" aria-hidden="true"
+  class="modal fade modalEditarCampoConfigurable">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px;">
+      <div class="modal-header" style="margin: 0px;">
+        <span>Editar Dato Configurable</span>
+        <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="cerrarModalEditarCampoConfigurable()"
+          data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+        <!-- <i class="col-lg-2 fa-solid fa-xmark" (click)="cerrarModalEditarCampoConfigurable()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i> -->
+      </div>
+      <div class="modal-body" style="min-height: 150px; height: 150px;">
+        <div class="row">
+          <div class="col-md-3" style="margin-top: 6px;">
+            Sección
+          </div>
+          <div class="col-md-6">
+            <!-- <ui-select id="Ui-select2" append-to-body="$root.mobileBrowser" search-enabled="$root.mobileBrowser" ng-model="campoAEditar.idCampoSeccion" theme="select2" style="width: 100%" chuy-select>
+                            <ui-select-match placeholder="Elige una Sección">{{$select.selected.nombre}}</ui-select-match>
+                            <ui-select-choices repeat="sec.idCampoSeccion as sec in secciones  | filter: {nombre: $select.search}">
+                                <span ng-bind-html="sec.nombre"></span>
+                            </ui-select-choices>
+                        </ui-select> -->
+            <ng-select id="Ui-select2" style="width: 100%;" [multiple]="false" appendTo="#Ui-select2"
+              [searchable]="false" [(ngModel)]="campoAEditar.idCampoSeccion" [clearable]="false"
+              placeholder="Elige una Sección" [items]="secciones" bindLabel="nombre" bindValue="idCampoSeccion">
+            </ng-select>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+          <div class="col-md-3" style="margin-top: 6px;">
+            Nombre
+          </div>
+          <div class="col-md-6">
+            <input id="Text2" style="width: 100%;" type="text" [(ngModel)]="campoAEditar.nombre"
+              class="form-control borderAzul" maxlength="100" />
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" class="buttonEstiloBlanco" (click)="editarCampoConfigurable()" style="height: auto;">
+            Editar
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" class="buttonEstiloBlanco" (click)="cerrarModalEditarCampoConfigurable()"
+            style="height: auto;">
+            {{'clienteTranslate.regresar' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--MAGP 22/01/2022 Confirmar eliminar sección y campo-->
+<div id="modal-confirmEliminarSeccion" tabindex="2" role="dialog" aria-hidden="true"
+  class="modal fade modal-confirmEliminarSeccion">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+      <div class="modal-body">
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+            (click)="modales.modalConfirmEliminarSeccion.hide();" style="height: auto;">
+            {{'clienteTranslate.cancelar'| translate}}
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+            (click)="eliminarSeccion(null); modales.modalConfirmEliminarSeccion.hide();" style="height: auto;">
+            {{'clienteTranslate.si'| translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-confirmEliminarCampo" tabindex="2" role="dialog" aria-hidden="true"
+  class="modal fade modal-confirmEliminarCampo">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+      <div class="modal-body">
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+            (click)="modales.modalConfirmEliminarCampo.hide();" style="height: auto;">
+            {{'clienteTranslate.cancelar'| translate}}
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+            (click)="eliminarConfigurables(null); modales.modalConfirmEliminarCampo.hide();" style="height: auto;">
+            {{'clienteTranslate.si'| translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<Script>
+  function valFecha(e) {
+    var key;
+    if (window.event) // IE
+    {
+      key = e.keyCode;
+    }
+    else if (e.which) // Netscape/Firefox/Opera
+    {
+      key = e.which;
+    }
+    if (key < 47 || key > 57) {
+      if (key == 8) // Detectar backspace (retroceso)
+      {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function validarNum(e) {
+    var key;
+    if (window.event) // IE
+    {
+      key = e.keyCode;
+    }
+    else if (e.which) // Netscape/Firefox/Opera
+    {
+      key = e.which;
+    }
+    if (key < 48 || key > 57) {
+      if (key == 8) // Detectar backspace (retroceso)
+      {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    return true;
+  }
+</Script>

@@ -1,0 +1,143 @@
+.indicador-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.indicador-body {
+    // height:50px;
+    // margin-top: -12px;
+    // width: 75%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.indicador-body h2 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+::ng-deep .fc-event-main-frame {
+    display: block !important;
+}
+
+// ::ng-deep .ng-select.ng-select-single .ng-select-container {
+//     height: 40px !important;
+// }
+
+::ng-deep .fc-day-today {
+    background-color: transparent !important;
+}
+
+::ng-deep .fc-slot-today {
+    background-color: transparent !important;
+}
+
+::ng-deep .fc-dia-deshabilitado{
+    background-color:#e6d2d2 !important;
+}
+
+.round-button {
+    width:10%;
+    display:inline-block;
+    padding: 2px;
+    // margin-left: 2px;
+    // margin-right: 2px;
+}
+
+.round-button-circle {
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #FFFFFF; 
+    box-shadow: 0 0 3px gray;
+    cursor: pointer;
+}
+
+.round-button a {
+    display: block;
+    float: left;
+    width: 100%;
+    padding-top: 50%;
+    padding-bottom: 50%;
+    line-height: 1em; 
+    margin-top: -0.5em;
+    cursor: pointer;
+    text-align: center;
+    color:#20c4e6;
+    font-family: Verdana; 
+    font-size: 1em;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.displayPred{
+    @media screen and (max-width: 632px){
+        display: unset !important;
+    }
+}
+
+.puntosSuspensivosHN{
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.puntosSuspensivosHoraH{
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.claseBordes{
+    border-radius: 0px 0px 10px 10px;
+    -moz-border-radius: 0px 0px 10px 10px;
+    -webkit-border-radius: 0px 0px 10px 10px;
+    /*border: 3px ridge #dbdbdb;*/
+    box-shadow: 0 4px 5px rgba(0,0,0,.15);
+}
+
+::ng-deep #agendaMatCard > .mat-card-header {
+    width: 100% !important;
+}
+
+::ng-deep #agendaMatCard > .mat-card-header > .mat-card-header-text {
+    width: 100% !important;
+}
+
+.modificarWidth{
+    @media screen and (max-width: 992px){
+        width: 95% !important;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    @media screen and (max-width: 450px){
+        width: 65% !important;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+}
+
+::ng-deep .fc-v-event .fc-event-title {
+    // white-space: nowrap;
+    overflow: hidden;
+}
+
+::ng-deep .fc-v-event .fc-event-title-container {
+    height: 100%;
+}
+
+::ng-deep .puntosSuspensivosNota{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 20%;
+}

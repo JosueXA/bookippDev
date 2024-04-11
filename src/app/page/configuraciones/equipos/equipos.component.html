@@ -1,0 +1,124 @@
+<mat-card class="mat-elevation-z8">
+    <mat-card-header>
+        <div style="width: auto; display: flex;">
+            <mat-card-title> {{'equiposTranslate.equipos' | translate}} </mat-card-title>                        
+            <mat-icon class="iconosBookipp mx-2" svgIcon="iconAgregar" *ngIf="accesosPantalla.accionEquipos == 1 " routerLink="/configuraciones/equipo" [queryParams]="{idEquipo: 'N'}" matListIcon style="cursor: pointer; width: 30px; height: 30px; position: relative; left: -5px;"></mat-icon>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="irAAgenda()" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="irAAgenda()">{{'consultaClienteTranslate.inicio' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a style="color: #20c4e6; top: -6px; position: relative;">{{'equiposTranslate.equipos' | translate}}</a>&nbsp;
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content style="margin-top: 10px;">
+
+        <div class="row mx-auto mt-3">
+            <!-- <div class="row">
+                <div class="col-md-3" style="height: 50px;">
+                    <a *ngIf="accesosPantalla.accionEquipos == 1 " routerLink="/configuraciones/equipo" [queryParams]="{idEquipo: 'N'}" class="btn btn-success">{{'consultaClienteTranslate.nuevo' | translate}}</a>
+                </div>
+            </div> -->
+
+            <div class="col-lg-12 overflow-auto">
+                <div class="mat-elevation-z8 my-2" style="min-width: 700px;">
+                    <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+                                        
+                        <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef style="text-align: center;">{{consultaExcepcionesTranslate.acciones | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                <!-- Icono Editar -->
+                                <!-- <i *ngIf="accesosPantalla.accionEquipos == 1 " 
+                                    (click)="editarEquipo(element.idEquipo)"
+                                    class="fa-solid fa-pencil colorPrimario"
+                                    style="font-size: 1.2em; cursor:pointer; width:29px;">
+                                </i> -->
+                                <mat-icon svgIcon="iconEditar" 
+                                    *ngIf="accesosPantalla.accionEquipos == 1 " 
+                                    (click)="editarEquipo(element.idEquipo)"
+                                    class="iconosBookipp"
+                                    style="font-size: 1.2em; cursor:pointer; width:29px;"
+                                    matListIcon >
+                                </mat-icon>
+                                
+                                <!-- Icono Trash -->
+                                <!-- <i *ngIf="accesosPantalla.accionEquipos == 1 " 
+                                    (click)="modalBorrar(element)"
+                                    class="fa-solid fa-trash-can colorPrimario"
+                                    style="font-size: 1.2em; cursor:pointer; width:29px;">
+                                </i> -->
+                                <mat-icon svgIcon="iconBasura" 
+                                    *ngIf="accesosPantalla.accionEquipos == 1 " 
+                                    (click)="modalBorrar(element)"
+                                    class="iconosBookipp"
+                                    style="font-size: 1.2em; cursor:pointer; width:29px;"
+                                    matListIcon >
+                                </mat-icon>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nombre">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">{{consultaServicioTranslate.nombre | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left;">                                                        
+                                {{element.nombre}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cantidad">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">{{promocionTranslate.cantidad | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;">                                                        
+                                {{element.cantidad}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="servicio">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">{{agendaTranslate.servicio | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left;">                                                        
+                                {{element.servicio}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="descripcion">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef style="text-align: center;">{{equiposTranslate.descripcionEquipo | translate}}</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;">                                                        
+                                {{element.descripcion}}
+                            </td>
+                        </ng-container>            
+                    
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>                    
+                    </table>      
+                </div>    
+            </div>    
+        </div>
+                  
+        
+    </mat-card-content>
+    <mat-paginator [pageSizeOptions]="[10, 25, 50, 100, 200]" showFirstLastButtons aria-label="Facebook">
+    </mat-paginator>
+
+</mat-card>
+
+<!--Borrar equipo -->
+<div id="modal-confirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirm" style="z-index: 500000">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" (click)="modales.modalConfirm.hide()" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'clienteTranslate.cancelar' | translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-dismiss="modal" class="buttonEstiloBlanco" (click)="borrarEquipo(); modales.modalConfirm.hide();" style="height: auto;">
+                        {{'clienteTranslate.si' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

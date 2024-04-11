@@ -1,0 +1,159 @@
+.accionBtn {
+    color: #357ec1;
+    margin: 0px 5px;
+    cursor: pointer;
+    width: 19px;
+}
+
+.barSetSearch {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    margin: 10px 0px;
+}
+
+.exportExcelIcon {
+    width: 24px;
+    margin: 0px 20px;
+    cursor: pointer;
+}
+
+.barSearch {
+    max-width: 350px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+	height: 30px;
+
+    input {
+        border: none;
+        flex-grow: 1;
+        width: 100%;
+        outline: none;
+    }
+}
+
+.indicadorCard {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border: 1px solid #357ec1;
+    border-bottom: 20px solid #357ec1;
+    padding: 10px;
+
+    p {
+        font-size: 18px;
+        text-decoration: underline;
+        margin: 0px;
+        width: 100%;
+        color: #357ec1;
+        cursor: pointer;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    label {
+        font-size: 30px;
+        flex-grow: 1;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: #357ec1;
+    }
+
+    i {
+        font-size: 30px;
+        color: #357ec1;
+    }
+}
+
+.indicadorCardGreen {
+    border-color: #57b477;
+
+    p {
+        color: #57b477;
+    }
+
+    label {
+        color: #57b477;
+    }
+
+    i {
+        color: #57b477;
+    }
+}
+
+.indicadorCardDark {
+    border-color: #20c4e6;
+
+    p {
+        color: #20c4e6;
+    }
+
+    label {
+        color: #20c4e6;
+    }
+
+    i {
+        color: #20c4e6;
+    }
+}
+
+.detailPoint {
+    color: #357ec1;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.tableFluidScroll {
+    max-height: 400px;
+    height: 100%;
+    max-width: 100%;
+    overflow: auto;
+}
+
+.activeLinkProd {
+    color: #357ec1;
+    font-weight: 700;
+}
+
+.inputCalenderSelect {
+    cursor: pointer;
+    height: 40px;
+    width: 100%;
+    border: 1px solid #b7c4c9;
+    border-radius: 1.5rem;
+    text-align: center;
+}
+
+::ng-deep {
+    ngx-daterangepicker-material {
+        & {
+            .md-drppicker {
+                width: 600px !important;
+            }
+        }
+    }
+}
+
+.colorBgBtnCharts {
+    color: white;
+    background-color: #357ec1;
+}
+
+.colorContainerChart{
+	border: 1px solid #b7c4c9;
+    border-radius: 10px;
+}
+
+.wb150{
+	max-width: 140px;
+    height: 40px !important;
+}
+
+.linkCustom{
+	color: #357ec1;
+	text-decoration: underline;
+	cursor: pointer;
+}

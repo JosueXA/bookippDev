@@ -1,0 +1,84 @@
+mat-expansion-panel {
+    box-shadow: unset !important;
+    background-color: transparent;
+    color: black !important;
+    border-radius: 0px;
+}
+
+.mat-list-base {
+    padding-top: 0px;
+}
+
+.mat-list-base {
+    .mat-list-item {
+        .mat-list-item-content {
+            padding: 0 24px !important;
+        }
+    }
+}
+
+.mat-list-base {
+    .mat-subheader {
+        color: black;
+    }
+}
+
+.mat-nav-list {
+    color: black !important;
+    //background-color: transparent;
+}
+
+.ionc {
+    color: black !important;
+}
+
+.icon-text {
+    display: flex;
+    align-items: center;
+}
+
+.sub-menu-selected {
+    background-color: #b82b03;
+    color: black !important;
+}
+
+.mat-icon {
+    background-color: transparent;
+    color: black;
+    vertical-align: middle;
+}
+
+.mat-expansion-indicator {
+    color: black !important;
+}
+
+// MAT DIVIDER
+// .mat-divider {
+//     border-top-color: black;
+// }
+
+.menuDesplod {
+    color: black;
+    font-size: 14px;
+}
+
+.iconMenuDesplod {
+    text-align: center;
+    width: 24px;
+    height: 24px;
+    //font-size: 24px;
+    margin: 0px 20px 0px 0px;
+}
+
+.iconMenu {
+    text-align: center;
+}
+
+.fillAzulBookipp{
+    fill:#20c4e6;
+}
+
+.strokeAzulBookipp{
+    fill: none;
+    stroke:#20c4e6;
+}

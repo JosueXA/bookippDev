@@ -1,0 +1,1503 @@
+<mat-card class="mat-elevation-z8" id="agendaMatCard" style="padding: 10px 16px 10px 16px;">
+    <mat-card-header>
+        <mat-card-title style="display: flex;">
+            <div class="col-6">
+                Agenda
+            </div>
+            <div class="col-6">
+                <ng-select id="uiSelectClienteBuscador" class="blue-select" style="width:100%; display:inline-flex; min-width: 180px; max-width: 300px; float: right;"
+                    placeholder="{{'agendaTranslate.seleccioneCliente'| translate}}"
+                    appendTo="#uiSelectClienteBuscador"
+                    [multiple]="false"
+                    [searchable]="true"
+                    [clearable]="true"
+                    [items]="rootScope_dataClientesBuffer"
+                    bindLabel="nombreBuscar"
+                    bindValue="idCliente"
+                    autocomplete="nuevo-cliente"
+                    [(ngModel)]="idCliente"
+                    (ngModelChange)="consultaHistorialCitasCliente()"
+                    [virtualScroll]="true"
+                    (clear)="resetInfScroll('AgendaBuscadorClientes', null)"
+                    (click)="resetInfScroll('AgendaBuscadorClientes', null)"
+                    (blur)="resetDdl()"
+                    (keyup)="buscarEnScroll('AgendaBuscadorClientes', 'uiSelectClienteBuscador', null)"
+                    (scroll)="onScroll('AgendaBuscadorClientes', $event, null)">
+                </ng-select>
+            </div>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <!-------------------- APARTADO DE INDICADORES -------------------->
+    <div id="agenda-indicadores" class="row" *ngIf="accesosPantallaAgenda.indicadores">
+        <div class="col-lg-3" style="margin-top: 12px;">
+            <div class="panel" style="background: transparent; border: 1px solid #dce6ea; color: #092a38; border-radius: 20px;">
+                <div class="col-lg-12 indicador-toggle" style="display: flex; height: 50px;">
+                    <div class="col-4" style="display: flex;">
+                        <div class="iconoIndicador" style="margin: auto auto;">
+                            <mat-icon svgIcon="iconCitasDia" style="margin: auto auto; height: 25px; width: 25px; display: flex"></mat-icon>
+                        </div>
+                    </div>
+                    <div class="col-8" style="display: flex;">
+                        <div style="width: 100%; margin: auto 0;">
+                            <div class="col-lg-12 panel-body indicador-body" style="font-size: 24px;">
+                                {{indicadores.citasDia}}
+                            </div>
+                            <div class="col-lg-12 indicador-title">
+                                {{'agendaTranslate.citasDia'| translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12" style="text-align: right; height: 25px; cursor: pointer;" (click)="ocultarIndicadores()">
+                    <mat-icon svgIcon="iconChrevronUpSmall" style="margin: -3px 5px 0px 0px; height: 30px; width: 30px;"></mat-icon>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3" style="margin-top: 12px;">
+            <div class="panel" style="background: transparent; border: 1px solid #dce6ea; color: #57b477; border-radius: 20px;">
+                <div class="col-lg-12 indicador-toggle" style="display: flex; height: 50px;">
+                    <div class="col-4" style="display: flex;">
+                        <div class="iconoIndicador" style="margin: auto auto;">
+                            <mat-icon svgIcon="iconCitasHoy" style="margin: auto auto; height: 25px; width: 25px; display: flex"></mat-icon>
+                        </div>
+                    </div>
+                    <div class="col-8" style="display: flex;">
+                        <div style="width: 100%; margin: auto 0;">
+                            <div class="col-lg-12 panel-body indicador-body" style="font-size: 24px;">
+                                {{indicadores.citasCompletadasDia}}
+                            </div>
+                            <div class="col-lg-12 indicador-title">
+                                {{'agendaTranslate.citasRealizadasDia'| translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12" style="text-align: right; height: 25px; cursor: pointer;" (click)="ocultarIndicadores()">
+                    <mat-icon svgIcon="iconChrevronUpSmall" style="margin: -3px 5px 0px 0px; height: 30px; width: 30px;"></mat-icon>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3" style="margin-top: 12px;">
+            <div class="panel" style="background: transparent; border: 1px solid #dce6ea; color: #b21f31; border-radius: 20px;">
+                <div class="col-lg-12 indicador-toggle" style="display: flex; height: 50px;">
+                    <div class="col-4" style="display: flex;">
+                        <div class="iconoIndicador" style="margin: auto auto;">
+                            <mat-icon svgIcon="iconCitasCanceladas" style="margin: auto auto; height: 25px; width: 25px; display: flex"></mat-icon>
+                        </div>
+                    </div>
+                    <div class="col-8" style="display: flex;">
+                        <div style="width: 100%; margin: auto 0;">
+                            <div class="col-lg-12 panel-body indicador-body" style="font-size: 24px;">
+                                {{indicadores.citasCanceladasDia}}
+                            </div>
+                            <div class="col-lg-12 indicador-title">
+                                {{'agendaTranslate.citasCanceladasDia'| translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12" style="text-align: right; height: 25px; cursor: pointer;" (click)="ocultarIndicadores()">
+                    <mat-icon svgIcon="iconChrevronUpSmall" style="margin: -3px 5px 0px 0px; height: 30px; width: 30px;"></mat-icon>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3" style="margin-top: 12px;">
+            <div class="panel" style="background: transparent; border: 1px solid #dce6ea; color: #337dc0; border-radius: 20px;">
+                <div class="col-lg-12 indicador-toggle" style="display: flex; height: 50px;">
+                    <div class="col-4" style="display: flex;">
+                        <div class="iconoIndicador" style="margin: auto auto;">
+                            <mat-icon svgIcon="iconIngresosDia" style="margin: auto auto; height: 25px; width: 25px; display: flex"></mat-icon>
+                        </div>
+                    </div>
+                    <div class="col-8" style="display: flex;">
+                        <div style="width: 100%; margin: auto 0;">
+                            <div class="col-lg-12 panel-body indicador-body" style="font-size: 24px;">
+                                {{indicadores.ingresos | currency}}
+                            </div>
+                            <div class="col-lg-12 indicador-title" style="text-decoration: underline; cursor: pointer;" (click)="indicadores_ingresosDetalle_mostrarIngresosDetalle()">
+                                {{'agendaTranslate.ingregosDia'| translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12" style="text-align: right; height: 25px; cursor: pointer;" (click)="ocultarIndicadores()">
+                    <mat-icon svgIcon="iconChrevronUpSmall" style="margin: -3px 5px 0px 0px; height: 30px; width: 30px;"></mat-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-------------------- APARTADO DE CALENDARIO SIN PERSONALES -------------------->
+    <div class="col-lg-12" [hidden]="!(resources.length == 0 && primeraCargaFinalizada)" style="font-size: 18px; text-align: center; margin-top: 50px;">
+        {{'agendaTranslate.faltaPersonalAgenda'| translate}}
+    </div>
+
+    <!-------------------- APARTADO DEL CALENDARIO -------------------->
+    <div id="general-container" class="col-lg-12 panel-body pan" style="height: auto; max-height: none; display: flex; margin-top: 12px;">
+        <div id="agenda-calendar" class="col-lg-12" style="margin-bottom: 50px; padding-right: 0px; padding-left: 0px;">
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4" style="padding-left: 0;" *ngIf="resources.length != 0 && primeraCargaFinalizada">
+                    <div *ngIf="calendario.viewActual == 'resourceDay' || calendario.viewActual == 'agendaDay'" class="modificarWidth">
+                        <ng-select id="ddlFiltro" style="height: 100%; width: 100%;" placeholder="{{'agendaTranslate.personal'| translate}}"
+                            appendTo="#agendaMatCard"
+                            [multiple]="true"
+                            [searchable]="true"
+                            [clearable]="false"
+                            [items]="resourcesFiltros.filtros.opciones"
+                            bindLabel="label"
+
+                            [(ngModel)]="resourcesFiltros.filtros.modelo"
+                            (ngModelChange)="calendario_aplicarFiltrosVistaResources(1)">
+                            <ng-template ng-multi-label-tmp>
+                                <div class="ng-value">
+                                    {{'agendaTranslate.personal'| translate}}
+                                </div>
+                            </ng-template>
+                            <ng-template ng-header-tmp>
+                                <button (click)="calendario_aplicarFiltrosVistaResources(2)" class="btn btn-sm btn-secondary"> {{'agendaTranslate.verTodos'| translate}} </button>
+                                <button (click)="calendario_aplicarFiltrosVistaResources(3)" class="btn btn-sm btn-secondary"> {{'agendaTranslate.quitarTodos'| translate}} </button>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                    <div *ngIf="calendario.viewActual == 'agendaWeek'">
+                        <ng-select id="ddlFiltroSemana" style="height: 100%; width: 100%;"
+                            appendTo="#ddlFiltroSemana"
+                            [searchable]="true"
+                            [clearable]="false"
+                            [items]="resources"
+                            bindLabel="name"
+                            bindValue="id"
+
+                            [(ngModel)]="resourceSemana"
+                            (ngModelChange)="calendario_aplicarFiltrosVistaSemana(null)">
+                            </ng-select>
+                    </div>
+                </div>
+                <div class="col-lg-4" style="padding-left: 0; text-align: right;" *ngIf="resources.length != 0 && primeraCargaFinalizada" >
+                    <div *ngIf="calendario.viewActual == 'resourceDay' || calendario.viewActual == 'agendaDay'">
+                        <mat-icon svgIcon="iconExcel" class="iconosBookipp" style="height: 100%; cursor: pointer; position: relative; top: 5px;"
+                            *ngIf="accesosPantallaAgenda.descargarExcel"
+                            (click)="exportar_exportarAgenda()">
+                        </mat-icon>
+                    </div>
+                </div>
+            </div>
+
+            <div id="calendarDiv" class="col-lg-12" style="margin-top: 18px; margin-bottom: 30px;" *ngIf="resources.length != 0 && primeraCargaFinalizada">
+                <full-calendar id="calendar"></full-calendar>
+            </div>
+        </div>
+    </div>
+
+    <!-------------------- APARTADO DE HISTORIAL DE CITAS DE CLIENTE -------------------->
+    <div id="divColorHistorial" class="claseBordes col-lg-3" *ngIf="consultaCitasExitosa" [ngStyle]="{ 'height.px': alturaDivAgendaHistorial }"
+        style="padding: 0; overflow: hidden; font-size: 12px!important; position: absolute; right: 20px; z-index: 3; top: 65px; background: gray;">
+    </div>
+
+    <div id="agenda-historialCitas" class="claseBordes col-lg-3" *ngIf="consultaCitasExitosa"
+        style="padding: 0; overflow: hidden; font-size: 12px!important; position: absolute; right: 20px; z-index: 5; top: 65px; border: #dce6ea solid 2px;">
+
+        <div id="infoPaciente" class="claseBorder col-lg-12" (click)="verDatosCliente()" style="background: #fcfcfc; cursor: pointer; height: 30px">
+            <div class="col-lg-12" style="background: #fcfcfc; padding-top: 2px; height: 20px; padding-left: 10px">
+                <b style="text-decoration: underline; background: #fcfcfc; cursor: pointer; margin-top: 5px">Información del cliente</b>
+            </div>
+        </div>
+
+        <div class="col-lg-12" style="background: #f6f6f6; padding: 0; text-align: center;" *ngIf="sinHistorialCitas">
+            No hay citas agendadas para este cliente
+        </div>
+
+        <div id="citaHistorial{{i}}" class="col-lg-12" style="padding: 0; cursor: pointer;" (click)="seleccionarCitaHistorial(x)" *ngFor="let x of dataHistorialCitas; let i = index;"
+            (mouseenter)="mouseEnterHistorial(i)" (mouseleave)="mouseLeaveHistorial(i)">
+            <div class="col-lg-12" style="background: #f6f6f6; padding-top: 2px; height: 20px; padding-left: 10px; color: #000000;">
+                <b>{{x.fechaMostrar}}</b>
+            </div>
+            <div class="col-lg-12" style="background: #dce6ea; padding: 0;">
+                <hr style="background-color: #e7e7e7; height: 1px; margin: 0; border: 0;" />
+            </div>
+            <div class="col-lg-12" style="background: #fcfcfc; padding: 0; display: flex;">
+                <div class="col-lg-3" style="padding: 0; display: flex;">
+                    <div class="col-lg-11" style="padding: 0;">
+                        <div class="col-lg-12 puntosSuspensivosHoraH" style="padding: 5px 8px 2px 2px; text-align: right;">
+                            <b>{{x.horaInicio}}</b>
+                        </div>
+                        <div class="col-lg-12 puntosSuspensivosHoraH" style="padding: 5px 8px 2px 2px; text-align: right;">
+                            {{'clienteTranslate.nota'| translate}}
+                        </div>
+                    </div>
+                    <div class="col-lg-1" style="padding: 0; height: 42px; width: 1px; margin-top: 4px;">
+                        <div style="height: 100%; width: 2px; background: #58b578;" *ngIf="x.citaPasada"></div>
+                        <div style="height: 100%; width: 2px; background: #357EC1;" *ngIf="!x.citaPasada"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6" style="padding-left: 4px; padding-right: 0px;">
+                    <div class="col-lg-12 puntosSuspensivosHN" style="padding: 5px 2px 2px 2px; text-align: left;">
+                        <b>{{x.nombreServicio}}</b>
+                    </div>
+                    <div class="col-lg-12 puntosSuspensivosHN" style="padding: 5px 2px 2px 2px; text-align: left;">
+                        {{x.notaCita}}
+                    </div>
+                </div>
+
+                <div class="col-lg-3" style="padding-left: 4px; padding-right: 3px;">
+                    <div class="col-lg-12 puntosSuspensivosHN" style="padding: 5px 2px 2px 2px; text-align: left;">
+                        <b>{{x.costoMinimo | currency}}</b>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="background: #dce6ea; padding: 0;">
+                <hr style="background-color: #c1c1c1; height: 1px; margin: 0; border: 0;" />
+            </div>
+        </div>
+    </div>
+</mat-card>
+
+<!---------------------------------- EVENTO DE CALENDARIO (CITA) ---------------------------------->
+<ng-template #popoverContenido >
+    <div class="ns-popover-tooltip" style="font-size:inherit; display:inline-block;">
+        <div style="width: 100%; display: flex;">
+            <div style="width: 95%;">
+                <span style="font-size: 18px"><b> {{'agendaTranslate.detalleDeCitaMayus'| translate}} </b></span>
+            </div>
+            <div style="width: 5%" (click)="cerrarPopoverDetalleCita();">
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+        </div>
+        <h6> {{ calendario.clickedEvent.start.format('ddd/MMM DD | HH:mm - ') }}  {{ calendario.clickedEvent.end.format('HH:mm') }} </h6>
+        <div style="float: left; width: 100%; margin-bottom: 12px; border-bottom: 1px solid; padding-bottom: 10px;">
+            <div style="margin-bottom: 8px; display: inline-block; width: 100%;">
+                <div style="width: 40%; float: left"> {{ 'agendaTranslate.cliente'| translate }}</div>
+                <div class="truncated-text" style="width: 60%; float: left">
+                    <a class="ls-link-b" style="cursor: pointer;" (click)="irAlCliente(calendario.clickedEvent.idCliente)">
+                        {{ calendario.clickedEvent.cliente }}
+                    </a>
+                    <div>
+                        {{ calendario.clickedEvent.emailCliente }}
+                    </div>
+                    <div>
+                        {{ calendario.clickedEvent.telefono }}
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 8px;display: inline-block;width: 100%;">
+                <div style="width:40%;float:left"> {{'agendaTranslate.personal'| translate}}</div>  <div class="truncated-text" style="width:60%;float:left">{{ calendario.clickedEvent.personal }} </div>
+            </div>
+
+            <div style="margin-bottom: 8px;display: inline-block;width: 100%;">
+                <div style="width:40%;float:left"> {{'agendaTranslate.servicio'| translate}}</div>  <div class="truncated-text" style="width:60%;float:left">{{ calendario.clickedEvent.servicio }} </div>
+            </div>
+
+            <div style="margin-bottom: 15px;display: inline-block;width: 100%;">
+                <div style="width:40%;float:left"> {{'agendaTranslate.costo'| translate}}</div>  <div style="width:60%;float:left">{{ calendario.clickedEvent.costoMinimo | currency }}{{ calendario.clickedEvent.costoMaximo ? ' - ' : ''}}{{ calendario.clickedEvent.costoMaximo ? (calendario.clickedEvent.costoMaximo | currency) : ''}}</div>
+            </div>
+
+            <div style="float:left;margin-bottom:15px;width:100%" *ngIf="calendario.clickedEvent.citasRelacionadas.length > 0">
+                <div> {{'agendaTranslate.citasRelacionadas'| translate}} </div>
+                <div class="truncated-text" *ngFor="let citaRel of calendario.clickedEvent.citasRelacionadas">
+                    {{citaRel.horaInicio}} | {{citaRel.personal}}
+                </div>
+            </div>
+
+            <div style="margin-bottom: 15px;display: inline-block;width: 100%;">
+                <div style="width:40%;float:left"> Realizo Alta </div>  <div style="width:60%;float:left">{{ calendario.clickedEvent.realizoAlta }} </div>
+            </div>
+
+            <div style="margin-bottom: 15px;display: inline-block;width: 100%;">
+                <div style="width:40%;float:left"> Fecha de creación </div>  <div style="width:60%;float:left"> {{ calendario.clickedEvent.fechaCreacion.format("DD/MM/YYYY") }}</div>
+            </div>
+
+            <ng-select id="ddlEstatus" class="blue-select" style="width:50%; display:inline-flex"
+                placeholder="{{'agendaTranslate.placeholderEstatus'| translate}}"
+                appendTo="#ddlEstatus"
+                [multiple]="false"
+                [searchable]="false"
+                [clearable]="false"
+                [items]="estatusCitas"
+                bindLabel="translate"
+                bindValue="idCitaEstatus"
+
+                [(ngModel)]="calendario.clickedEvent.estatus"
+                (ngModelChange)="cambiarEstatusCita()"
+                *ngIf="accesosPantallaAgenda.cambiarEstatusCita"
+                [disabled]="calendario.clickedEvent.estatus == 3 || calendario.clickedEvent.estatus == 4 || calendario.clickedEvent.estatus == 6">
+            </ng-select>
+        </div>
+
+        <div style="float:left;width:50%;margin-bottom:12px;">
+            <a (click)="editarCita()" *ngIf="(calendario.clickedEvent.estatus != 3 && calendario.clickedEvent.estatus != 4 && calendario.clickedEvent.estatus != 6) && accesosPantallaAgenda.agendar" style="font-size:14px;cursor:pointer;">
+                <mat-icon svgIcon="iconEditar" class="iconosBookipp ms-2" style="cursor: pointer; width: 24px; display: inline-table;"></mat-icon>{{'agendaTranslate.editar'| translate}}
+                <!-- <i class="fa fa-pencil-square-o fa-lg"></i>  {{'agendaTranslate.editar'| translate}} -->
+            </a>
+            <mat-icon svgIcon="iconArchivo" class="iconosBookipp m-2" (click)="ticketPago_mostrarModalTicketPago()" *ngIf="calendario.clickedEvent.estatus == 3" style="cursor: pointer; width: 24px; display: inline-table;"></mat-icon>
+        </div>
+
+        <div style="width: 50%;float:left;text-align:right;margin-bottom:12px;">
+            <a style="cursor:pointer; font-size:11px;" *ngIf="calendario.clickedEvent.esRecurrente" (click)="confirmarCancelacionRecurrencia()"> {{'agendaTranslate.recurrencia'| translate}} <mat-icon svgIcon="iconCalendarioEditar" class="iconosBookipp ms-2 cursorPointer" style="width: 24px; display: inline-table;"></mat-icon></a>
+        </div>
+
+        <div style="display: inline-block;width: 100%;">
+            <div (click)="nota_mostrarEdicion()" [hidden]="nota.esEditarNota" style="float: right;margin-bottom: 11px;margin-top: 1px;margin-right: 3px;text-align: right;cursor:pointer;font-size: 12px; word-wrap:break-word;">
+                {{ calendario.clickedEvent.nota ? calendario.clickedEvent.nota : traducion.notas}}
+                <!-- <i class="fa fa-pencil-square-o"></i> -->
+            </div>
+            <mat-icon svgIcon="iconDeshacer" (mousedown)="nota_revertirEdicion()" *ngIf="nota.esEditarNota" class="iconosBookipp ms-2 cursorPointer" style="width: 24px; display: inline-table;"></mat-icon>
+            <!-- <i class="fa fa-undo" (mousedown)="nota_revertirEdicion()" *ngIf="nota.esEditarNota" style="float:right;margin-right: 5px;margin-top: 5px;"></i> -->
+            <input id="inputEditarNota" class="form-control" *ngIf="nota.esEditarNota" [(ngModel)]="calendario.clickedEvent.nota" (blur)="nota_editarNota()" (keyup.enter)="nota_editarNota()" style="font-size:12px;width: 100%;height: 22px;padding-left: 4px;padding-right: 22px;" maxlength="500"/>
+        </div>
+    </div>
+</ng-template>
+
+<!-------------------------------------- MODAL DE NUEVA CITA -------------------------------------->
+<div id="nueva-cita" aria-hidden="true" class="modal fade nueva-cita" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; border: 0;">
+            <div class="modal-header">
+                <span>{{'agendaTranslate.agendarCitaMayus'| translate}}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="cerrarModalNuevaCita()" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div id="nuevaCitaModalBody" class="modal-body">
+                <mat-tab-group #tabGroup id="cita-tabs" dynamicHeight="true" mat-align-tabs="center" preserveContent="true" (selectedTabChange)="cambiarPestaniaNuevaCita($event)">
+                    <!-- Pestaña Cita -->
+                    <mat-tab id="tab-cita" (click)="cambiarVistaCita(1)" style="width: 50%;">
+                        <ng-template mat-tab-label>
+                            <label> {{'agendaTranslate.cita'| translate}} </label>
+                        </ng-template>
+
+                        <!------ Apartado de cliente ------>
+                        <div id="apartadoClientes" style="padding-left: 2px; padding-right: 2px; margin-top: 10px;">
+                            <div id="botonesCliente">
+                                <label id="lblCliente" style="color: #337dc0; margin-left: 5px;">{{'agendaTranslate.cliente'| translate}}
+                                    <mat-icon svgIcon="iconAgregar" (click)="mostrarNuevoCliente()" *ngIf="!cita.esClienteNuevo" class="iconosBookipp"></mat-icon>
+                                    <mat-icon svgIcon="iconDeshacer" (click)="ocultarNuevoCliente()" *ngIf="cita.esClienteNuevo" class="iconosBookipp"></mat-icon>
+                                </label>
+                            </div>
+
+                            <div id="listadoClientes" *ngIf="!cita.esClienteNuevo">
+                                <ng-select id="cliente-modal" style="width: 100%;"
+                                    [multiple]="false" [searchable]="true"
+                                    [clearable]="true"
+                                    placeholder="{{'agendaTranslate.placeholderCliente'| translate}}"
+                                    appendTo="#nuevaCitaModalBody"
+                                    [items]="dataClientesBuffer"
+                                    bindLabel="nombreBuscar"
+                                    bindValue="idCliente"
+                                    [(ngModel)]="cita.cliente"
+                                    (change)="cambiarCliente($event); removerEstiloValidacion('cliente-modal', cita.cliente);"
+                                    [virtualScroll]="true"
+                                    (click)="resetInfScroll('AgendaNuevaCitaClientes', null)"
+                                    (clear)="resetInfScroll('AgendaNuevaCitaClientes', null)"
+                                    (blur)="resetDdl()"
+                                    (keyup)="buscarEnScroll('AgendaNuevaCitaClientes', 'cliente-modal', null)"
+                                    (scroll)="onScroll('AgendaNuevaCitaClientes', $event, null)">
+                                </ng-select>
+                            </div>
+
+                            <div id="cliente-nuevo-modal" *ngIf="cita.esClienteNuevo">
+                                <div style="margin-top:10px"> <label>{{'agendaTranslate.nombre'| translate}}</label></div>
+                                <div>
+                                    <input id="modal-nombre" class="form-control borderAzul" style="margin-top: 0px" type="text" maxlength="200"
+                                        placeholder="{{'agendaTranslate.placeholderNomCom'| translate}}"
+                                        [matAutocomplete]="autoListClientes"
+                                        #autoListClientesInput
+                                        [(ngModel)]="cita.clienteNuevo.nombre"
+                                        (ngModelChange)="buscarEnScroll('AgendaNuevaCitaNuevoCliente', null, null); removerEstiloValidacion('modal-nombre', cita.clienteNuevo.nombre)"
+
+                                        (click)="resetInfScroll('AgendaNuevaCitaNuevoCliente', null)"/>
+                                        <mat-autocomplete #autoListClientes="matAutocomplete">
+                                            <cdk-virtual-scroll-viewport [itemSize]="30" [style.height.px]="200" (scroll)="onScroll('AgendaNuevaCitaNuevoCliente', $event, null)">
+                                                <mat-option *cdkVirtualFor="let etiqueta of dataClienteBuscadorBuffer" [value]="etiqueta">
+                                                    {{ etiqueta }}
+                                                </mat-option>
+                                            </cdk-virtual-scroll-viewport>
+                                        </mat-autocomplete>
+                                </div>
+
+                                <div style="margin-top:10px">
+                                    <label>Email</label>
+                                </div>
+                                <div>
+                                    <input id="modal-email" [(ngModel)]="cita.clienteNuevo.email" (ngModelChange)="removerEstiloValidacion('modal-email', cita.clienteNuevo.email)"
+                                        style="width:97%;" type="text" class="form-control" placeholder="{{'agendaTranslate.placeholderEmail'| translate}}">
+                                </div>
+
+                                <div style="margin-top:10px; display:flex">
+                                    <label style="width:50%">{{'agendaTranslate.telefono'| translate}}</label>
+                                    <label style="width:50%">{{'clienteTranslate.fechaNacimiento'| translate}}</label>
+                                </div>
+                                <div style="display:flex; width:100%">
+                                    <div style="width:50%">
+                                        <input id="modal-telefono" [(ngModel)]="cita.clienteNuevo.telefono" (ngModelChange)="removerEstiloValidacion('modal-telefono', cita.clienteNuevo.telefono)"
+                                            style="width:95%;" type="text" class="form-control borderAzul" placeholder="12345-67890">
+                                    </div>
+                                    <div style="width:50%">
+                                        <input id="idFecha" name="datepicker" class="form-control borderAzul" style="height: 40px;"
+                                            type="date" min="01-01-1950" max="01-01-2099" maxlength="10"
+                                            placeholder="13/03/1995"
+                                            [(ngModel)]="cita.clienteNuevo.nacimiento"
+                                            (ngModelChange)="removerEstiloValidacion('idFecha', cita.clienteNuevo.nacimiento)"
+                                            date-format="dd/MM/yyyy"
+                                            (keypress)="valFecha($event)"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!------ Apartado de cabina ------>
+                        <div id="apartadoCabina" *ngIf="cabina.listadoCabinas.length > 0" style="padding-left: 2px; padding-right: 2px;">
+                            <div style="margin-top:10px">
+                                <label style="color: #337dc0; margin-left: 5px;"> Cabina </label>
+                            </div>
+                            <ng-select id="uiSelectCabina" style="width: 100%;" [multiple]="false"
+                                appendTo="#nuevaCitaModalBody" [searchable]="true"
+                                [clearable]="true" placeholder="{{'agendaTranslate.placeholderPersonal'| translate}}"
+                                [items]="cabina.listadoCabinas"
+                                bindLabel="nombre"
+                                bindValue="idPersonal"
+
+                                [(ngModel)]="cita.cabina"
+                                (ngModelChange)="cambiarCabina()">
+                            </ng-select>
+                        </div>
+
+                        <!------ Apartado de servicios ------>
+                        <div id="apartadoServicios" style="padding-left: 2px; padding-right: 8px;">
+                            <!-- Sección de sevicios normales -->
+                            <div *ngIf="!cita.cabina">
+                                <div style="margin-top:10px">
+                                    <label style="color: #337dc0; margin-left: 5px;">{{'agendaTranslate.servicios'| translate}}</label>
+                                    <mat-icon svgIcon="iconAgregar" (click)="agregarServicio()" class="iconosBookipp"></mat-icon>
+                                </div>
+                                <div *ngFor="let s of cita.servicios; let i = index;" style="display:flex; margin-bottom:5px;">
+                                    <ng-select class="dropdownPeque" id="{{'personal-modal-' + i}}" style="width: 48%; float:left;"
+                                        [multiple]="false" appendTo="#nuevaCitaModalBody" [searchable]="true"
+                                        [clearable]="true" placeholder="{{'agendaTranslate.placeholderPersonal'| translate}}"
+                                        [items]="s.listadoPersonales"
+                                        bindLabel="nombre"
+                                        bindValue="idPersonal"
+                                        [(ngModel)]="s.personal"
+                                        (ngModelChange)="consultarServiciosPorPersonal(s); removerEstiloValidacion('personal-modal-' + i, s.personal)">
+                                    </ng-select>
+
+                                    <div class="divider" style="width: 2%;"></div>
+
+                                    <ng-select class="dropdownPeque" id="{{'servicio-modal-' + i}}" style="width: 47%; float:left;"
+                                        [multiple]="false" appendTo="#nuevaCitaModalBody" [searchable]="true"
+                                        [clearable]="false" placeholder="{{'agendaTranslate.placeholderServicio'| translate}}"
+                                        [disabled]="s.esDePaquete"
+                                        [items]="s.listadoServiciosBuffer"
+                                        bindLabel="nombre"
+                                        bindValue="idServicio"
+                                        [(ngModel)]="s.servicio"
+                                        (ngModelChange)="consultarPersonalesPorServicio(s); removerEstiloValidacion('servicio-modal-' + i, s.servicio)"
+
+                                        [virtualScroll]="true"
+                                        (click)="resetInfScroll('AgendaNuevaCitaServicios', i)"
+                                        (clear)="resetInfScroll('AgendaNuevaCitaServicios', i)"
+                                        (blur)="resetDdl()"
+                                        (keyup)="buscarEnScroll('AgendaNuevaCitaServicios', 'servicio-modal-' + i, i)"
+                                        (scroll)="onScroll('AgendaNuevaCitaServicios', $event, i)">
+                                    </ng-select>
+                                    <div style="width: 3%;">
+                                        <mat-icon svgIcon="iconCruzCuadrado" (click)="removerServicio(s)" *ngIf="cita.servicios.length > 1" class="iconosBookipp" style="vertical-align: middle;"></mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección de sevicios de cabina -->
+                            <div *ngIf="cita.cabina">
+                                <div style="margin-top:10px">
+                                    <label style="color: #337dc0;">{{'agendaTranslate.servicios'| translate}}</label>
+                                    <mat-icon svgIcon="iconAgregar" (click)="agregarServicio()" class="iconosBookipp"></mat-icon>
+                                </div>
+                                <div *ngFor="let s of cita.servicios; index as i;" style="display:flex;margin-bottom:5px;">
+                                    <ng-select class="dropdownPeque" id="{{'personal-modal-cabina-' + i}}" style="width: 48%; float:left;"
+                                        [multiple]="false" appendTo="#nuevaCitaModalBody" [searchable]="true"
+                                        [clearable]="true" placeholder="{{'agendaTranslate.placeholderPersonal'| translate}}"
+                                        [items]="cabina.personales"
+                                        bindLabel="nombre"
+                                        bindValue="idPersonal"
+
+                                        [(ngModel)]="s.personal"
+                                        (ngModelChange)="removerEstiloValidacion('personal-modal-cabina-' + i, s.personal)">
+                                    </ng-select>
+
+                                    <div class="divider" style="width: 2%;"></div>
+
+                                    <ng-select class="dropdownPeque" id="{{'servicio-modal-cabina-' + i}}" style="width: 47%; float:left;"
+                                        [multiple]="false" appendTo="#nuevaCitaModalBody" [searchable]="true"
+                                        [clearable]="false" placeholder="{{'agendaTranslate.placeholderServicio'| translate}}"
+                                        [disabled]="s.esDePaquete"
+                                        [items]="cabina.serviciosBuffer"
+                                        bindLabel="nombre"
+                                        bindValue="idServicio"
+                                        [(ngModel)]="s.servicio"
+                                        (ngModelChange)="getDuracionServicioCabina(s); removerEstiloValidacion('servicio-modal-cabina-' + i, s.servicio)"
+
+                                        [virtualScroll]="true"
+                                        (click)="resetInfScroll('AgendaNuevaCitaServiciosCabina', null)"
+                                        (clear)="resetInfScroll('AgendaNuevaCitaServiciosCabina', null)"
+                                        (blur)="resetDdl()"
+                                        (keyup)="buscarEnScroll('AgendaNuevaCitaServiciosCabina', 'servicio-modal-cabina-' + i, null)"
+                                        (scroll)="onScroll('AgendaNuevaCitaServiciosCabina', $event, null)">
+                                    </ng-select>
+                                    <div style="width: 3%;">
+                                        <mat-icon svgIcon="iconCruzCuadrado" (click)="removerServicio(s)" *ngIf="cita.servicios.length > 1" class="iconosBookipp" style="vertical-align: middle;"></mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!------ Apartado de hora y fecha ------>
+                        <div id="apartadoFechaHora" style="padding-left: 2px; padding-right: 2px;">
+                            <div style="margin-top:10px;display:flex">
+                                <label style="width:50%; color: #337dc0; margin-left: 5px;">{{'agendaTranslate.fecha'| translate}}</label>
+                                <label style="width:50%; color: #337dc0; margin-left: 5px;">{{'agendaTranslate.hora'| translate}}</label>
+                            </div>
+                            <div style="display:flex">
+                                <div id="modal-fecha" style="width:48%">
+                                    <input id="cita-fecha" name="datepicker" class="form-control borderAzul" style="height: 40px;"
+                                        type="date" min="01-01-1950" max="01-01-2099" maxlength="10"
+                                        placeholder="13/03/1995"
+                                        [(ngModel)]="cita.fecha"
+                                        (ngModelChange)="calcularHorasDisponiblesEnCita(); ajustarFechaRecurrencia(); removerEstiloValidacion('cita-fecha', cita.fecha);"
+                                        date-format="dd/MM/yyyy"
+                                        (keypress)="valFecha($event)"/>
+                                </div>
+                                <div class="divider" style="width: 2%;"></div>
+                                <div style="width:47%">
+                                    <ng-select id="modal-hora" class="dropdownMini" appendTo="#nuevaCitaModalBody"
+                                        style="height: 40px; width: 100%;" [searchable]="true" [clearable]="false"
+                                        [items]="cita.listadoHoras" bindLabel="label" bindValue="value"
+                                        (ngModelChange)="removerEstiloValidacion('modal-hora', cita.hora)"
+                                        [(ngModel)]="cita.hora">
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!------ Apartado de referencia ------>
+                        <div id="apartadoReferencia" style="padding-left: 2px; padding-right: 2px;">
+                            <div style="margin-top:10px;display:flex">
+                                <label style="width:50%; color: #337dc0; margin-left: 5px;"> Referencia </label>
+                            </div>
+                            <div style="width:48%">
+                                <ng-select id="ddlReferenciaAgenda" class="" style="width: 100%;"
+                                    [multiple]="false" appendTo="#nuevaCitaModalBody" [searchable]="true"
+                                    [clearable]="true" placeholder="Seleccione la referencia"
+                                    [disabled]="(referencia.id_referencia != -1 && referencia.id_referencia != '' && deshabilitarReferencia == true)"
+                                    [items]="referencia.dataReferencia"
+                                    bindLabel="nombre"
+                                    bindValue="id_referencia"
+
+                                    [(ngModel)]="referencia.id_referencia"
+                                    (ngModelChange)="cambioReferenciaAgenda()">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <!------ Apartado de recurrencia ------>
+                        <div id="apartadoRecurrencia" style="padding-left: 2px; padding-right: 2px; margin-bottom: 10px;">
+                            <div style="margin-top:20px" *ngIf="!cita.ocultarBotonRecurrencia">
+                                <div style="width:100%;display:flex">
+                                    <div style="float:left">
+                                        <label id="lblRecurrencia" style="color: #337dc0; margin-left: 5px;">{{'agendaTranslate.recurrencia'| translate}}</label>
+                                    </div>
+                                    <div class="onoffswitch col-lg-12">
+                                        <mat-slide-toggle id="chkRecurrencia" class="mx-2" cd-true-value="1" cd-false-value="0"
+                                            [(ngModel)]="cita.recurrencia"
+                                            (ngModelChange)="mostrarRecurrencia()">
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+
+                                <div id="modal-recurrencia" *ngIf="cita.recurrencia">
+                                    <div style="display:flex">
+                                        <label style="width:50%; color: #337dc0; margin-left: 5px;">{{'agendaTranslate.inicio2'| translate}}</label>
+                                        <label style="width:50%; color: #337dc0; margin-left: 5px;">{{'agendaTranslate.final'| translate}}</label>
+                                    </div>
+                                    <div id="modal-recurrencia-fechas" style="display:flex">
+                                        <div style="width:48%">
+                                            <input id="modal-recurrencia-inicio" name="datepicker" class="form-control borderAzul" style="height: 40px;"
+                                                type="date" min="01-01-1950" max="01-01-2099" maxlength="10"
+                                                placeholder="13/03/2023"
+                                                [(ngModel)]="cita.rFechaInicio"
+                                                (ngModelChange)="removerEstiloValidacion('modal-recurrencia-inicio', cita.rFechaInicio)"
+                                                startDate="'26/08/2023'"
+                                                date-format="dd/MM/yyyy"
+                                                (keypress)="valFecha($event)"/>
+                                        </div>
+                                        <div class="divider" style="width: 2%;"></div>
+                                        <div style="width:47%">
+                                            <input id="modal-recurrencia-fin" name="datepicker" class="form-control borderAzul" style="height: 40px;"
+                                                type="date" min="01-01-1950" max="01-01-2099" maxlength="10"
+                                                placeholder="27/03/2023"
+                                                [(ngModel)]="cita.rFechaFin"
+                                                (ngModelChange)="removerEstiloValidacion('modal-recurrencia-fin', cita.rFechaFin)"
+                                                startDate="'26/08/2023'"
+                                                date-format="dd/MM/yyyy"
+                                                (keypress)="valFecha($event)"/>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:5px;display:flex">
+                                        <label style="margin-top: 6px; width:50%; color: #337dc0; margin-left: 5px;">{{'agendaTranslate.frecuencia'| translate}}</label>
+                                        <label style="margin-top: 6px; width:50%; color: #337dc0; margin-left: 5px;">{{'agendaTranslate.cada'| translate}}</label>
+                                    </div>
+                                    <div style="display:flex">
+                                        <div style="width:48%">
+                                            <ng-select id="modal-frecuencia" style="width: 100%;"
+                                                [multiple]="false" appendTo="#nuevaCitaModalBody" [searchable]="true"
+                                                [clearable]="false" placeholder="{{'agendaTranslate.placeholderFrecuencia'| translate}}"
+                                                [items]="recurrencias.frecuencias"
+                                                bindLabel="name"
+                                                bindValue="id"
+
+                                                [(ngModel)]="cita.rFrecuencia"
+                                                (change)="obtenerRepeticiones($event); removerEstiloValidacion('modal-frecuencia', cita.rFrecuencia)">
+                                            </ng-select>
+                                        </div>
+                                        <div class="divider" style="width: 2%;"></div>
+                                        <div style="width:47%">
+                                            <ng-select id="modal-repeticion" style="width: 100%;"
+                                                [multiple]="false" appendTo="#nuevaCitaModalBody" [searchable]="true"
+                                                [clearable]="false" placeholder="{{'agendaTranslate.placeholder'| translate}}"
+                                                [disabled]="!cita.rFrecuencia"
+                                                [items]="recurrencias.repeticiones"
+                                                bindLabel="name"
+                                                bindValue="id"
+
+                                                [(ngModel)]="cita.rRepeticion"
+                                                (ngModelChange)="removerEstiloValidacion('modal-repeticion', cita.rRepeticion)">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div id="modal-dias-frecuencia" class="col-lg-12 text-center" style="margin-top:10px;" *ngIf="traducion.frecuencia == 'Semanal'">
+                                        <div id="modal-lun" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="marcarDiaRecurrencia(1)">{{'agendaTranslate.l'| translate}}</a></div></div>
+                                        <div id="modal-mar" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="marcarDiaRecurrencia(2)">{{'agendaTranslate.m'| translate}}</a></div></div>
+                                        <div id="modal-mie" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="marcarDiaRecurrencia(3)">{{'agendaTranslate.mi'| translate}}</a></div></div>
+                                        <div id="modal-jue" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="marcarDiaRecurrencia(4)">{{'agendaTranslate.j'| translate}}</a></div></div>
+                                        <div id="modal-vie" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="marcarDiaRecurrencia(5)">{{'agendaTranslate.v'| translate}}</a></div></div>
+                                        <div id="modal-sab" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="marcarDiaRecurrencia(6)">{{'agendaTranslate.s'| translate}}</a></div></div>
+                                        <div id="modal-dom" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="marcarDiaRecurrencia(7)">{{'agendaTranslate.d'| translate}}</a></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+
+                    <!-- Pestaña Paquete -->
+                    <mat-tab id="tab-paquete" *ngIf="cita.cliente" style="width: 50%;" style="margin-top: 10px;">
+                        <ng-template mat-tab-label>
+                            <label> Paquete </label>
+                        </ng-template>
+
+                        <!-- Apartado -->
+                        <div style="margin-left:20px;margin-bottom:15px;display:inline-block">
+                            <div style="float:left;width:100%">
+                                <label style="width:30%">{{'agendaTranslate.cliente'| translate}} </label>
+                                <span>{{cita.clienteInfo.nombre}}</span>
+                            </div>
+                            <div style="float:left;width:100%">
+                                <label style="width:30%">{{'agendaTranslate.correo'| translate}} </label>
+                                <span>{{cita.clienteInfo.email}}</span>
+                            </div>
+                            <div style="float:left;width:100%">
+                                <label style="width:30%">{{'agendaTranslate.telefono'| translate}} </label>
+                                <span>{{cita.clienteInfo.telefono ? cita.clienteInfo.telefono : ' - '}}</span>
+                            </div>
+                            <div style="float:left;width:100%">
+                                <label style="width:30%">{{'agendaTranslate.cumpleanios'| translate}} </label>
+                                <span>{{cita.clienteInfo.cumpleanios ? cita.clienteInfo.cumpleanios : ' - '}}</span>
+                            </div>
+                        </div>
+
+                        <div *ngIf="paqueteSucursal.agendar.dataPaqueteSucursalCliente.length" style="padding-left: 2px; padding-right: 2px;">
+                            <div *ngFor="let dps of paqueteSucursal.agendar.dataPaqueteSucursalCliente" style="border:1px solid #CCC;margin-bottom:10px;margin-left:20px;width:90%;display:inline-block">
+                                <div style="margin-bottom:20px; display:inline-block; padding: 20px;">
+                                    <div style="float: left; margin-top:5px;width: 50%;">
+                                        {{dps.nombrePaqueteSucursal}}
+                                    </div>
+                                    <div style="float: left; margin-top:5px;width: 50%; text-align: right;">
+                                        Vigencia: {{dps.fechaVigencia}}
+                                    </div>
+                                    <div style="float: left; margin-top: 15px; width: 100%;">
+                                        <div *ngFor="let s of dps.servicios" style="float:left; width:100%; display: flex;">
+                                            <div *ngIf="s.cantServicioRealizado != s.cantServicio" style="float:left; width:100%; display: flex;">
+                                                <div style="width:70%">
+                                                    <span>Servicio : {{s.nombreServicio}}</span>
+                                                </div>
+                                                <div style="width:30%">
+                                                    <span style="padding-left: 10px;">Sesión {{s.cantServicioRealizado}}/{{s.cantServicio}}</span>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="s.cantServicioRealizado == s.cantServicio" style="color: red; float:left; width:100%; display: flex;">
+                                                <div style="width:70%">
+                                                    <span>Servicio : {{s.nombreServicio}}</span>
+                                                </div>
+                                                <div style="width:30%">
+                                                    <span style="padding-left: 10px;">Sesión {{s.cantServicioRealizado}}/{{s.cantServicio}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngFor="let p of dps.productos" style="float:left; width:100%; display: flex;">
+                                            <div *ngIf="p.cantProductoRealizado != p.cantProducto" style="float:left; width:100%; display: flex;">
+                                                <div style="width:70%">
+                                                    <span>Producto : {{p.nombreProducto}}</span>
+                                                </div>
+                                                <div style="width:30%">
+                                                    <span style="padding-left: 10px;">Cantidad : {{p.cantProductoRealizado}}/{{p.cantProducto}}</span>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="p.cantProductoRealizado == p.cantProducto" style="color: red; float:left; width:100%; display: flex;">
+                                                <div style="width:70%">
+                                                    <span>Producto : {{p.nombreProducto}}</span>
+                                                </div>
+                                                <div style="width:30%">
+                                                    <span style="padding-left: 10px;">Cantidad : {{p.cantProductoRealizado}}/{{p.cantProducto}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="float:left;width:100%;text-align:right;margin-bottom:5px">
+                                    <mat-icon svgIcon="iconCalendarioMas" class="iconosBookipp" (click)="paqueteSucursal_agendar_agendarServiciosPaqueteSucursalCliente(dps)" style="cursor: pointer; margin-right: 10px">Agendar</mat-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+            <div class="modal-footer" *ngIf="cita.vista == 1" style="height:62px; display: flex; text-align: center;">
+                <button id="btnModalAgendar" type="button" class="buttonEstiloBlanco" style="height: 35px; width: 25%;"
+                    (click)="agendarCita()">
+                    {{'agendaTranslate.agendar'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-------------------------------------- MODAL DE EDITAR CITA ------------------------------------->
+<div id="editar-cita" aria-hidden="true" class="modal fade editar-cita" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; border: 0;">
+            <div class="modal-header">
+                <span> {{'agendaTranslate.editarCitaMayus'| translate}} </span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div id="editarCitaModalBody" class="modal-body">
+                <label> {{'agendaTranslate.citaDe'| translate}} {{ calendario.clickedEvent.cliente }} </label><br/>
+                <label style="margin-bottom: 25px;">{{'agendaTranslate.nota'| translate}}: {{ calendario.clickedEvent.nota }}</label>
+
+                <!---- Apartado de Cabina ---->
+                <div id="apartadoCabinaEditarCita" *ngIf="cabina.listadoCabinas.length > 0">
+                    <div>
+                        <label style="color: #337dc0; margin-left: 5px;"> Cabina </label>
+                    </div>
+                    <ng-select id="uiSelectCabinaEditar" style="width: 97%;"
+                        appendTo="#editarCitaModalBody"
+                        [clearable]="true" placeholder="{{'agendaTranslate.placeholderPersonal'| translate}}"
+                        [multiple]="false"
+                        [searchable]="true"
+                        [items]="cabina.listadoCabinas"
+                        bindValue="idPersonal"
+                        bindLabel="nombre"
+
+                        [(ngModel)]="citaEditar.cabina"
+                        (ngModelChange)="cambiarCabinaEditar()">
+                    </ng-select>
+                </div>
+
+                <!---- Apartado de Servicios ---->
+                <div id="apartadoServiciosEditarCita" style="margin-top: 10px;">
+                    <!---- Servicios normales ---->
+                    <div *ngIf="!citaEditar.cabina">
+                        <div style="margin-top:10px">
+                            <label style="color: #337dc0; margin-left: 5px;"> {{'agendaTranslate.servicios'| translate}} </label>
+                            <mat-icon svgIcon="iconAgregar" class="iconosBookipp" (click)="agregarServicioEditar()" style="stroke: black; cursor: pointer; font-size: 16px;"></mat-icon>
+                        </div>
+                        <div *ngFor="let ss of citaEditar.servicios; index as i" style="display: flex; margin-bottom: 5px;">
+                            <ng-select id="{{'editar-personal-' + i}}" style="width: 48%;"
+                                appendTo="#editarCitaModalBody"
+                                [clearable]="false" placeholder="{{'agendaTranslate.placeholderPersonal'| translate}}"
+                                [multiple]="false"
+                                [searchable]="true"
+                                [items]="ss.listadoPersonales"
+                                bindLabel="nombre"
+                                bindValue="idPersonal"
+
+                                [(ngModel)]="ss.personal"
+                                (ngModelChange)="consultarServiciosPorPersonal(ss); removerEstiloValidacion('editar-personal-' + i, ss.personal);"
+                                [disabled]="!ss.servicio">
+                            </ng-select>
+
+                            <div class="divider" style="width: 2%;"></div>
+
+                            <ng-select id="{{'editar-servicio-' + i}}" style="width: 47%;"
+                                appendTo="#editarCitaModalBody"
+                                [clearable]="false" placeholder="{{'agendaTranslate.placeholderServicio'| translate}}"
+                                [multiple]="false"
+                                [searchable]="true"
+                                [items]="ss.listadoServiciosBuffer"
+                                bindLabel="nombre"
+                                bindValue="idServicio"
+                                [(ngModel)]="ss.servicio"
+                                (ngModelChange)="consultarPersonalesPorServicio(ss); removerEstiloValidacion('editar-servicio-' + i, ss.servicio)"
+                                [disabled]="ss.esDePaquete"
+
+                                [virtualScroll]="true"
+                                (click)="resetInfScroll('AgendaEditarCitaServicios', i)"
+                                (clear)="resetInfScroll('AgendaEditarCitaServicios', i)"
+                                (blur)="resetDdl()"
+                                (keyup)="buscarEnScroll('AgendaEditarCitaServicios', 'editar-servicio-' + i, i)"
+                                (scroll)="onScroll('AgendaEditarCitaServicios', $event, i)">
+                            </ng-select>
+
+                            <!--No se puede eliminar si ya se pago con paypal-->
+                            <div style="width: 3%;">
+                                <mat-icon class="iconosBookipp" svgIcon="iconCruzCuadrado" (click)="removerServicioEditar(i)" *ngIf="citaEditar.servicios.length > 1 && !ss.idPagoClienteDetalle && ss.montoTotalPagoPaypal == 0"
+                                    style="stroke: black; float:left; margin-left:3px; margin-top: 7px; cursor:pointer">
+                                </mat-icon>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Servicios de cabina -->
+                    <div *ngIf="citaEditar.cabina">
+                        <div>
+                            <label style="color: #337dc0; margin-left: 5px;">{{'agendaTranslate.servicios'| translate}}</label>
+                            <mat-icon svgIcon="iconAgregar" class="iconosBookipp" (click)="agregarServicioEditar()" style="stroke: black; cursor: pointer; font-size: 16px;"></mat-icon>
+                        </div>
+                        <div *ngFor="let ss of citaEditar.servicios; index as i" style="display:flex;margin-bottom:5px;">
+                            <ng-select id="{{'editar-personal-cabina-' + i}}" style="width: 48%;"
+                                appendTo="#editarCitaModalBody"
+                                [clearable]="false" placeholder="{{'agendaTranslate.placeholderPersonal'| translate}}"
+                                [multiple]="false"
+                                [searchable]="true"
+                                [items]="cabina.personales"
+                                bindLabel="nombre"
+                                bindValue="idPersonal"
+
+                                [(ngModel)]="ss.personal"
+                                (ngModelChange)="removerEstiloValidacion('editar-personal-cabina-' + i, ss.personal)">
+                            </ng-select>
+
+                            <div class="divider" style="width: 2%;"></div>
+
+                            <ng-select id="{{'editar-servicio-cabina-' + i}}" style="width: 47%;"
+                                appendTo="#editarCitaModalBody"
+                                [clearable]="false" placeholder="{{'agendaTranslate.placeholderServicio'| translate}}"
+                                [multiple]="false"
+                                [searchable]="true"
+                                [items]="cabina.serviciosBuffer"
+                                bindLabel="nombre"
+                                bindValue="idServicio"
+                                [(ngModel)]="ss.servicio"
+                                (ngModelChange)="getDuracionServicioCabina(ss); removerEstiloValidacion('editar-servicio-cabina-' + i, ss.servicio)"
+                                [disabled]="ss.esDePaquete"
+
+                                [virtualScroll]="true"
+                                (click)="resetInfScroll('AgendaEditarCitaServiciosCabina', null)"
+                                (clear)="resetInfScroll('AgendaEditarCitaServiciosCabina', null)"
+                                (blur)="resetDdl()"
+                                (keyup)="buscarEnScroll('AgendaEditarCitaServiciosCabina', 'editar-servicio-cabina-' + i, null)"
+                                (scroll)="onScroll('AgendaEditarCitaServiciosCabina', $event, null)">
+                            </ng-select>
+
+                            <!--No se puede eliminar si ya se pago con paypal-->
+                            <div style="width: 3%;">
+                                <mat-icon class="iconosBookipp" svgIcon="iconCruzCuadrado" (click)="removerServicioEditar(i)" *ngIf="citaEditar.servicios.length > 1 && !ss.idPagoClienteDetalle && ss.montoTotalPagoPaypal == 0"
+                                    style="stroke: black; float:left; margin-left:3px; margin-top: 7px; cursor:pointer">
+                                </mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!---- Apartado Fecha y Hora ---->
+                <div id="apartadoFechaHoraEditarCita">
+                    <div style="margin-top:10px;display:flex">
+                        <label style="width:50%; color: #337dc0; margin-left: 5px;">{{'agendaTranslate.fecha'| translate}}</label>
+                        <label style="width:50%; color: #337dc0; margin-left: 5px;">{{'agendaTranslate.hora'| translate}}</label>
+                    </div>
+
+                    <div style="display:flex">
+                        <div id="editar-fecha-container" style="width:48%">
+                            <input id="editar-fecha" name="datepicker" class="form-control borderAzul" style="height: 40px;"
+                                type="date" min="01-01-1950" max="01-01-2099" maxlength="10"
+                                placeholder="13/03/1995"
+                                [(ngModel)]="citaEditar.fecha"
+                                (ngModelChange)="calcularHorasDisponiblesEnEditarCita(); removerEstiloValidacion('editar-fecha', citaEditar.fecha);"
+                                date-format="dd/MM/yyyy"
+                                (keypress)="valFecha($event)"/>
+                        </div>
+
+                        <div class="divider" style="width: 2%;"></div>
+
+                        <div style="width:47%">
+                            <ng-select id="editar-hora" style="height: 40px; width: 100%;"
+                                appendTo="#editarCitaModalBody"
+                                [searchable]="true"
+                                [clearable]="false"
+                                [items]="citaEditar.listadoHoras"
+                                bindLabel="label"
+                                bindValue="value"
+
+                                [(ngModel)]="citaEditar.hora"
+                                (ngModelChange)="removerEstiloValidacion('editar-hora', citaEditar.hora)">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="buttonEstiloBlanco" style="height: 35px; width: 25%;" data-bs-dismiss="modal">
+                    {{'agendaTranslate.cancelar'| translate}}
+                </button>
+                <button id="botonEditarCita" type="button" class="buttonEstiloBlanco" style="height: 35px; width: 25%;"
+                    (click)="modificarCita()">
+                    {{'agendaTranslate.editar'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-------------------------------------- MODAL DE REFERENCIA -------------------------------------->
+<div id="modal-referencia-agenda" role="dialog" aria-hidden="true" class="modal fade modal-referencia-agenda">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 540px; border: none;">
+            <div class="modal-header">
+                <span>Referencia</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="salirModalReferenciaAgenda()" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body" >
+                <div>
+                    <div style="width: auto; height: auto; position: relative;">
+                        <div class="row" style="width: auto; position: relative;">
+                            <div class="col-lg-12" style="text-align:center;">
+                                <table mat-table id="modalReferenciaAgenda" [dataSource]="referencia.dataReferencia" class="" style="width: calc(100% - 15px);">
+                                    <ng-container matColumnDef="acciones">
+                                        <th mat-header-cell *matHeaderCellDef style="text-align: center; width: 100px;">
+                                            Acciones
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                            <div class="ui-grid-cell-contents" *ngIf="element.nombre" style="text-align:center; color:#337dc0; display: flex;">
+                                                <mat-icon svgIcon="iconEditar" (click)="mostrarEdicionReferencia(element)" class="iconosBookipp ms-2 cursorPointer" style="cursor:pointer; width: 24px; display: inline-table;"></mat-icon>
+                                                <mat-icon svgIcon="iconBasura" (click)="preparacionBorrarReferenciaAgenda(element)" class="iconosBookipp ms-2 cursorPointer" style="cursor:pointer; width: 24px; display: inline-table;"></mat-icon>
+                                            </div>
+                                            <div class="ui-grid-cell-contents" *ngIf="!element.nombre" style="text-align:center; color:#337dc0;">
+                                                <div *ngIf="!mostrarNuevaReferenciaAgenda && element.nuevo">
+                                                    <mat-icon svgIcon="iconAgregar" (click)="mostrarAgregarReferencia()" class="iconosBookipp ms-2 cursorPointer" style="cursor:pointer;width: 24px; display: inline-table;"></mat-icon>
+                                                </div>
+                                                <div *ngIf="mostrarActualizarReferenciaAgenda && !element.nuevo">
+                                                    <mat-icon svgIcon="iconDeshacer" (click)="cerrarAgregarReferencia()" class="iconosBookipp ms-2 cursorPointer" style="cursor: pointer; width: 24px; display: inline-table;"></mat-icon>
+                                                    <mat-icon svgIcon="iconGuardar" (click)="actualizarReferencia(element)" class="iconosBookipp ms-2 cursorPointer" style="cursor: pointer; width: 24px; display: inline-table;"></mat-icon>
+                                                </div>
+                                                <div *ngIf="mostrarNuevaReferenciaAgenda">
+                                                    <mat-icon svgIcon="iconDeshacer" (click)="cerrarAgregarReferencia()" class="iconosBookipp ms-2 cursorPointer" style="cursor: pointer;width: 24px; display: inline-table;"></mat-icon>
+                                                    <mat-icon svgIcon="iconGuardar" (click)="agregarReferenciaAgenda()" class="iconosBookipp ms-2 cursorPointer" style="cursor: pointer; width: 24px; display: inline-table;"></mat-icon>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nombre">
+                                        <th mat-header-cell *matHeaderCellDef style="text-align: center; min-width: 220px;">
+                                            Nombre
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                            <div style="margin-top: 5px;" *ngIf="element.nombre">
+                                                {{element.nombre}}
+                                            </div>
+                                            <div style="width: 100%; height:100%;" *ngIf="!element.nombre">
+                                                <div style="margin:2px; width: 100%; height:100%;" *ngIf="mostrarActualizarReferenciaAgenda">
+                                                    <input id="txtNombreReferenciaAgenda" *ngIf="!element.nuevo" [(ngModel)]="nombreReferencia" style="width: 98.5%; height:85%; margin:1px;" type="text" class="form-control" maxlength="100"/>
+                                                </div>
+                                                <div style="margin:2px; width: 100%; height:100%;" *ngIf="mostrarNuevaReferenciaAgenda">
+                                                    <input id="txtNombreReferenciaAgenda" [(ngModel)]="nombreReferencia" style="width: 98.5%; height:85%; margin:1px;" type="text" class="form-control" maxlength="100"/>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                                </table>
+                                <!-- <div ui-grid="gridReferenciaAgenda" ui-grid-edit class="grid" ui-grid-auto-resize></div> DUDA -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="buttonEstiloBlanco" style="height: 35px; width: 25%;"
+                    (click)="salirModalReferenciaAgenda()">
+                    {{'agendaTranslate.salir'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-------------------------------------- MODAL DE ALERTA DE REFERENCIA -------------------------------------->
+<div id="modal-alert-referencia" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-alert-referencia" style="z-index: 500001">
+    <div class="modal-dialog">
+         <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                    {{'agendaTranslate.aceptar'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------------------------------- MODAL DE BORRAR REFERENCIA ---------------------------------------->
+<div id="borrar-referencia" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade borrar-referencia" style="z-index: 500000">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'agendaTranslate.cancelar'| translate}}
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="buttonEstiloBlanco" (click)="borrarReferencia()" style="height: auto;">
+                        {{'agendaTranslate.si'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-------------------------------------------- MODAL DE CORTE DE DÍA ----------------------------------------->
+<div id="modal-corteDia" aria-hidden="true" class="modal fade modal-corteDia" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; min-width: 265px; border: 0;">
+            <div class="modal-header" style="border-bottom:none;">
+                <span>{{'agendaTranslate.ingregosDia'| translate}}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body">
+                <!--Calendario-->
+                <div class="col-lg-12 form-group">
+                    <div class="col-lg-6">
+                        <div class="calendario">
+                            <div class="contenedor">
+                                <mat-icon class="iconosBookipp" svgIcon="iconCalendarioEditar" style="position: absolute; margin: 8px 0px 0px 30px;"></mat-icon>
+                                <input type="text" id="reportrange" name="calendarioCorteDiaAgenda"
+                                    ngxDaterangepickerMd
+                                    class="form-control"
+                                    style="cursor: pointer; height: 40px; width: 350px; padding-left: 90px; border:#b7c4c9 solid 1px; border-radius: 1.5rem;"
+                                    [(ngModel)]="indicadores.ingresosDetalle.fechas"
+                                    (ngModelChange)="indicadores_ingresosDetalle_consultaCorteDiaAgenda()"
+                                    [showCustomRangeLabel]="true"
+                                    [alwaysShowCalendars]="true"
+                                    [ranges]="this.ranges"
+                                    [linkedCalendars]="true"
+                                    [isInvalidDate] = "isInvalidDate"
+                                    [showClearButton]="false"
+                                    [locale] = "this.locale"
+                                    [showDropdowns]="true"
+                                    readonly="readonly"
+                                    placeholder="DD/MM/YYYY - DD/MM/YYYY"
+                                />
+                                <mat-icon class="iconosBookipp" svgIcon="iconFlechaAbajo" style="position: absolute; margin: -30px 0px 0px 300px;"></mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Tabla de pagos-->
+                <div style="padding:0; min-height: 50px;" *ngIf="indicadores.ingresosDetalle.dataMetodosPago.length > 0">
+                    <table id="tablaPagos" class="table table-striped table-bordered" style="background-color: White; margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 35%; text-align: center;">
+                                    <label>{{'reporteVentasTranslate.metodopago'| translate}}</label>
+                                </th>
+                                <th style="width: 35%; text-align: center;">
+                                    <label>{{'reporteVentasTranslate.cantidadPagos'| translate}}</label>
+                                </th>
+                                <th style="width: 30%; text-align: center;">
+                                    <label>{{'reporteVentasTranslate.total'| translate}}</label>
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let item of indicadores.ingresosDetalle.dataMetodosPago;">
+                                <td>
+                                    {{item.nombre}}
+                                </td>
+                                <td class="text-center">
+                                    {{ item.cantidad }}
+                                </td>
+                                <td class="text-center">
+                                    {{ item.total | currency }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--Tabla de pagos sin pagos-->
+                <div style="padding:0; min-height: 50px;" *ngIf="indicadores.ingresosDetalle.dataMetodosPago.length == 0">
+                    <table id="tablaSinPagos" class="table table-striped table-bordered" style="background-color: White; margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 70%; text-align: center;">
+                                    <label>{{'reporteVentasTranslate.cantidadPagos'| translate}}</label>
+                                </th>
+                                <th style="width: 30%; text-align: center;">
+                                    <label>{{'reporteVentasTranslate.total'| translate}}</label>
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>
+                                    0
+                                </td>
+                                <td class="text-center">
+                                    0
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <!--Tabla de devoluciones-->
+                <div style="padding:0; min-height: 50px;" *ngIf="indicadores.ingresosDetalle.dataDevoluciones.length > 0">
+
+                    <table id="tablaPagoDevoluciones" class="table table-striped table-bordered" style="background-color: White; margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 70%; text-align: center;">
+                                    <label> Cantidad de Devoluciones </label>
+                                </th>
+                                <th style="width: 30%; text-align: center;">
+                                    <label>{{'reporteVentasTranslate.total'| translate}}</label>
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let item of indicadores.ingresosDetalle.dataDevoluciones;">
+                                <td class="text-center">
+                                    {{ item.cantidad }}
+                                </td>
+                                <td class="text-center">
+                                    {{ item.total | currency }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <!-- Tabla Retiros Efectivo -->
+                 <div style="padding:0; min-height: 50px;" *ngIf="indicadores.ingresosDetalle.dataRetiroEfectivo.length > 0">
+                    <table id="tablaRetiroEfectivo" class="table table-striped table-bordered" style="background-color: White; margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 70%; text-align: center;">
+                                    <label>Cantidad Retiro Efectivo</label>
+                                </th>
+                                <th style="width: 30%; text-align: center;">
+                                    <label>{{'reporteVentasTranslate.total'| translate}}</label>
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let item of indicadores.ingresosDetalle.dataRetiroEfectivo;">
+                                <td class="text-center">
+                                    {{ item.cantidad }}
+                                </td>
+                                <td class="text-center">
+                                    {{ item.total | currency }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--Totales-->
+                <div style="padding:0;">
+                    <div style="text-align: right; margin-right: 40px; margin-top: 9px;">
+                        {{ 'reporteVentasTranslate.total'| translate }}: {{ indicadores.ingresosDetalle.total | currency }}
+                    </div>
+                </div>
+
+                <!--Sin registros-->
+                <div style="font-style: italic; font-size: large; min-height: 50px; margin-top: 50px; text-align:center;"
+                    *ngIf="indicadores.ingresosDetalle.dataMetodosPago.length == 0 && indicadores.ingresosDetalle.dataDevoluciones.length == 0">
+                    {{'chuySelectTranslate.noRegistros'| translate}}
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button  type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                    {{'agendaTranslate.aceptar'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---------------------------------------- MODALES DE CANCELACIÓN SERVICIO ----------------------------------->
+<div id="modalCancelarServicio" aria-hidden="true" class="modal fade modalCancelarServicio" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border: 0;">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button class="buttonEstiloBlanco" data-bs-dismiss="modal" (click)="regresarEstatus()" type="button">
+                    {{'agendaTranslate.no'| translate}}
+                </button>
+                <button class="buttonEstiloBlanco" data-bs-dismiss="modal" (click)="cancelarServicio()" type="button">
+                    {{'agendaTranslate.si'| translate}}
+                </button>
+                <button class="buttonEstiloBlanco" data-bs-dismiss="modal" (click)="cancelarCita()" type="button">
+                    {{'agendaTranslate.cancelarCita'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---------------------------------------- MODALES DE CANCELACIÓN CITA -------------------------------------->
+<div id="modalCancelarCita" aria-hidden="true" class="modal fade modalCancelarCita" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border: 0;">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button class="buttonEstiloBlanco" data-bs-dismiss="modal" type="button">
+                    {{'agendaTranslate.no'| translate}}
+                </button>
+                <button class="buttonEstiloBlanco" data-bs-dismiss="modal" (click)="cancelarCita()" type="button">
+                    {{'agendaTranslate.si'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------- MODALES DE CANCELACIÓN RECURRENCIA ------------------------------>
+<div id="modalConfirmarCancelacionRecurrencia" aria-hidden="true" class="modal fade modalConfirmarCancelacionRecurrencia" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button class="buttonEstiloBlanco" data-bs-dismiss="modal" type="button">
+                    {{'agendaTranslate.no'| translate}}
+                </button>
+                <button class="buttonEstiloBlanco" data-bs-dismiss="modal" (click)="cancelarRecurrencia()" type="button">
+                    {{'agendaTranslate.si'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---------------------------------- MODALES DE NOTAS DE CLIENTE ---------------------------------->
+<div id="notas-cliente" aria-hidden="true" class="modal fade notas-cliente" role="dialog" style="overflow: auto;">
+    <div class="modal-dialog displayPred" style="display: grid; justify-content: center;">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: max-content; max-width: 1000px; min-height: 507px;">
+            <div class="modal-header">
+                <span [hidden]="notasClientes.vista != 0">{{'agendaTranslate.notasDeMayus'| translate}} {{calendario.clickedEvent.cliente}}</span>
+                <span [hidden]="notasClientes.vista != 1">{{'agendaTranslate.notaNuevaMayus'| translate}}</span>
+                <span [hidden]="notasClientes.vista != 2">{{'agendaTranslate.notaActualizarMayus'| translate}}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="notasClientes_funciones_cerrarModalNotasX()" data-bs-dismiss="modal" style="cursor: pointer;"></mat-icon>
+            </div>
+            <div class="modal-body" style="min-height:380px;" >
+                <div style="width: 100%; position: relative;">
+
+                    <!--Consulta general -->
+                    <div class="row" [hidden]="notasClientes.vista != 0" style="margin-bottom:0px;">
+                        <div class="col-lg-12" style="margin-bottom:0px;">
+                            <div class="col-lg-12" style="margin-bottom:0px;" >
+                                <table mat-table id="modalReferenciaAgenda" [dataSource]="notasClientes.dataNotas" class="" style="width: calc(100% - 15px);">
+                                    <ng-container matColumnDef="acciones">
+                                        <th mat-header-cell *matHeaderCellDef style="text-align: center; width: 15%;">
+                                            {{'agendaTranslate.acciones'| translate}}
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                            <div style="display: flex;">
+                                                <mat-icon svgIcon="iconBuscar" (click)="notasClientes_funciones_cargarVistaPrevia(element)" class="iconosBookipp ms-2 cursorPointer" style="cursor:pointer; width: 24px; display: inline-table;"></mat-icon>
+                                                <mat-icon [hidden]="element.origen" (click)="notasClientes_funciones_cargarNota(element)" svgIcon="iconEditar" class="iconosBookipp ms-2 cursorPointer" style="cursor:pointer; width: 24px; display: inline-table;"></mat-icon>
+                                                <mat-icon [hidden]="element.origen" (click)="notasClientes_funciones_preparacionBorrarNota(element)" svgIcon="iconBasura" class="iconosBookipp ms-2 cursorPointer" style="cursor:pointer; width: 24px; display: inline-table;"></mat-icon>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="comentario">
+                                        <th mat-header-cell *matHeaderCellDef style="text-align: center; width: 35%;">
+                                            {{'agendaTranslate.nota'| translate}}
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" style="text-align: center; padding-inline: 5px;">
+                                            {{element.comentario}}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="esAlerta">
+                                        <th mat-header-cell *matHeaderCellDef style="text-align: center; width: 15%;">
+                                            {{'agendaTranslate.esAlertaGrid'| translate}}
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                            {{element.esAlerta == 1? (agendaTranslate.si | translate) : (agendaTranslate.no | translate) }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="origen">
+                                        <th mat-header-cell *matHeaderCellDef style="text-align: center; width: 15%;">
+                                            {{'agendaTranslate.origen'| translate}}
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                            {{element.origen ? element.origen : ''}}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nombre">
+                                        <th mat-header-cell *matHeaderCellDef style="text-align: center; width: 20%;">
+                                            {{'agendaTranslate.realizoUltCambio'| translate}}
+                                        </th>
+                                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                            {{element.nombre}}
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns02" ></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns02"></tr>
+                                </table>
+                                <!-- <div ui-grid="notasClientes.grid"  ui-grid-edit class="grid" ui-grid-auto-resize></div>  DUDA -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Nueva nota o Actualizar nota-->
+                    <div class="row" [hidden]="notasClientes.vista != 1 && notasClientes.vista != 2" >
+                        <div style="margin-top: 1%;" class="col-lg-12">
+                            <div class="col-lg-10 col-lg-offset-1" style="margin-top: 1%;">
+                                <div class="col-lg-12">
+                                    <label>{{'consultaClienteTranslate.cliente' | translate}}</label><label style="margin-left:25%;">{{calendario.clickedEvent.cliente}}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1%;" class="col-lg-12">
+                            <div class="col-lg-10 col-lg-offset-1" style="margin-top: 1%;">
+                                <div class="col-lg-12" style="padding:0px">
+                                    <div class="col-lg-4" style="margin-top: 0.8%;">
+                                        <label>{{'consultaClienteTranslate.esAlerta' | translate}}</label>
+                                    </div>
+
+                                    <div class="onoffswitch col-lg-4">
+                                        <mat-slide-toggle id="switch1" cd-true-value="1" cd-false-value="0" checked
+                                            [(ngModel)]="notasClientes.alerta"
+                                            (ngModelChange)="mostrarRecurrencia()"
+                                            [disabled]="notasClientes.vistaPrevia">
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1%;" class="col-lg-12">
+                            <div class="col-lg-10 col-lg-offset-1" style="margin-top: 1%;">
+                                <div style="margin-top: 0.8%;" class="col-lg-4">
+                                    <label style="margin-top: 1px;">{{'consultaClienteTranslate.nota' | translate}}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1%;" class="col-lg-12">
+                            <div class="col-lg-12">
+                                <div class="col-lg-12">
+                                    <textarea id="notas-comentario" type="text" class="form-control" style="width: 100%; resize:none; height: 180px; padding: 10px 10px;"
+                                        [(ngModel)]="notasClientes.comentario" (blur)="notasClientes_funciones_inputBlurNotas(notasClientes.comentario, 'notas-comentario')" (focus)="notasClientes_funciones_inputFocus(notasClientes.comentario, 'notas-comentario')"
+                                        maxlength="500" [disabled]="notasClientes.vistaPrevia">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="height:62px;">
+                <div *ngIf="notasClientes.vista == 1 || notasClientes.vista == 2" style="text-align:center;">
+                    <div [hidden]="notasClientes.vistaPrevia">
+                        <button style="border: none; cursor: pointer; width: 81px; margin-right: 10px; height: auto;" class="buttonEstiloBlanco" (click)="notasClientes_funciones_guardarNota()" type="button" [hidden]="notasClientes.vista != 1">
+                            {{'agendaTranslate.guardar'| translate}}
+                        </button>
+                        <button style="border: none; cursor: pointer; width: 81px; margin-right: 10px; height: auto;" class="buttonEstiloBlanco" (click)="notasClientes_funciones_actualizarNota()" type="button" [hidden]="notasClientes.vista != 2">
+                            {{'agendaTranslate.guardar'| translate}}
+                        </button>
+                        <button style="border: none; cursor: pointer; width: 81px; height: auto;" class="buttonEstiloBlanco" (click)="notasClientes_funciones_volverConsultaNotas()"
+                            type="button">
+                            {{'agendaTranslate.cancelar'| translate}}
+                        </button>
+                    </div>
+                    <div *ngIf="notasClientes.vistaPrevia">
+                        <button style="border: none; cursor: pointer; width: 81px; height: auto;" class="buttonEstiloBlanco" (click)="notasClientes_funciones_volverConsultaNotas()"
+                            type="button">
+                            {{'clienteTranslate.regresar'| translate}}
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="notasClientes.vista == 0" style="text-align:right;">
+                    <div>
+                        <button class="buttonEstiloBlanco" type="button" (click)="notasClientes_funciones_nuevaNota()" style="height: auto;">{{'agendaTranslate.nueva'| translate}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---------------------------------- MODALES DE CONFIRMAR BORRAR NOTAS DE CLIENTE ---------------------------------->
+<div id="notas-cliente-borrar-confirm" role="dialog" aria-hidden="true" class="modal fade notas-cliente-borrar-confirm" style="z-index: 500000">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400;">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'agendaTranslate.cancelar'| translate}}
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="notasClientes_funciones_borrarNota()" style="height: auto;">
+                        {{'agendaTranslate.si'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-------------------------- BOTÓN PARA OCULTAR EL EVENTO DEL CALENDARIO -------------------------->
+<!-- <button id="hide-popover" [hidden]="true" (click)="hidePopover()"></button> -->
+
+<!--------------------------------- TABLA PARA DESCARGA DE EXCEL ---------------------------------->
+<div id="excelTable" style="display: none;"></div>

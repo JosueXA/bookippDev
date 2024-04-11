@@ -1,0 +1,260 @@
+.divider {
+    width: 1px;
+    background: #CCC;
+    height: 26px;
+    margin-top: 3px;
+    margin-right: 5px;
+    float: left;
+    margin-bottom: 3px;
+    margin-left: 5px;
+}
+
+.payment-company-currency {
+    width: auto !important;
+    color: #686868;
+    font-size: 13px !important;
+    padding-left: 6px;
+    text-align: left !important;
+    padding-right: 2px;
+    margin-top: 9px;
+    float: left;
+}
+
+input, textarea{
+    outline: 1px solid #20c4e6 !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}
+
+/*.modal-header{
+    background-color: #20c4e6 !important;
+    color: #dce6ea;
+    text-align: center;
+    font-size: 20px;
+}*/
+
+.mat-column-acciones {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-datoFecha {
+    min-width: 240px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-datoFolioVenta {
+    min-width: 120px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-datoFolioPago {
+    min-width: 120px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-datoEstatus {
+    min-width: 100px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-datoCliente {
+    min-width: 300px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-datoCargo {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-datoAbono {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-datoSaldo {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+
+.recibo-pago {
+    width: 60%;
+    margin: 0 auto!important;
+}
+
+.mat-column-folioTicket {
+    min-width: 100px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-nombreCorteTipo {
+    min-width: 120px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-nombreCorteAccion {
+    min-width: 120px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-nombreUsuario {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-fechaAlta {
+    min-width: 180px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-fondoCaja {
+    min-width: 130px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-montoPromociones {
+    min-width: 130px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-montoDiferencia {
+    min-width: 130px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-totalRetirosEfectivo {
+    min-width: 130px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-totalDevoluciones {
+    min-width: 130px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-nombreRealizoAlta {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-nombreVerifico {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+//
+
+.mat-column-folio_caja {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-fechaAlta {
+    min-width: 180px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-nombrePersonal {
+    min-width: 180px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-nombreCliente {
+    min-width: 180px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-descripcion {
+    min-width: 230px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-total {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-pago {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-descuento {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-promocion {
+    min-width: 150px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}
+
+::ng-deep .cdk-overlay-pane{
+    z-index: 999999 !important;
+}

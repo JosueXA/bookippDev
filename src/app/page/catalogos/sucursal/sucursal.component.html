@@ -1,0 +1,1669 @@
+<mat-card class="mat-elevation-z8">
+	<mat-card-header class="cardHeaderMaterial">
+		<mat-card-title style="display: flex; align-items: center;">
+			{{ "sucursalTranslate.sucursales" | translate }}
+		</mat-card-title>
+		<mat-icon *ngIf="nueva_sucursal" matListIcon class="iconosBookipp iconoSizeHeader" svgIcon="Agregar-1-icon"
+			(click)="descartaActualizar('Nuevo')"></mat-icon>
+
+		<div class="breadcrumbCustom">
+			<a href="/procesos/agenda">
+				<mat-icon matListIcon class="iconosBookipp iconoSize" 
+				style="margin: 0px 0px 3px 0px;" svgIcon="Casa1-icon"></mat-icon>
+				<span>Inicio</span>
+			</a>
+			<a href="#">
+				<mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;" svgIcon="iconFlechaDerecha"></mat-icon>
+			</a>
+			<a href="#" class="active">
+				<span>{{ "sucursalTranslate.sucursales" | translate }}</span>
+			</a>
+		</div>
+	</mat-card-header>
+	<mat-divider></mat-divider>
+
+	<!-- Seccion de sucursales -->
+	<div class="row mx-auto">
+		<div class="col-lg-10 ms-auto" style="max-width: 1000px; overflow-x: auto">
+			<div id="divSucursales" class="d-flex">
+				<div class="d-inline-flex flex-column text-center pt-2 mx-2" *ngFor="let i of sucursal.dataSucursales">
+					<mat-icon id="borrar{{ i.idSucursal }}" (click)="validarSucursalBase(i.idSucursal)" matListIcon
+						class="iconosBookipp iconoSize" style="margin: 3px auto;" svgIcon="timeClose"></mat-icon>
+
+					<img id="img{{ i.idSucursal }}" class="img-thumbnail imageSucursal"
+						[class.activeSucursal]="sucursal.idSucursal === i.idSucursal"
+						src="../../../../assets/images/system/logoSucursal.png"
+						(click)="accionBoton(i.idSucursal, 'toActualizar')" />
+
+					<label id="lbl{{ i.idSucursal }}" (click)="accionBoton(i.idSucursal, 'toActualizar')"
+						class="labelSucursal">
+						{{ i.nombre }}
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<mat-card-content style="margin-top: 10px">
+		<mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true"
+			[(selectedIndex)]="tabSelect">
+			<!-- Datos generales -->
+			<mat-tab id="datosGenerales" label="{{ 'sucursalTranslate.datosGenerales' | translate }}">
+				<!-- Contenedor principal -->
+				<div id="contenedorDatosGenerales" class="row mx-auto">
+					<!-- Panel izquierdo -->
+					<div class="col-lg-5">
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.nombre" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="250" class="form-control borderAzul" id="txtNombre"
+									type="text" [(ngModel)]="sucursal.nombre" (focus)="onFocusTxt('txtNombre')"
+									(blur)="onBlurTxt('txtNombre')" style="width: 100%" />
+							</div>
+						</div>
+
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.email" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="100" class="form-control borderAzul" id="txtEmail"
+									type="text" [(ngModel)]="sucursal.email" (focus)="onFocusTxt('txtEmail')"
+									(blur)="onBlurTxt('txtEmail')" style="width: 100%" />
+							</div>
+							<div class="col-lg-12" style="color: red; margin-top: -2px">
+								{{ msgEmail }}
+							</div>
+						</div>
+
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.telefono" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="12" class="form-control borderAzul" id="txtTelefono"
+									type="text" [(ngModel)]="sucursal.telefono" (focus)="onFocusTxt('txtTelefono')"
+									(blur)="onBlurTxt('txtTelefono')" style="width: 100%" />
+							</div>
+							<div class="col-lg-12" style="color: red; margin-top: -2px">
+								{{ msgTelefono }}
+							</div>
+						</div>
+
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.telefono2" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="30" class="form-control borderAzul" id="txtTelefono2"
+									type="text" [(ngModel)]="sucursal.telefono2" style="width: 100%" />
+							</div>
+							<div class="col-lg-12" style="color: red; margin-top: -2px">
+								{{ msgTelefono2 }}
+							</div>
+						</div>
+
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.codigo" | translate }}
+							</div>
+							<div class="col-11 col-lg-8">
+								<input tabindex="5" maxlength="10" class="form-control borderAzul" disabled
+									id="txtCodigo" type="text" [(ngModel)]="sucursal.codigoSucursal"
+									style="width: 100%" />
+							</div>
+							<div class="col-1 col-lg-1 d-flex align-items-center justify-content-center">
+								<div>
+									<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="AlarmaCirculo-icon"
+										placement="auto"
+										ngbPopover="Código para identificación de la sucursal"></mat-icon>
+								</div>
+							</div>
+						</div>
+
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.idioma" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<ng-select id="ddlIdioma" style="width: 100%" placeholder="{{
+                    'sucursalTranslate.placeholderIdioma' | translate
+                  }}" appendTo="body" [searchable]="false" [clearable]="false" [items]="sucursal.dataIdiomas"
+									(mousedown)="onClickDdl('ddlIdioma')" bindLabel="descripcion" bindValue="idIdioma"
+									[(ngModel)]="sucursal.idioma">
+								</ng-select>
+							</div>
+						</div>
+
+						<div class="row my-3">
+							<div id="lblCategoria" class="col-lg-3">
+								{{ "sucursalTranslate.categorias" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<ng-select id="ddlCategorias" style="width: 100%" placeholder="{{
+                    'sucursalTranslate.placeholderCategoria' | translate
+                  }}" appendTo="body" [searchable]="false" [clearable]="false" [multiple]="true"
+									(change)="onChangeDdlCategorias()" (mousedown)="onClickDdl('ddlCategorias')"
+									[items]="sucursal.dataCategorias" bindLabel="nombre" bindValue="idCategoria"
+									[(ngModel)]="sucursal.categorias">
+								</ng-select>
+							</div>
+							<div class="col-lg-12" style="color: red; margin-top: -2px">
+								{{ msgCategorias }}
+							</div>
+						</div>
+
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.subcategorias" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<ng-select id="ddlSubcategorias" style="width: 100%" placeholder="{{
+                    'sucursalTranslate.placeholderSubcategoria' | translate
+                  }}" (click)="onClickDdl('ddlSubcategorias')" [multiple]="true" appendTo="body" [searchable]="false"
+									[clearable]="false" [items]="sucursal.dataSubcategorias" bindLabel="nombre"
+									bindValue="idSubcategoria" [(ngModel)]="sucursal.subcategoria">
+								</ng-select>
+							</div>
+						</div>
+
+						<div class="row my-3" *ngIf="accion === 'Actualizar'">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.visibleApp" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<mat-slide-toggle id="chkEstaActiva" [(ngModel)]="sucursal.estaActiva">
+								</mat-slide-toggle>
+							</div>
+						</div>
+					</div>
+
+					<!-- Panel derecho -->
+					<div class="col-lg-6">
+						<div class="row mx-auto">
+							<div class="col-lg-10 mx-auto">
+								<canvas id="Canvas1" width="300" height="300" style="display: none"></canvas>
+								<mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true">
+									<!-- logo -->
+									<mat-tab id="logo" label="{{ 'sucursalTranslate.logo' | translate }}">
+										<div id="contenedorLogo" class="row mx-auto mt-3">
+											<div class="col-lg-12 mx-auto" style="max-width: 400px">
+												<div class="carousel-inner">
+
+													<mat-icon id="btnBorrarImagen" matListIcon class="iconosBookipp"
+														(click)="borrarImagenLogo()" style="
+                            position: absolute;
+                            margin-left: 24.8%;
+                            z-index: 1;
+                            color: white;
+                            background-color: #e0e0e0;
+                            cursor: pointer;
+                            display: none;
+                            right: 0px;
+                            top: 0px;
+                          " svgIcon="timeClose"></mat-icon>
+
+													<img id="txtImagen" style="width: 100%; height: 300px" src="{{
+                              this.sucursal.imagenRecortada ||
+                                '../../../../assets/images/migracion/Imagen-Foto-300x300.png'
+                            }}" />
+												</div>
+												<div class="row">
+													<div class="col-lg-12">
+														<div class="form-group">
+															<label class="buttonEstiloBlanco"
+																style="height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+																{{ "importador.selectArchivo" | translate }}
+																<input
+																	style="margin-top: 20px; width: 285px; display: none;"
+																	type="file" id="filesLogo" accept="image/*"
+																	(change)="filesLogoOnchange($event)" />
+															</label>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-lg-9" style="color: red">
+														{{ msgLogo }}
+													</div>
+												</div>
+											</div>
+										</div>
+									</mat-tab>
+
+									<!-- fotografias -->
+									<mat-tab id="fotografias" label="{{ 'sucursalTranslate.fotografias' | translate }}">
+										<div id="contenedorFotografias" class="row mx-auto mt-3">
+											<div class="col-lg-12 mx-auto" style="max-width: 400px">
+												<!-- carousel de fotografias -->
+												<ngb-carousel>
+													<ng-template ngbSlide *ngIf="cargaFoto0">
+														<div id="divImagen0" class="item">
+
+															<mat-icon id="btnBorrarImagen0" matListIcon
+																class="iconosBookipp" (click)="borrarImagenFoto(0)"
+																*ngIf="sucursal.foto[0]" style="
+                                                                position: absolute;
+                                                                margin-left: 24.8%;
+                                                                z-index: 2;
+                                                                color: white;
+                                                                background-color: #e0e0e0;
+                                                                cursor: pointer;
+                                                                right: 0px;
+                                                                top: 0;
+                                                            " svgIcon="timeClose"></mat-icon>
+
+															<img id="txtImagen0" style="width: 100%; height: 300px" src="{{
+                                  sucursal.foto[0] ||
+                                    '../../../../assets/images/migracion/Imagen-Foto-300x300.png'
+                                }}" />
+														</div>
+													</ng-template>
+													<ng-template ngbSlide *ngIf="cargaFoto1">
+														<div id="divImagen1" class="item">
+															<mat-icon id="btnBorrarImagen1" matListIcon
+																class="iconosBookipp" (click)="borrarImagenFoto(1)"
+																*ngIf="sucursal.foto[1]" style="
+                                                                position: absolute;
+                                                                margin-left: 24.8%;
+                                                                z-index: 2;
+                                                                color: white;
+                                                                background-color: #e0e0e0;
+                                                                cursor: pointer;
+                                                                right: 0px;
+                                                                top: 0;
+                                                            " svgIcon="timeClose"></mat-icon>
+
+															<img id="txtImagen1" style="width: 100%; height: 300px" src="{{
+                                  sucursal.foto[1] ||
+                                    '../../../../assets/images/migracion/Imagen-Foto-300x300.png'
+                                }}" />
+														</div>
+													</ng-template>
+													<ng-template ngbSlide *ngIf="cargaFoto2">
+														<div id="divImagen2" class="item">
+															<mat-icon id="btnBorrarImagen2" matListIcon
+																class="iconosBookipp" (click)="borrarImagenFoto(2)"
+																*ngIf="sucursal.foto[2]" style="
+                                                                position: absolute;
+                                                                margin-left: 24.8%;
+                                                                z-index: 2;
+                                                                color: white;
+                                                                background-color: #e0e0e0;
+                                                                cursor: pointer;
+                                                                right: 0px;
+                                                                top: 0;
+                                                            " svgIcon="timeClose"></mat-icon>
+
+															<img id="txtImagen2" style="width: 100%; height: 300px" src="{{
+                                  sucursal.foto[2] ||
+                                    '../../../../assets/images/migracion/Imagen-Foto-300x300.png'
+                                }}" />
+														</div>
+													</ng-template>
+													<ng-template ngbSlide *ngIf="cargaFoto3">
+														<div id="divImagen3" class="item">
+															<mat-icon id="btnBorrarImagen3" matListIcon
+																class="iconosBookipp" (click)="borrarImagenFoto(3)"
+																*ngIf="sucursal.foto[3]" style="
+                                                                position: absolute;
+                                                                margin-left: 24.8%;
+                                                                z-index: 2;
+                                                                color: white;
+                                                                background-color: #e0e0e0;
+                                                                cursor: pointer;
+                                                                right: 0px;
+                                                                top: 0;
+                                                            " svgIcon="timeClose"></mat-icon>
+
+															<img id="txtImagen3" style="width: 100%; height: 300px" src="{{
+                                  sucursal.foto[3] ||
+                                    '../../../../assets/images/migracion/Imagen-Foto-300x300.png'
+                                }}" />
+														</div>
+													</ng-template>
+													<ng-template ngbSlide *ngIf="cargaFoto4">
+														<div id="divImagen4" class="item">
+															<mat-icon id="btnBorrarImagen4" matListIcon
+																class="iconosBookipp" (click)="borrarImagenFoto(4)"
+																*ngIf="sucursal.foto[4]" style="
+                                                            position: absolute;
+                                                            margin-left: 24.8%;
+                                                            z-index: 2;
+                                                            color: white;
+                                                            background-color: #e0e0e0;
+                                                            cursor: pointer;
+                                                            right: 0px;
+                                                            top: 0;
+                                                        " svgIcon="timeClose"></mat-icon>
+
+															<img id="txtImagen4" style="width: 100%; height: 300px" src="{{
+                                  sucursal.foto[4] ||
+                                    '../../../../assets/images/migracion/Imagen-Foto-300x300.png'
+                                }}" />
+														</div>
+													</ng-template>
+												</ngb-carousel>
+
+												<div class="row">
+													<div class="col-lg-12">
+														<div class="form-group">
+															<label class="buttonEstiloBlanco"
+																style="height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+																{{ "importador.selectArchivo" | translate }}
+																<input
+																	style="margin-top: 20px; width: 285px; display: none;"
+																	type="file" (change)="filesFotoOnchange($event)"
+																	id="filesFoto" accept="image/*"
+																	[disabled]="numImagen == 5" />
+															</label>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-lg-9" style="color: red">
+														{{ msgFoto }}
+													</div>
+												</div>
+											</div>
+										</div>
+									</mat-tab>
+								</mat-tab-group>
+							</div>
+						</div>
+					</div>
+
+					<!-- Botón de guardar servicio -->
+					<div class="col-lg-12">
+						<div id="botonGuardarServicio" class="row mx-auto"
+							style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4">
+								<button class="buttonEstiloBlanco" (click)="accioImportarServicios()">
+									{{ "sucursalTranslate.guardar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-4"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+
+			<!-- direccion -->
+			<mat-tab id="direccion" label="{{ 'sucursalTranslate.direccion' | translate }}">
+				<!-- Contenedor principal -->
+				<div id="contenedorDireccion" class="row mx-auto">
+					<div class="col-lg-5">
+						<!-- <div class="row" style="padding-bottom:25px;">
+                                <div class="col-lg-12">
+                                    <label class="control-label" style="color:red;height: 0px;margin-top: -8px;">
+                                        {{ msgDireccion }}
+                                    </label>
+                                </div>
+                            </div> -->
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.calle" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="100" class="form-control borderAzul" id="txtCalle"
+									type="text" [(ngModel)]="sucursal.calle" (focus)="onFocusTxt('txtCalle')"
+									(blur)="onBlurTxt('txtCalle')" />
+							</div>
+							<div class="col-lg-12" style="color: red; margin-top: -2px">
+								{{ msgCalle }}
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.entreCalles" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="200" class="form-control borderAzul" id="txtEntreCalles"
+									type="text" [(ngModel)]="sucursal.entreCalles" style="width: 100%" />
+							</div>
+							<div class="col-lg-12" style="color: red; margin-top: -2px">
+								{{ msgEntreCalles }}
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.numero" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="10" class="form-control borderAzul" id="txtNumero"
+									type="text" [(ngModel)]="sucursal.numero" (focus)="onFocusTxt('txtNumero')"
+									(blur)="onBlurTxt('txtNumero')" style="width: 100%" />
+							</div>
+							<div class="col-lg-12" style="color: red; margin-top: -2px">
+								{{ msgNumero }}
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.numeroInterior" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="15" class="form-control borderAzul"
+									id="txtNumeroInterior" type="text" [(ngModel)]="sucursal.numeroInterior"
+									style="width: 100%" />
+							</div>
+							<div class="col-lg-12" style="color: red; margin-top: -2px">
+								{{ msgNumInterior }}
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.colonia" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="50" class="form-control borderAzul" id="txtColonia"
+									type="text" [(ngModel)]="sucursal.colonia" (focus)="onFocusTxt('txtColonia')"
+									(blur)="onBlurTxt('txtColonia')" style="width: 100%" />
+							</div>
+							<div class="col-lg-12" style="color: red; margin-top: -2px">
+								{{ msgColonia }}
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.codigoPostal" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="10" class="form-control borderAzul"
+									(keypress)="validarNum($event)" id="txtCodigoPostal" type="text"
+									[(ngModel)]="sucursal.codigoPostal" (focus)="onFocusTxt('txtCodigoPostal')"
+									(blur)="onBlurTxt('txtCodigoPostal')" style="width: 100%" />
+							</div>
+							<div class="col-lg-12" style="color: red; margin-top: -2px">
+								{{ msgCPostal }}
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.pais" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<ng-select id="ddlPais" style="width: 100%" placeholder="{{
+                    'sucursalTranslate.placeholderPais' | translate
+                  }}" appendTo="body" (change)="onChangeDdlPais()" (click)="onClickDdl('ddlPais')" [searchable]="false"
+									[clearable]="false" [items]="dataPais" bindLabel="nombre" bindValue="idPais"
+									[(ngModel)]="sucursal.pais">
+								</ng-select>
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.placeholderEstado" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<ng-select id="ddlEstado" style="width: 100%"
+									placeholder="{{ 'sucursalTranslate.estado' | translate }}" appendTo="body"
+									(change)="onChangeDdlEstado()" (click)="onClickDdl('ddlEstado')"
+									[searchable]="false" [clearable]="false" [items]="dataEstado" bindLabel="nombre"
+									bindValue="idEstado" [(ngModel)]="sucursal.estado">
+								</ng-select>
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.ciudad" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<ng-select id="ddlCiudad" style="width: 100%" placeholder="{{
+                    'sucursalTranslate.placeholderCiudad' | translate
+                  }}" appendTo="body" [searchable]="false" [clearable]="false" [items]="sucursal.dataCiudad"
+									(click)="onClickDdl('ddlCiudad')" bindLabel="nombre" bindValue="idCiudad"
+									[(ngModel)]="sucursal.ciudad">
+								</ng-select>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-5">
+						<div class="row">
+							<div class="col-lg-12" style="margin-top: 20px">
+								<div id="1" *ngIf="showMap2">
+									<div id="map_canvas2"></div>
+								</div>
+							</div>
+
+							<!-- <button class="btn btn-success mx-auto" style="max-width: 200px;" type="button"
+                                (click)="establecerUbicacion()">
+                                {{ btnEstablecer }}
+                            </button> -->
+						</div>
+					</div>
+
+					<!-- Botón de guardar servicio -->
+					<div class="col-lg-12">
+						<div id="botonGuardarServicio" class="row mx-auto"
+							style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4">
+								<button class="buttonEstiloBlanco" (click)="accioImportarServicios()">
+									{{ "sucursalTranslate.guardar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-4"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+
+			<!-- horario -->
+			<mat-tab id="horario" label="{{ 'sucursalTranslate.horario' | translate }}">
+				<!-- Contenedor principal -->
+				<div id="contenedorHorario" class="row mx-auto">
+					<div class="col-lg-8">
+						<!-- Lunes -->
+						<div class="row mx-auto my-3">
+							<div class="col-3 col-lg-2">
+								{{ "sucursalTranslate.lunes" | translate }}
+							</div>
+							<div class="col-9 col-lg-2">
+								<mat-slide-toggle id="ChkLunes" [(ngModel)]="sucursal.lunes"
+									(change)="onChangeChkLunes()">
+								</mat-slide-toggle>
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraInicioLunes" style="width: 100%" appendTo="body"
+									[searchable]="true" [clearable]="false" [items]="hora" [disabled]="!sucursal.lunes"
+									bindLabel="h" bindValue="h" [(ngModel)]="sucursal.horaInicioLunes">
+								</ng-select>
+							</div>
+							<div class="col-2 col-lg-1 text-center">
+								{{ "sucursalTranslate.a" | translate }}
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraFinLunes" style="width: 100%" appendTo="body" [searchable]="true"
+									[clearable]="false" [items]="hora" [disabled]="!sucursal.lunes" bindLabel="h"
+									bindValue="h" [(ngModel)]="sucursal.horaFinLunes">
+								</ng-select>
+							</div>
+							<div class="col-12 col-lg-4" style="border: 0px solid; border-color: Red; color: red">
+								{{ msgLunes }}
+							</div>
+						</div>
+						<!-- Martes -->
+						<div class="row mx-auto my-3">
+							<div class="col-3 col-lg-2">
+								{{ "sucursalTranslate.martes" | translate }}
+							</div>
+							<div class="col-9 col-lg-2">
+								<mat-slide-toggle id="ChkMartes" [(ngModel)]="sucursal.martes"
+									(change)="onChangeChkMartes()">
+								</mat-slide-toggle>
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraInicioMartes" style="width: 100%" appendTo="body"
+									[searchable]="true" [clearable]="false" [items]="hora" [disabled]="!sucursal.martes"
+									bindLabel="h" bindValue="h" [(ngModel)]="sucursal.horaInicioMartes">
+								</ng-select>
+							</div>
+							<div class="col-2 col-lg-1 text-center">
+								{{ "sucursalTranslate.a" | translate }}
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraFinMartes" style="width: 100%" appendTo="body" [searchable]="true"
+									[clearable]="false" [items]="hora" [disabled]="!sucursal.martes" bindLabel="h"
+									bindValue="h" [(ngModel)]="sucursal.horaFinMartes">
+								</ng-select>
+							</div>
+							<div class="col-12 col-lg-4" style="border: 0px solid; border-color: Red; color: red">
+								{{ msgMartes }}
+							</div>
+						</div>
+						<!-- Miercoles -->
+						<div class="row mx-auto my-3">
+							<div class="col-3 col-lg-2">
+								{{ "sucursalTranslate.miercoles" | translate }}
+							</div>
+							<div class="col-9 col-lg-2">
+								<mat-slide-toggle id="ChkMiercoles" [(ngModel)]="sucursal.miercoles"
+									(change)="onChangeChkMiercoles()">
+								</mat-slide-toggle>
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraInicioMiercoles" style="width: 100%" appendTo="body"
+									[searchable]="true" [clearable]="false" [items]="hora"
+									[disabled]="!sucursal.miercoles" bindLabel="h" bindValue="h"
+									[(ngModel)]="sucursal.horaInicioMiercoles">
+								</ng-select>
+							</div>
+							<div class="col-2 col-lg-1 text-center">
+								{{ "sucursalTranslate.a" | translate }}
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraFinMiercoles" style="width: 100%" appendTo="body"
+									[searchable]="true" [clearable]="false" [items]="hora"
+									[disabled]="!sucursal.miercoles" bindLabel="h" bindValue="h"
+									[(ngModel)]="sucursal.horaFinMiercoles">
+								</ng-select>
+							</div>
+							<div class="col-12 col-lg-4" style="border: 0px solid; border-color: Red; color: red">
+								{{ msgMiercoles }}
+							</div>
+						</div>
+						<!-- Jueves -->
+						<div class="row mx-auto my-3">
+							<div class="col-3 col-lg-2">
+								{{ "sucursalTranslate.jueves" | translate }}
+							</div>
+							<div class="col-9 col-lg-2">
+								<mat-slide-toggle id="ChkJueves" [(ngModel)]="sucursal.jueves"
+									(change)="onChangeChkJueves()">
+								</mat-slide-toggle>
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraInicioJueves" style="width: 100%" appendTo="body"
+									[searchable]="true" [clearable]="false" [items]="hora" [disabled]="!sucursal.jueves"
+									bindLabel="h" bindValue="h" [(ngModel)]="sucursal.horaInicioJueves">
+								</ng-select>
+							</div>
+							<div class="col-2 col-lg-1 text-center">
+								{{ "sucursalTranslate.a" | translate }}
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraFinJueves" style="width: 100%" appendTo="body" [searchable]="true"
+									[clearable]="false" [items]="hora" [disabled]="!sucursal.jueves" bindLabel="h"
+									bindValue="h" [(ngModel)]="sucursal.horaFinJueves">
+								</ng-select>
+							</div>
+							<div class="col-12 col-lg-4" style="border: 0px solid; border-color: Red; color: red">
+								{{ msgJueves }}
+							</div>
+						</div>
+						<!-- Viernes -->
+						<div class="row mx-auto my-3">
+							<div class="col-3 col-lg-2">
+								{{ "sucursalTranslate.viernes" | translate }}
+							</div>
+							<div class="col-9 col-lg-2">
+								<mat-slide-toggle id="ChkViernes" [(ngModel)]="sucursal.viernes"
+									(change)="onChangeChkViernes()">
+								</mat-slide-toggle>
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraInicioViernes" style="width: 100%" appendTo="body"
+									[searchable]="true" [clearable]="false" [items]="hora"
+									[disabled]="!sucursal.viernes" bindLabel="h" bindValue="h"
+									[(ngModel)]="sucursal.horaInicioViernes">
+								</ng-select>
+							</div>
+							<div class="col-2 col-lg-1 text-center">
+								{{ "sucursalTranslate.a" | translate }}
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraFinViernes" style="width: 100%" appendTo="body"
+									[searchable]="true" [clearable]="false" [items]="hora"
+									[disabled]="!sucursal.viernes" bindLabel="h" bindValue="h"
+									[(ngModel)]="sucursal.horaFinViernes">
+								</ng-select>
+							</div>
+							<div class="col-12 col-lg-4" style="border: 0px solid; border-color: Red; color: red">
+								{{ msgViernes }}
+							</div>
+						</div>
+						<!-- Sabado -->
+						<div class="row mx-auto my-3">
+							<div class="col-3 col-lg-2">
+								{{ "sucursalTranslate.sabado" | translate }}
+							</div>
+							<div class="col-9 col-lg-2">
+								<mat-slide-toggle id="ChkSabado" [(ngModel)]="sucursal.sabado"
+									(change)="onChangeChkSabado()">
+								</mat-slide-toggle>
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraInicioSabado" style="width: 100%" appendTo="body"
+									[searchable]="true" [clearable]="false" [items]="hora" [disabled]="!sucursal.sabado"
+									bindLabel="h" bindValue="h" [(ngModel)]="sucursal.horaInicioSabado">
+								</ng-select>
+							</div>
+							<div class="col-2 col-lg-1 text-center">
+								{{ "sucursalTranslate.a" | translate }}
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraFinSabado" style="width: 100%" appendTo="body" [searchable]="true"
+									[clearable]="false" [items]="hora" [disabled]="!sucursal.sabado" bindLabel="h"
+									bindValue="h" [(ngModel)]="sucursal.horaFinSabado">
+								</ng-select>
+							</div>
+							<div class="col-12 col-lg-4" style="border: 0px solid; border-color: Red; color: red">
+								{{ msgSabado }}
+							</div>
+						</div>
+						<!-- Domingo -->
+						<div class="row mx-auto my-3">
+							<div class="col-3 col-lg-2">
+								{{ "sucursalTranslate.domingo" | translate }}
+							</div>
+							<div class="col-9 col-lg-2">
+								<mat-slide-toggle id="ChkDomingo" [(ngModel)]="sucursal.domingo"
+									(change)="onChangeChkDomingo()">
+								</mat-slide-toggle>
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraInicioDomingo" style="width: 100%" appendTo="body"
+									[searchable]="true" [clearable]="false" [items]="hora"
+									[disabled]="!sucursal.domingo" bindLabel="h" bindValue="h"
+									[(ngModel)]="sucursal.horaInicioDomingo">
+								</ng-select>
+							</div>
+							<div class="col-2 col-lg-1 text-center">
+								{{ "sucursalTranslate.a" | translate }}
+							</div>
+							<div class="col-5 col-lg-3">
+								<ng-select id="txtHoraFinDomingo" style="width: 100%" appendTo="body"
+									[searchable]="true" [clearable]="false" [items]="hora"
+									[disabled]="!sucursal.domingo" bindLabel="h" bindValue="h"
+									[(ngModel)]="sucursal.horaFinDomingo">
+								</ng-select>
+							</div>
+							<div class="col-12 col-lg-4" style="border: 0px solid; border-color: Red; color: red">
+								{{ msgDomingo }}
+							</div>
+						</div>
+					</div>
+
+					<!-- Botón de guardar servicio -->
+					<div class="col-lg-12">
+						<div id="botonGuardarServicio" class="row mx-auto"
+							style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4">
+								<button class="buttonEstiloBlanco" (click)="accioImportarServicios()">
+									{{ "sucursalTranslate.guardar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-4"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+
+			<!-- descansos -->
+			<mat-tab id="descansos" label="{{ 'sucursalTranslate.descansos' | translate }}">
+				<!-- Contenedor principal -->
+				<div id="contenedorDescansos" class="row mx-auto">
+					<div class="col-lg-12">
+						<!-- Lunes -->
+						<div class="row mx-auto my-3" *ngIf="sucursal.lunes">
+							<div class="col-2 col-lg-1">
+								{{ "sucursalTranslate.lunes" | translate }}
+							</div>
+							<div class="col-10 col-lg-1">
+								<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="Agregar-1-icon"
+									(click)="sumarContadorLunes()"></mat-icon>
+							</div>
+							<div class="col-lg-10">
+								<div class="row" *ngIf="sucursal.contadorLunes >= 1">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtLunesDescansoInicio0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoLunes[0].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtLunesDescansoFin0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoLunes[0].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorLunes(0)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-12 col-lg-5" style="color: red">
+										{{ msgLunesDescansos[0] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorLunes >= 2">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtLunesDescansoInicio1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoLunes[1].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtLunesDescansoFin1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoLunes[1].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorLunes(1)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgLunesDescansos[1] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorLunes >= 3">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtLunesDescansoInicio2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoLunes[2].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtLunesDescansoFin2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoLunes[2].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorLunes(2)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgLunesDescansos[2] }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Martes -->
+						<div class="row mx-auto my-3" *ngIf="sucursal.martes">
+							<div class="col-2 col-lg-1">
+								{{ "sucursalTranslate.martes" | translate }}
+							</div>
+							<div class="col-10 col-lg-1">
+								<mat-icon matListIcon class="iconosBookipp iconoSize" (click)="sumarContadorMartes()"
+									svgIcon="Agregar-1-icon"></mat-icon>
+							</div>
+							<div class="col-lg-10">
+								<div class="row" *ngIf="sucursal.contadorMartes >= 1">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMartesDescansoInicio0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMartes[0].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMartesDescansoFin0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMartes[0].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorMartes(0)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgMartesDescansos[0] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorMartes >= 2">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMartesDescansoInicio1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMartes[1].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMartesDescansoFin1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMartes[1].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorMartes(1)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgMartesDescansos[1] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorMartes >= 3">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMartesDescansoInicio2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMartes[2].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMartesDescansoFin2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMartes[2].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorMartes(2)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgMartesDescansos[2] }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Miercoles -->
+						<div class="row mx-auto my-3" *ngIf="sucursal.miercoles">
+							<div class="col-2 col-lg-1">
+								{{ "sucursalTranslate.miercoles" | translate }}
+							</div>
+							<div class="col-10 col-lg-1">
+								<mat-icon matListIcon class="iconosBookipp iconoSize" (click)="sumarContadorMiercoles()"
+									svgIcon="Agregar-1-icon"></mat-icon>
+							</div>
+							<div class="col-lg-10">
+								<div class="row" *ngIf="sucursal.contadorMiercoles >= 1">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMiercolesDescansoInicio0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMiercoles[0].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMiercolesDescansoFin0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMiercoles[0].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorMiercoles(0)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgMiercolesDescansos[0] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorMiercoles >= 2">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMiercolesDescansoInicio1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMiercoles[1].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMiercolesDescansoFin1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMiercoles[1].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorMiercoles(1)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgMiercolesDescansos[1] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorMiercoles >= 3">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMiercolesDescansoInicio2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMiercoles[2].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtMiercolesDescansoFin2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoMiercoles[2].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorMiercoles(2)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgMiercolesDescansos[2] }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Jueves -->
+						<div class="row mx-auto my-3" *ngIf="sucursal.jueves">
+							<div class="col-2 col-lg-1">
+								{{ "sucursalTranslate.jueves" | translate }}
+							</div>
+							<div class="col-10 col-lg-1">
+								<mat-icon matListIcon class="iconosBookipp iconoSize" (click)="sumarContadorJueves()"
+									svgIcon="Agregar-1-icon"></mat-icon>
+							</div>
+							<div class="col-lg-10">
+								<div class="row" *ngIf="sucursal.contadorJueves >= 1">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtJuevesDescansoInicio0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoJueves[0].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtJuevesDescansoFin0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoJueves[0].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorJueves(0)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgJuevesDescansos[0] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorJueves >= 2">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtJuevesDescansoInicio1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoJueves[1].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtJuevesDescansoFin1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoJueves[1].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorJueves(1)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgJuevesDescansos[1] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorJueves >= 3">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtJuevesDescansoInicio2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoJueves[2].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtJuevesDescansoFin2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoJueves[2].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorJueves(2)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgJuevesDescansos[2] }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Viernes -->
+						<div class="row mx-auto my-3" *ngIf="sucursal.viernes">
+							<div class="col-2 col-lg-1">
+								{{ "sucursalTranslate.viernes" | translate }}
+							</div>
+							<div class="col-10 col-lg-1">
+								<mat-icon matListIcon class="iconosBookipp iconoSize" (click)="sumarContadorViernes()"
+									svgIcon="Agregar-1-icon"></mat-icon>
+							</div>
+							<div class="col-lg-10">
+								<div class="row" *ngIf="sucursal.contadorViernes >= 1">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtViernesDescansoInicio0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoViernes[0].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtViernesDescansoFin0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoViernes[0].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorViernes(0)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgViernesDescansos[0] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorViernes >= 2">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtViernesDescansoInicio1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoViernes[1].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtViernesDescansoFin1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoViernes[1].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorViernes(1)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgViernesDescansos[1] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorViernes >= 3">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtViernesDescansoInicio2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoViernes[2].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtViernesDescansoFin2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoViernes[2].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorViernes(2)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgViernesDescansos[2] }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Sabado -->
+						<div class="row mx-auto my-3" *ngIf="sucursal.sabado">
+							<div class="col-2 col-lg-1">
+								{{ "sucursalTranslate.sabado" | translate }}
+							</div>
+							<div class="col-10 col-lg-1">
+								<mat-icon matListIcon class="iconosBookipp iconoSize" (click)="sumarContadorSabado()"
+									svgIcon="Agregar-1-icon"></mat-icon>
+							</div>
+							<div class="col-lg-10">
+								<div class="row" *ngIf="sucursal.contadorSabado >= 1">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtSabadoDescansoInicio0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoSabado[0].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtSabadoDescansoFin0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoSabado[0].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorSabado(0)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgSabadoDescansos[0] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorSabado >= 2">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtSabadoDescansoInicio1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoSabado[1].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtSabadoDescansoFin1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoSabado[1].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorSabado(1)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgSabadoDescansos[1] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorSabado >= 3">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtSabadoDescansoInicio2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoSabado[2].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtSabadoDescansoFin2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoSabado[2].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorSabado(2)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgSabadoDescansos[2] }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Domingo -->
+						<div class="row mx-auto my-3" *ngIf="sucursal.domingo">
+							<div class="col-2 col-lg-1">
+								{{ "sucursalTranslate.domingo" | translate }}
+							</div>
+							<div class="col-10 col-lg-1">
+								<mat-icon matListIcon class="iconosBookipp iconoSize" (click)="sumarContadorDomingo()"
+									svgIcon="Agregar-1-icon"></mat-icon>
+							</div>
+							<div class="col-lg-10">
+								<div class="row" *ngIf="sucursal.contadorDomingo >= 1">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtDomingoDescansoInicio0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoDomingo[0].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtDomingoDescansoFin0" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoDomingo[0].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorDomingo(0)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgDomingoDescansos[0] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorDomingo >= 2">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtDomingoDescansoInicio1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoDomingo[1].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtDomingoDescansoFin1" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoDomingo[1].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorDomingo(1)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgDomingoDescansos[1] }}
+									</div>
+								</div>
+								<div class="row mt-3" *ngIf="sucursal.contadorDomingo >= 3">
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtDomingoDescansoInicio2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoDomingo[2].horaInicio">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center">
+										{{ "sucursalTranslate.a" | translate }}
+									</div>
+									<div class="col-5 col-lg-2">
+										<ng-select id="txtDomingoDescansoFin2" style="width: 100%" appendTo="body"
+											[searchable]="true" [clearable]="false" [items]="hora" bindLabel="h"
+											bindValue="h" [(ngModel)]="sucursal.objetoDomingo[2].horaFin">
+										</ng-select>
+									</div>
+									<div class="col-1 col-lg-1" style="text-align: center; margin: 5px 0px">
+										<mat-icon matListIcon class="iconosBookipp iconoSize"
+											(click)="restarContadorDomingo(2)" svgIcon="Basura-icon"></mat-icon>
+									</div>
+									<div class="col-lg-5" style="color: red">
+										{{ msgDomingoDescansos[2] }}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Botón de guardar servicio -->
+					<div class="col-lg-12">
+						<div id="botonGuardarServicio" class="row mx-auto"
+							style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4">
+								<button class="buttonEstiloBlanco" (click)="accioImportarServicios()">
+									{{ "sucursalTranslate.guardar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-4"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+
+			<!-- redesSociales -->
+			<mat-tab id="redesSociales" label="{{ 'sucursalTranslate.redesSociales' | translate }}">
+				<!-- Contenedor principal -->
+				<div id="contenedorRedesSociales" class="row mx-auto">
+					<div class="col-lg-5">
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.paginaWeb" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="250" class="form-control borderAzul" id="txtPaginaWeb"
+									type="text" [(ngModel)]="sucursal.paginaWeb" style="width: 100%" />
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.facebook" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="250" class="form-control borderAzul" id="txtFacebook"
+									type="text" [(ngModel)]="sucursal.facebook" style="width: 100%" />
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.twitter" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="250" class="form-control borderAzul" id="txtTwitter"
+									type="text" [(ngModel)]="sucursal.twitter" style="width: 100%" />
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-lg-3">
+								{{ "sucursalTranslate.instagram" | translate }}
+							</div>
+							<div class="col-lg-9">
+								<input tabindex="5" maxlength="250" class="form-control borderAzul" id="txtInstagram"
+									type="text" [(ngModel)]="sucursal.instagram" style="width: 100%" />
+							</div>
+						</div>
+					</div>
+
+					<!-- Botón de guardar servicio -->
+					<div class="col-lg-12">
+						<div id="botonGuardarServicio" class="row mx-auto"
+							style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4">
+								<button class="buttonEstiloBlanco" (click)="accioImportarServicios()">
+									{{ "sucursalTranslate.guardar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-4"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+		</mat-tab-group>
+	</mat-card-content>
+</mat-card>
+
+<!-- Modales -->
+<div id="establecerUbicacion" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade establecerUbicacion">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>{{ "sucursalTranslate.establecerUbicacion" | translate }}</span>
+
+				<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconClose" data-bs-dismiss="modal"
+					(click)="modalConfirmUbicacion()"></mat-icon>
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div class="row">
+					<div id="Div2" class="col-lg-12">
+						<div class="col-lg-2" style="padding-left: 0px">
+							<label style="margin-top: 3px">{{
+								"sucursalTranslate.direccion" | translate
+								}}</label>
+						</div>
+						<div class="col-lg-8" style="padding-left: 0; margin-top: 1%">
+							<input id="txtDireccion" [(ngModel)]="sucursal.direccion"
+								(focus)="onFocusTxt('txtDireccion')" (blur)="onBlurTxt('txtDireccion')" type="text"
+								style="width: 100%; border: 1px solid #e5e5e5" />
+						</div>
+						<div class="col-lg-2" style="padding-left: 0">
+							<div class="col-lg-6" style="padding-left: 0">
+								<button id="btnBuscar" class="buttonEstiloBlanco" type="button" style="
+                    margin-top: 1%;
+                    background-color: #337dc0;
+                    color: #dce6ea;
+                    padding-left: 10px;
+                    border: none;
+                  ">
+									{{ "sucursalTranslate.buscar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-6"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12">
+						<label style="padding-left: 2%; color: red; min-height: 15px">{{
+							msgUbicacion
+							}}</label>
+					</div>
+					<div class="col-lg-12">
+						<div id="Div1" ng-if="showMap">
+							<div id="map_canvas"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button id="btnRecortarLogo" type="button" class="buttonEstiloBlanco"
+					style="max-width: 120px; height: 40px; display: none" (click)="definirDireccion()">
+					{{ "sucursalTranslate.establecer" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modalBorrarConfirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalBorrarConfirm">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px"></div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" class="buttonEstiloBlanco" style="max-width: 120px; height: 40px;"
+					data-bs-dismiss="modal">
+					{{ "sucursalTranslate.cancelar" | translate }}
+				</button>
+				<button type="button" class="buttonEstiloBlanco" style="max-width: 120px; height: 40px;"
+					data-bs-dismiss="modal" (click)="borrarSucursal()">
+					{{ "sucursalTranslate.si" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modalConfirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalConfirm">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px"></div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" class="buttonEstiloBlanco" style="max-width: 120px; height: 40px;"
+					(click)="cancelarDescartar()">
+					{{ "sucursalTranslate.cancelar" | translate }}
+				</button>
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+					style="max-width: 120px; height: 40px;" (click)="confirmDescartar()">
+					{{ "sucursalTranslate.si" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modalConfirmDescartarActualizar" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalConfirmDescartarActualizar">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px"></div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" class="buttonEstiloBlanco" style="max-width: 120px; height: 40px;"
+					(click)="cancelarDescartarActualizar()">
+					{{ "sucursalTranslate.cancelar" | translate }}
+				</button>
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+					style="max-width: 120px; height: 40px;" (click)="confirmDescartarActualizar()">
+					{{ "sucursalTranslate.si" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modalConfirmServicios" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalConfirmServicios">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px"></div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" class="buttonEstiloBlanco" data-bs-dismiss="modal"
+					style="max-width: 120px; height: 40px;" (click)="guardarSucursal(null, 'false')">
+					{{ "sucursalTranslate.cancelar" | translate }}
+				</button>
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+					style="max-width: 120px; height: 40px;" (click)="guardarSucursal(null, 'true')">
+					{{ "sucursalTranslate.si" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modalConfirmUbicacion" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalConfirmUbicacion">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px"></div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" class="buttonEstiloBlanco" style="max-width: 120px; height: 40px;"
+					data-bs-dismiss="modal">
+					{{ "sucursalTranslate.cancelar" | translate }}
+				</button>
+				<button type="button" class="buttonEstiloBlanco" style="max-width: 120px; height: 40px;"
+					(click)="descartarUbicacion()">
+					{{ "sucursalTranslate.si" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modalAlertBorrado" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalAlertBorrado">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px"></div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" class="buttonEstiloBlanco" style="max-width: 120px; height: 40px;"
+					data-bs-dismiss="modal">
+					{{ "sucursalTranslate.aceptar" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modalCargarImagen" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalCargarImagen">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>{{ "sucursalTranslate.cargarImagen" | translate }}</span>
+
+				<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconClose" data-bs-dismiss="modal"
+					(click)="cancelarRecortadoImagen()"></mat-icon>
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div id="cropImage"></div>
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button id="btnRecortarLogo" type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+					style="max-width: 120px; height: 40px; display: none" (click)="recortarImagen()">
+					{{ "sucursalTranslate.aceptar" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modalCargarFoto" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalCargarFoto">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>{{ "sucursalTranslate.cargarImagen" | translate }}</span>
+
+				<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconClose" data-bs-dismiss="modal"
+					(click)="cancelarRecortadoFotos()"></mat-icon>
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div id="cropFoto"></div>
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button id="btnRecortarFoto" type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+					style="max-width: 120px; height: 40px; display: none" (click)="recortarFoto()">
+					{{ "sucursalTranslate.aceptar" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,206 @@
+<mat-card class="mat-elevation-z8" id="mainMatCard" style="height: 850px;">
+    <mat-card-header>
+        <mat-card-title> {{'promocionTranslate.promocion' | translate}} </mat-card-title>
+        <div class="col-lg-2 pt-1">
+            <mat-icon id="btnNuevo" class="iconosBookipp" svgIcon="iconAgregar" *ngIf="accesosPantalla.accesoCrearEditar == 1" (click)="crearPromocion()" matListIcon style="cursor: pointer; width: 30px; height: 30px; position: relative; left: -5px;"></mat-icon>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="irAAgenda()" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="irAAgenda()">{{'recetaMedicaTranslate.inicio' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a style="color: #20c4e6; top: -6px; position: relative;">Promociones</a>
+        </div>    
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="pb-5 pt-3">
+        <!-- Calendario y Buscador -->
+        <div class="row page_seccion_campo" style=" margin-top:15px">
+            <!-- Calendario -->
+            <div class="col-lg-6 py-1" id ="CalendarioReporteCitas">
+                <div style="padding-left: 15px;">
+                    <mat-icon class="iconosBookipp" svgIcon="iconCalendarioEditar" style="position: absolute; margin: 8px 0px 0px 30px;"></mat-icon>
+                    <input type="text" id="reportrange" name="calendarioFiltro"
+                        ngxDaterangepickerMd
+                        class="borderAzul"
+                        style="cursor: pointer; height: 40px; width: 350px; padding-left: 90px; border-radius: 1.5rem;"
+                        [(ngModel)]="fechaCalendario"
+                        (ngModelChange)="consultarPromocionesPorSucursal()"
+                        [showCustomRangeLabel]="true"
+                        [alwaysShowCalendars]="true"
+                        [ranges]="this.ranges"
+                        [linkedCalendars]="true"
+                        [isInvalidDate] = "isInvalidDate"
+                        [showClearButton]="false"
+                        [locale]="this.locale"
+                        [showDropdowns]="true"
+                        placeholder="DD/MM/YYYY - DD/MM/YYYY" 
+                    />
+                    <mat-icon class="iconosBookipp" svgIcon="iconFlechaAbajoPeque" style="position: absolute; margin: 8px 0px 0px -60px;"></mat-icon>
+                </div>
+            </div>
+
+            <div class="col-lg-2"></div>
+
+            <!-- Buscador -->
+            <div class="col-lg-4 col-sm-12 py-1 anchoBuscador" *ngIf="dataPromocionesOriginal.length != 0" style="padding-bottom: 2%; float: right;">
+                <span style="position: absolute; margin-left: 10px; font-size: 18px;">
+                    <mat-icon class="iconosBookipp" svgIcon="iconBuscar"></mat-icon>
+                </span>
+                <input id="inputFiltroBusqueda" class="form-control borderAzul" 
+                    style="height: 30px; padding-left: 35px; width: 93%;" type="text" 
+                    placeholder="{{'consultaProductosTranslate.buscar' | translate}}" 
+                    [(ngModel)]="filtro.textoFiltro" 
+                    (ngModelChange)="buscarPromociones()"/>
+            </div> 
+        </div>
+
+        <!-- Listado de Promociones -->
+        <div class="row page_seccion_campo" style="margin-top: 10px; min-height: 300px;">
+            <div class="row col-lg-12" *ngIf="dataPromociones.length == 0" style="font-style: italic; font-size: large; justify-content: center;">
+                No hay datos para mostrar
+            </div>
+
+            <!-- Tabla de Promociones -->
+            <div class="col-lg-12" *ngIf="dataPromociones.length > 0" id="contenedorTablaPersonal">
+                <div class="mat-elevation-z8" style="width: calc(100% - 15px); margin-top: 10px; overflow: auto;">
+                    <table mat-table id="tablaPromociones" [dataSource]="dataSource" matSort style="width: 100%; min-width: 1220px; border: solid 1px #c5c4c4;">
+                        <ng-container matColumnDef="idPromocion">
+                            <th mat-header-cell *matHeaderCellDef style="text-align: center; width: 100px;" >
+                                Acciones
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                <mat-icon svgIcon="iconEditar1" *ngIf="accesosPantalla.accesoCrearEditar == 1" (click)="actualizarPromocion(element)" class="iconosBookipp" style="cursor: pointer;"></mat-icon>
+                                <mat-icon svgIcon="iconBasura" *ngIf="accesosPantalla.accesoCrearEditar == 1" (click)="preparacionBorrarPromocion(element)" class="iconosBookipp" style="cursor: pointer;"></mat-icon>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nombrePromocion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                                Nombre Promoción
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.nombrePromocion}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tipoPromocion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                                Tipo de Promoción
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.tipoPromocion}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tipoVigencia">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                                Tipo de Vigencia
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.tipoVigencia}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fechaInicio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                                Vigencia Fecha Inicio
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.fechaInicio}} </td>
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="fechaFin">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                                Vigencia Fecha Fin
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.fechaFin}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="difusionPromocion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                                Envío
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                {{(element.difusionPromocion ? "consultaCambioTipoTranslate.si" : "consultaCambioTipoTranslate.no") | translate}}
+                            </td>
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="tipoDifusion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                                Tipo de Envío
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.tipoDifusion}} </td>
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="activa">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                                Activa
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+                                {{(element.activa ? "consultaCambioTipoTranslate.si" : "consultaCambioTipoTranslate.no") | translate}}
+                            </td>
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="esBorrador">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                                Es Borrador
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+                                {{(element.esBorrador ? "consultaCambioTipoTranslate.si" : "consultaCambioTipoTranslate.no") | translate}}
+                            </td>
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="fechaAlta">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;">
+                                Fecha Alta
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.fechaAlta}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns_listadoPromociones"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns_listadoPromociones;"></tr>                    
+                    </table>  
+                </div>
+            </div>
+            
+            <mat-paginator 
+                [hidden]="dataPromociones.length == 0" 
+                [pageSizeOptions]="[10, 25, 50, 100, 200]" 
+                showFirstLastButtons aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- Modal Alert -->
+<div id="modal-alert" tabindex="-1" role="dialog" class="modal fade modal-alert">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;" id="mensaje1">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'consultaPromocionesTranslate.aceptar' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmar Eliminar -->
+<div id="modalEliminarPromocion" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modalEliminarPromocion">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'consultaPromocionesTranslate.cancelar' | translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="eliminarPromocion()" style="height: auto;">
+                        {{'consultaPromocionesTranslate.si' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

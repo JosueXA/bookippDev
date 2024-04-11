@@ -1,0 +1,41 @@
+.canvasStyle {
+    //min-width: 628px;
+    //min-height: 314px;
+    max-width: 628px;
+    max-height: 314px;
+}
+
+.tablesRowsSize{
+    min-width: 238.5px;
+    min-height: 55px;
+    max-width: 238.5px;
+    max-height: 55px;
+}
+
+.labelLink{
+    text-decoration: underline; 
+    color: #357ec1;
+    cursor: pointer;
+}
+
+.labelLink:hover{
+    text-decoration: underline; 
+    color: #b32032;
+}
+
+.colorBgBtnCharts{
+    color: white;
+    background-color: #357ec1;
+}
+
+@media screen and (max-width: 992px){
+    .ocultarDivSeparador{
+        display: none;
+    }
+}
+
+.heightPred{
+    @media screen and (max-width: 767px){
+        min-height: 550px !important;
+    }
+}

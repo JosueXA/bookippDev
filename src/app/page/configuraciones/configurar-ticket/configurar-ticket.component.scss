@@ -1,0 +1,53 @@
+.titleFiltro {
+    display: block;
+    text-align: center;
+
+    span {
+        display: block;
+        min-height: 25px;
+    }
+}
+
+.example-section {
+    margin: 5px 0;
+}
+
+.example-margin {
+    margin: 0 12px;
+}
+
+.iconImg {
+    width: 24px;
+    margin: 0px 5px;
+    cursor: pointer;
+}
+
+.tableOverflow {
+    margin-top: 30px;
+    overflow: auto;
+    min-height: 200px;
+}
+
+.table {
+    thead {
+        tr {
+            th {
+                text-align: center;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            td {
+                text-align: center;
+            }
+        }
+    }
+}
+
+.inputCustom {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}

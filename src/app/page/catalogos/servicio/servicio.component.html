@@ -1,0 +1,904 @@
+<mat-card class="mat-elevation-z8">
+    <mat-card-header class="cardHeaderMaterial">
+        <mat-card-title> Servicio </mat-card-title>
+
+		<div class="breadcrumbCustom">
+			<a href="/procesos/agenda">
+				<mat-icon matListIcon class="iconosBookipp iconoSize" 
+				style="margin: 0px 0px 3px 0px;" svgIcon="iconCasita"></mat-icon>
+				<span>Inicio</span>
+			</a>
+			<a href="#">
+				<mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;" svgIcon="iconFlechaDerecha"></mat-icon>
+			</a>
+			<a href="#" class="active">
+				<span>Servicios</span>
+			</a>
+		</div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content style="margin-top: 10px;">
+        <mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true">
+
+            <!-- SERVICIOS -->
+            <mat-tab id="servicios" label="{{'servicioTranslate.servicios'| translate}}" style="width: 50%;">
+
+                <!-- Contenedor de servicios -->
+                <div id="contenedorServicios" class="row mx-auto">
+
+                    <!-- Secciones de datos de servicios -->
+                    <div id="seccionesServicios" class="col-lg-8">
+
+                        <!-- Sección Botón Nuevo-->
+                        <div id="servicioSeccionBotonNuevo" class="col-lg-12 page_seccion">
+                            <div  class="row mx-auto" style="margin-top: 15px;">
+                                <div class="col-3" style="display: flex; height: 34px;">
+                                    <label style="margin: auto 0;"> Nuevo Servicio </label>
+                                </div>
+                                <div class="col-1 d-flex justify-content-center align-items-center">
+									<div>
+										<mat-icon svgIcon="iconPlusCircle" class="iconosBookipp iconoSize" 
+										(click)="nuevoServicio()"></mat-icon>
+									</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sección Datos Generales -->
+                        <div id="servicioSeccionDatosGenerales" class="col-lg-12 page_seccion">
+                            
+                            <!-- Titulo de sección -->
+                            <div class="col-lg-12 page_seccion_titulo">
+                                {{'servicioTranslate.datosGenerales'| translate}}
+                            </div>
+                            <div class="col-lg-12 page_seccion_titulo_barra">
+                                <hr class="page_seccion_titulo_barra_contenido"/>
+                            </div>
+
+                            <!-- Nombre -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> {{'servicioTranslate.nombre'| translate}} </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <input id="txtNombre" class="form-control borderAzul" style="height: 100%;" type="text" maxlength="100" 
+                                            [(ngModel)]="servicio.nombre" 
+                                            (focus)="onFocusTxt('txtNombre')" 
+                                            (blur)="onBlurTxt('txtNombre')"/>
+                                    </div>
+                                    <div class="col-lg-12 page_seccion_campo_contenido_error"
+                                        *ngIf="msgNombre">
+                                        <label class="control-label" style="height: 100%;"> {{msgNombre}} </label> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Duración -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> {{'servicioTranslate.duracion'| translate}} </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor" style="display: flex;">
+                                        <div class="col-6" style="padding: 0;">
+                                            <input id="txtDuracion" class="form-control borderAzul" style="height: 100%;" type="text" maxlength="3" 
+                                                [(ngModel)]="servicio.duracion" 
+                                                (focus)="onFocusTxt('txtDuracion')" 
+                                                (blur)="onBlurTxt('txtDuracion')"
+                                                (keypress)="servicio_validarNum($event)"/>
+                                        </div>
+                                        <div class="col-2" style="padding: 0; display: flex;">
+                                            <label style="margin: auto auto;">{{'servicioTranslate.min'| translate}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 page_seccion_campo_contenido_error"
+                                        *ngIf="msgDuracion">
+                                        <label class="control-label" style="height: 100%;"> {{msgDuracion}} </label> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Costo Tipo -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> {{'servicioTranslate.costoTipo'| translate}} </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-6 page_seccion_campo_contenido_valor">
+                                        <ng-select id="ddlCostoTipo" style="height: 100%; width: 100%;" placeholder="{{'servicioTranslate.costoTipoM'| translate}}"
+                                            appendTo="#ddlCostoTipo"
+                                            [searchable]="false"
+                                            [clearable]="false"
+                                            [items]="dataCostoTipo"
+                                            bindLabel="descripcion"
+                                            bindValue="idCostoTipo"
+
+                                            [(ngModel)]="servicio.costoTipo"
+                                            (ngModelChange)="onChangeDdlTipoCosto()"
+                                            (click)="onClickDdl('ddlCostoTipo')">
+                                         </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Costo Min. -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> {{'servicioTranslate.costoMinimo'| translate}} </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-6 page_seccion_campo_contenido_valor">
+                                        <input id="txtCostoMinimo" class="form-control borderAzul" style="height: 100%; text-align:right;" type="text" maxlength="15"
+                                            [(ngModel)]="servicio.costoMinimo"
+                                            (focus)="onFocusTxt('txtCostoMinimo')" 
+                                            (blur)="onBlurTxt('txtCostoMinimo')"
+                                            [disabled]="!(servicio.costoTipo != null)"
+                                            currencyMask [options]="{ allowNegative: false, prefix: '', nullable: true, inputMode: 1 }" autocomplete="off"/>
+                                        <span style="position:relative; right:-11px; top:-27px;">$</span>
+                                    </div>
+                                    <div class="col-lg-12 page_seccion_campo_contenido_error"
+                                        *ngIf="msgCostoMin">
+                                        <label class="control-label" style="height: 100%;"> {{msgCostoMin}} </label> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Costo Max. -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> {{'servicioTranslate.costoMaximo'| translate}} </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-6 page_seccion_campo_contenido_valor">
+                                        <input id="txtCostoMaximo" class="form-control borderAzul" style="height: 100%; text-align:right;" type="text" maxlength="9"
+                                            [(ngModel)]="servicio.costoMaximo"
+                                            (focus)="onFocusTxt('txtCostoMaximo')" 
+                                            (blur)="onBlurTxt('txtCostoMaximo')"
+                                            [disabled]="!(servicio.costoTipo == 1 || servicio.costoTipo == 3)" 
+                                            currencyMask [options]="{ allowNegative: false, prefix: '', nullable: true, inputMode: 1 }" autocomplete="off"/>
+                                        <span style="position:relative; right:-11px; top:-27px;">$</span>
+                                    </div>
+                                    <div class="col-lg-12 page_seccion_campo_contenido_error"
+                                        *ngIf="msgCostoMax">
+                                        <label class="control-label" style="height: 100%;"> {{msgCostoMax}} </label> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Configuración de facturación -->
+                            <div [hidden]="this._pantallaServicio.permisos_visualizacion.accesosPantalla.sitebar.mostrarFacturacion == false">
+
+                                <!--Clave producto-->
+                                <div class="row mx-auto page_seccion_campo">
+                                    <div class="col-lg-3 page_seccion_campo_label">
+                                        <label class="page_seccion_campo_label_contenido"> Clave de Producto </label>
+                                    </div>
+                                    <div class="col-lg-9 page_seccion_campo_contenido">
+                                        <div class="col-lg-6 page_seccion_campo_contenido_valor">
+                                            <ng-select id="txtCPS" style="height: 100%; width: 100%;" placeholder="Seleccione una clave"
+                                                appendTo="#txtCPS"
+                                                [searchable]="false"
+                                                [items]="dataCPS"
+                                                bindLabel="descripcion"
+                                                bindValue="idClaveProdServ"
+
+                                                [(ngModel)]="servicio.idClaveProdServ">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <!-- Unidad de medida -->
+                                <div class="row mx-auto page_seccion_campo">
+                                    <div class="col-lg-3 page_seccion_campo_label">
+                                        <label class="page_seccion_campo_label_contenido"> Unidad de Medida </label>
+                                    </div>
+                                    <div class="col-lg-9 page_seccion_campo_contenido">
+                                        <div class="col-lg-6 page_seccion_campo_contenido_valor">
+                                            <ng-select id="txtUnidadMedida" style="height: 100%; width: 100%;" placeholder="Seleccione una unidad de medida"
+                                                appendTo="#txtUnidadMedida"
+                                                [searchable]="false"
+                                                [items]="dataUnidadMedida"
+                                                bindLabel="nombre"
+                                                bindValue="idUnidadMedida"
+
+                                                [(ngModel)]="servicio.idUnidadMedida">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Sección Configuración -->
+                        <div id="servicioSeccionConfiguracion" class="col-lg-12 page_seccion">
+
+                            <!-- Titulo de sección -->
+                            <div class="col-lg-12 page_seccion_titulo">
+                                {{'servicioTranslate.configuracion'| translate}}
+                            </div>
+                            <div class="col-lg-12 page_seccion_titulo_barra">
+                                <hr class="page_seccion_titulo_barra_contenido"/>
+                            </div>
+
+                            <!-- Grupo -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido ls-link-b" 
+                                        (click)="abrirModalEtiquetas()"> 
+                                        Grupo 
+                                    </label>
+                                </div>
+                                <div id="divFiltro" class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="row mx-auto">
+                                        <div class="col-6 page_seccion_campo_contenido_valor">
+                                            <input id="inputEtiqueta" class="form-control borderAzul" style="margin-top: 0px" type="text" placeholder="p ej. Tratamiento" 
+                                                [matAutocomplete]="etiquetasAutocomplete"
+                                                [(ngModel)]="etiqueta.etiquetaSeleccionada"
+                                                (ngModelChange)="filtroEtiquetas()"/>
+                                            <mat-autocomplete #etiquetasAutocomplete="matAutocomplete" [displayWith]="displayEtiquetas">
+                                                <mat-option *ngFor="let etiqueta of etiqueta.dataEtiquetasFiltro" [value]="etiqueta">
+                                                    {{etiqueta.nombre}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </div>
+                                        <div class="col-1 page_seccion_campo_contenido_valor mx-1" style="display: flex; justify-content: center; align-items: center;">
+											<mat-icon svgIcon="iconPlusCircle" class="iconosBookipp iconoSize" (click)="guardarEtiqueta()"></mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lista de grupos -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <!-- <div class="col-lg-12 page_seccion_campo_contenido">
+                                    
+                                </div> -->
+                                <div class="col-3 puntosSuspensivos2" style="padding:0; margin-left: 2px;" 
+                                    *ngFor="let x of etiqueta.dataServicioEtiquetas">
+                                    <mat-icon svgIcon="iconCross" class="iconosBookipp" (click)="eliminarEtiquetaServicio(x.idEtiqueta)" 
+                                        style="width: 24px; height: 24px; position: relative; left: 4px; top: 7px; cursor: pointer;">
+                                    </mat-icon>
+                                    <a style="cursor: pointer; text-decoration:underline !important; color:#5a97cb; margin-right: 15px;"
+                                        (click)="addFilter(x.idEtiqueta, x.nombre)">
+                                        {{x.nombre}}
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Empalmar citas -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> {{'servicioTranslate.tiempoDisponible'| translate}} </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <mat-slide-toggle id="chkLibre"
+                                            [(ngModel)]="servicio.libre"
+                                            (ngModelChange)="onChangeChkLibre()">
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+
+                                <!--<div class="col-xs-3" style="padding-right: 0px;" ng-hide="true">
+                                    <input id="txtTiempoDisponible"  onkeypress="javascript:return validarNum(event)" ng-model="servicio.duracion" ng-focus="onFocusTxt('txtTiempoDisponible')" ng-blur="onBlurTxt('txtTiempoDisponible')"
+                                        ng-disabled="!servicio.libre" class="form-control borderAzul" type="text" maxlength="3"/>
+                                </div>
+                                <div class="col-xs-2" style="padding: 0;" ng-hide="true">
+                                    <label style="margin-top: 5px; margin-left:5px;">{{'servicioTranslate.min'| translate}}</label>   
+                                    <a id="pop2" rel="popover"  href="javascript:void(0);" data-toggle="popover"> <span class="glyphicon glyphicon-info-sign" style="color: #357EC1; margin-left:6px; margin-top: 9px; font-size: 1.2em; position:static"></span></a>
+                                </div>-->
+                                <!--<div style=" color:red;" class="col-xs-4">
+                                    <label class="control-label" > {{msgTiempoDisponible}}</label> 
+                                </div>-->
+                            </div>
+
+                            <!-- Visible en app -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> {{'servicioTranslate.visibleEnApp'| translate}} </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <mat-slide-toggle id="chkVisibleApp"
+                                            [(ngModel)]="servicio.esPrivado"
+                                            (ngModelChange)="onchangeChkServicioPrivado()">
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Visible en link -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> Visible en Link </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <mat-slide-toggle id="chkVisibleLink"
+                                            [(ngModel)]="servicio.esLink">
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Iva Servicios -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> Aplica Iva </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <mat-slide-toggle id="swservicioiva"
+                                            [(ngModel)]="servicio.iva">
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pago con Paypal -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> Pago con Paypal obligatorio en Ligas</label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <mat-slide-toggle id="chkPagoPaypal"
+                                            [(ngModel)]="servicio.pagoPaypal">
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Listado de servicios -->
+                    <div id="listadoServicios" class="col-lg-4">
+
+                        <!-- Filtros de listado de servicios -->
+                        <div id="listadoServiciosFiltros" class="col-lg-12 page_seccion">
+
+                            <!-- Listado de filtros -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-12 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <ng-select id="ddlGrupo" style="height: 100%; width: 100%;" placeholder="{{'servicioTranslate.grupos'| translate}}"
+                                            appendTo="#ddlGrupo"
+                                            [multiple]="true"
+                                            [searchable]="true"
+                                            [items]="multiSelResources"
+                                            bindLabel="label"
+                                            
+                                            [(ngModel)]="multiSelModel"
+                                            (ngModelChange)="seleccionarGrupos(0)">
+                                            <ng-template ng-multi-label-tmp>
+                                                <div class="ng-value">
+                                                    {{'servicioTranslate.grupos'| translate}}
+                                                </div>
+                                            </ng-template>
+                                            <ng-template ng-header-tmp>
+                                                <button (click)="seleccionarGrupos(1)" class="btn btn-sm btn-secondary"> {{'agendaTranslate.verTodos'| translate}} </button>
+                                                <button (click)="seleccionarGrupos(2)" class="btn btn-sm btn-secondary"> {{'agendaTranslate.quitarTodos'| translate}} </button>
+                                            </ng-template>
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <button id="btnDescartar" class="btn btn-danger" type="button" (click)="descartar(null)" style="display:none;" >
+                                    {{'servicioTranslate.cancelar'| translate}}
+                                </button>
+                            </div>
+
+                            <!-- Buscador de servicio -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-12 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <mat-icon svgIcon="iconSearch" class="iconosBookipp" style="position: absolute; cursor: pointer; margin: 5px 0px 0px 5px; width: 24px; height: 24px;"></mat-icon>
+                                        <input id="inputNombres"class="form-control borderAzul" style="height: 100%; padding-left: 35px;" type="text" placeholder="{{'consultaClienteTranslate.buscar' | translate}}"
+                                            [(ngModel)]="inputBusquedaServicios" 
+                                            (ngModelChange)="busquedaServicio()"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Listado -->
+                        <div id="listadoServiciosListado" class="col-lg-12 page_seccion">
+                            <div class="col-lg-12">
+                                <div id="Ul1" class="col-lg-12 colorBorderPrimario" style="height: 320px; padding: 0px; border: 1px solid !important; border-radius: 15px; padding: 10px;">
+                                    <ul id="navlist" class="col-lg-12" style="height: 100%; overflow-y:auto; overflow-x:hidden; padding: 0px;">
+                                        <li class="row" style="padding: 0px; margin-top: 5px; margin-bottom: 5px; display: flex; min-height: 30px;" *ngFor="let i of servicio.dataServicios">
+                                            <div class="col-2" style="display: flex; justify-content: center; align-items: center;">
+                                                <div>
+													<mat-icon svgIcon="iconCross" class="iconosBookipp iconoSize" id="borrar{{i.idServicio}}" (click)="confirmarBorrarServicio(i.idServicio)"></mat-icon>
+												</div>
+                                            </div>
+                                            <div id="div{{i.idServicio}}" class="{{i.claseColor}} col-1" style="cursor:pointer; border-radius: 25px; text-align: center; padding-top: 6px; min-height:26px; margin-left:5px; margin: auto auto;"
+                                                (click)="accionBoton(i.idServicio, 'toActualizar')">
+                                            </div>
+                                            <div class="col-9" style="display: flex;">
+                                                <label id="lbl{{i.idServicio}}" style="overflow: hidden; white-space: nowrap;cursor:pointer; text-overflow: ellipsis;cursor:pointer; text-align:left; margin-top:6px; font-size:13px"
+                                                    (click)="accionBoton(i.idServicio, 'toActualizar')" > 
+                                                    {{i.nombre}} 
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Botón de guardar servicio -->
+                <div id="botonGuardarServicio" class="row mx-auto" style="text-align:center; margin-top: 40px; margin-bottom: 40px;">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <button class="buttonEstiloBlanco" (click)="accionBoton(undefined, undefined)"> {{'servicioTranslate.guardar'| translate}} </button>
+                    </div>
+                    <div class="col-lg-4"></div>
+                </div>
+
+            </mat-tab>
+
+            <!-- PAQUETES -->
+            <mat-tab id="paquetes" label="{{'servicioTranslate.paquetes'| translate}}">
+
+                <!-- Contenedor de paquetes -->
+                <div id="contenedorPaquetes" class="row mx-auto">
+
+                    <!-- Secciones de datos de paquetes -->
+                    <div id="seccionesPaquetes" class="col-lg-8">
+
+                        <!-- Sección Botón Nuevo-->
+                        <div id="paqueteSeccionBotonNuevo" class="col-lg-12 page_seccion">
+                            <div  class="row mx-auto" style="margin-top: 15px;">
+                                <div class="col-3" style="display: flex; height: 34px;">
+                                    <label style="margin: auto 0;"> Nuevo Paquete </label>
+                                </div>
+                                <div class="col-1 d-flex justify-content-center align-items-center">
+                                	<div>
+										<mat-icon svgIcon="iconPlusCircle" class="iconosBookipp iconoSize" 
+										(click)="inicializarPaquetes()"></mat-icon>
+									</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sección Datos Generales -->
+                        <div id="paqueteSeccionDatosGenerales" class="col-lg-12 page_seccion">
+
+                            <!-- Titulo de sección -->
+                            <div class="col-lg-12 page_seccion_titulo">
+                                {{'servicioTranslate.datosGenerales'| translate}}
+                            </div>
+                            <div class="col-lg-12 page_seccion_titulo_barra">
+                                <hr class="page_seccion_titulo_barra_contenido"/>
+                            </div>
+
+                            <!-- Descripción de paquete -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> Descripción </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <input id="txtDescripcion" class="form-control borderAzul" style="height: 100%;" type="text"
+                                            [(ngModel)]="paquetes.nombre"/>
+                                    </div>
+                                    <div class="col-lg-12 page_seccion_campo_contenido_error"
+                                        *ngIf="msgNombre">
+                                        <label class="control-label" style="height: 100%;"> {{msgNombre}} </label> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Servicios de paquetes -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> Servicios </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <ng-select id="ddlServicio" style="height: 100%; width: 100%;"
+                                            appendTo="#ddlServicio"
+                                            [multiple]="true"
+                                            [searchable]="true"
+                                            [items]="paquetes.dataServicios"
+                                            bindLabel="nombre"
+                                            bindValue="idServicio"
+
+                                            [(ngModel)]="paquetes.servicios"
+                                            (click)="onClickDdl('ddlServicio')">
+                                         </ng-select>
+                                    </div>
+                                    <div style="color:red;" class="col-lg-12">
+                                        <label id="txtErrorDdlServicios" class="control-label text-left" style="color: red; display: none;"> Los servicios y las asignaciones de cantidad deben coincidir </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cantidad de servicios --> 
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> Cant. de servicios </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor" style="height: max-content !important;">
+                                        <mat-chip-list #txtCantServicios>
+                                            <mat-chip *ngFor="let lcs of listCantServicios" (removed)="paqueteEliminarCantidadDeServicio(lcs)">
+                                                {{lcs.text}}
+                                                <i matChipRemove class="fa-solid fa-solid fa-xmark colorPrimario"></i>
+                                            </mat-chip>
+                                            <input class="form-control borderAzul" placeholder="P. ej. 1; 2; 1" style="height: 34px; padding: 0rem 0.75rem;"
+                                                selectable="false"
+                                                [matChipInputFor]="txtCantServicios"
+                                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                                [matChipInputAddOnBlur]="true"
+                                                (matChipInputTokenEnd)="paqueteAgregarCantidadDeServicio($event)">
+                                        </mat-chip-list>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Costo Tipo -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> Tipo de pago </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-6 page_seccion_campo_contenido_valor">
+                                        <ng-select id="ddlCostoTipoP" style="height: 100%; width: 100%;"
+                                            appendTo="#ddlCostoTipoP"
+                                            [searchable]="false"
+                                            [clearable]="false"
+                                            [items]="dataCostoTipoP"
+                                            bindLabel="descripcion"
+                                            bindValue="idPaquete_tipo_costo"
+
+                                            [(ngModel)]="paquetes.idCostoTipo"
+                                            (ngModelChange)="onChangeDdlTipoCostoPaquete()">
+                                         </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Costo del paquete -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> Costo de Paquete </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-6 page_seccion_campo_contenido_valor">
+                                        <input id="txtCostoParcial" class="form-control borderAzul" style="height: 100%; text-align:right;" type="text" maxlength="9"
+                                            [(ngModel)]="paquetes.precioParcial"
+                                            [disabled]="(paquetes.idCostoTipo == null)"
+                                            currencyMask [options]="{ allowNegative: false, prefix: '', nullable: true, inputMode: 1 }"/>
+                                        <span style="position:relative; right:-11px; top:-27px;">$</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Sección Configuración -->
+                        <div id="paqueteSeccionConfiguracion" class="col-lg-12 page_seccion">
+
+                            <!-- Titulo de sección -->
+                            <div class="col-lg-12 page_seccion_titulo">
+                                {{'servicioTranslate.configuracion'| translate}}
+                            </div>
+                            <div class="col-lg-12 page_seccion_titulo_barra">
+                                <hr class="page_seccion_titulo_barra_contenido"/>
+                            </div>
+
+                            <!-- Vigente --> 
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> Vigente </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <mat-slide-toggle id="chckActivo"
+                                            [(ngModel)]="paquetes.vigente">
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Periodo de consumo -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-3 page_seccion_campo_label">
+                                    <label class="page_seccion_campo_label_contenido"> Período Consumo </label>
+                                </div>
+                                <div class="col-lg-9 page_seccion_campo_contenido">
+                                    <div class="row mx-auto">
+                                        <div class="col-6 page_seccion_campo_contenido_valor">
+                                            <ng-select id="ddlPeriodoConsumo" style="height: 100%; width: 100%;"
+                                                appendTo="#ddlPeriodoConsumo"
+                                                [searchable]="false"
+                                                [clearable]="false"
+                                                [items]="paquetes.periodos"
+                                                bindLabel="meses"
+                                                bindValue="meses"
+    
+                                                [(ngModel)]="paquetes.periodoVigencia">
+                                             </ng-select>
+                                        </div>
+                                        <div class="col-2 page_seccion_campo_contenido_valor" style="display: flex;">
+                                            <label *ngIf="paquetes.periodoVigencia == 1" style="margin: auto auto;">Mes</label>
+                                            <label *ngIf="paquetes.periodoVigencia >= 2" style="margin: auto auto;">Meses</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Listado de paquetes -->
+                    <div id="listadoPaquetes" class="col-lg-4">
+
+                        <!-- Filtros de listado de servicios -->
+                        <div id="listadoPaquetesFiltros" class="col-lg-12 page_seccion">
+
+                            <!-- Buscador de paquetes -->
+                            <div class="row mx-auto page_seccion_campo">
+                                <div class="col-lg-12 page_seccion_campo_contenido">
+                                    <div class="col-lg-12 page_seccion_campo_contenido_valor">
+                                        <mat-icon svgIcon="iconSearch" class="iconosBookipp" style="position: absolute; cursor: pointer; margin: 5px 0px 0px 5px; width: 24px; height: 24px;"></mat-icon>
+                                        <input id="inputNombresPaquetes"class="form-control borderAzul" style="height: 100%; padding-left: 35px;" type="text" placeholder="{{'consultaClienteTranslate.buscar' | translate}}"
+                                            [(ngModel)]="inputBusquedaPaquete" 
+                                            (ngModelChange)="busquedaPaquete()"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Listado -->
+                        <div id="listadoPaquetesListado" class="col-lg-12 page_seccion">
+                            <div class="col-lg-12">
+                                <div id="Ul1" class="col-lg-12 colorBorderPrimario" style="height: 320px; padding: 0px; border: 1px solid !important; border-radius: 15px; padding: 10px;">
+                                    <ul id="navlist" class="col-lg-12" style="height: 100%; overflow-y:auto; overflow-x:hidden; padding: 0px;">
+                                        <li class="row" style="padding: 0px; margin-top: 5px; margin-bottom: 5px; display: flex; min-height: 30px;"
+                                            *ngFor="let i of dataPaquetes">
+                                            <div class="col-2" style="display: flex; justify-content: center; align-items: center;">
+                                                <div>
+													<mat-icon svgIcon="iconCross" class="iconosBookipp" id="borrar{{i.idPaqueteSucursal}}" (click)="confirmBorrarPaquete(i.idPaqueteSucursal)" style="width: 15px; position: relative; left: 5px; cursor: pointer; width: 24px; height: 24px;"></mat-icon>
+												</div>
+                                            </div>
+                                            <div id="div{{i.idPaqueteSucursal}}" class="{{i.claseColor}} col-1" style="cursor:pointer; border-radius: 25px; text-align: center; padding-top: 6px; min-height:26px; margin-left:5px; margin: auto auto;  "
+                                                (click)="editarPaquete(i.idPaqueteSucursal)">
+                                            </div>
+                                            <div class="col-9" style="display: flex;">
+                                                <label id="lbl{{i.idPaqueteSucursal}}" style="overflow: hidden; white-space: nowrap;cursor:pointer; text-overflow: ellipsis;cursor:pointer; text-align:left; margin-top:6px; font-size:13px"
+                                                    (click)="editarPaquete(i.idPaqueteSucursal)" > 
+                                                    {{i.nombre}} 
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="botonGuardarPaquete" class="row mx-auto" style="text-align:center; margin-top: 40px; margin-bottom: 40px;">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <button class="buttonEstiloBlanco" (click)="guardarPaquete()"> {{'servicioTranslate.guardar'| translate}} </button>
+                    </div>
+                    <div class="col-lg-4"></div>
+                </div>
+
+            </mat-tab>
+
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
+
+
+<!-- MODALES -->
+<div id="modal-alertBorrado" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-alertBorrado">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" id="mensaje1" style="min-height: 50px;">
+                {{ modalAlertBorrado_mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    {{'servicioTranslate.aceptar'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-confirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirm">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{ modalConfirm_mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="btn btn-default" (click)="cancelarDescartar()">
+                    {{'servicioTranslate.cancelar'| translate}}
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="confirmDescartar()">
+                    {{'servicioTranslate.si'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-confirmDescartarActualizar" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirmDescartarActualizar">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{ modalConfirmDescartarActualizar_mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="btn btn-default" (click)="cancelarDescartarActualizar()">
+                    {{'servicioTranslate.cancelar'| translate}}
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="confirmDescartarActualizar()">
+                    {{'servicioTranslate.si'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-confirmEliminar" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirmEliminar">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{ modalConfirmEliminar_mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+                    {{'servicioTranslate.cancelar'| translate}}
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="servicio_validarCitasDetalle()">
+                    {{'servicioTranslate.si'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-confirm2" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirm2">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{ modalConfirm2_mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="servicio_borrarServicio('')">
+                    {{'servicioTranslate.cancelar'| translate}}
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="servicio_validarCitas()">
+                    {{'servicioTranslate.si'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalEtiquetas" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalEtiquetas">
+    <div class="modal-dialog" style="max-width: 800px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-header">
+                <span>Administrar Etiquetas</span>
+                <i class="fa-solid fa-xmark" data-bs-dismiss="modal" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i>
+            </div>
+            <div class="modal-body" style="min-height: 185px;" [ngStyle]="modalStyle">
+                <div class="row mx-auto">
+                    <div style="padding-left:0px; height:30px;" class="col-6" *ngFor="let x of etiqueta.dataEtiquetasCopia">
+                        <div style="padding:0;" class="col-12">
+                            <div class="row">
+                                <div class="col-6 puntosSuspensivos">
+                                    <a style="text-decoration: underline;">{{x.nombre}}</a>
+                                </div>
+                                <div class="col-1">
+                                    <i class="fa-solid fa-trash" style="color:#337dc0 !important; font-size: 1.5em !important; cursor:pointer;" (click)="modalEliminarEtiqueta(x.idEtiqueta)"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="btn btn-default" style="margin: auto auto;" (click)="cerrarModalEtiquetas()">
+                    Regresar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalEliminarEtiqueta" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalEliminarEtiqueta">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{ modalEliminarEtiqueta_mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+                    {{'servicioTranslate.cancelar'| translate}}
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="eliminarEtiqueta()">
+                    {{'servicioTranslate.si'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalConfirmEliminarPaquete" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalConfirmEliminarPaquete">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{ modalConfirmEliminarPaquete_mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+                    {{'servicioTranslate.cancelar'| translate}}
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="eliminarPaquete()">
+                    {{'servicioTranslate.si'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalActualizarservicio" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalActualizarservicio">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{ modalActualizarservicio_mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+                    {{'servicioTranslate.cancelar'| translate}}
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="servicio_actualizarServicio(null)">
+                    {{'servicioTranslate.si'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalActualizarPaquete" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalActualizarPaquete">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{ modalActualizarPaquete_mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+                    {{'servicioTranslate.cancelar'| translate}}
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="actualizarPaquete()">
+                    {{'servicioTranslate.si'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

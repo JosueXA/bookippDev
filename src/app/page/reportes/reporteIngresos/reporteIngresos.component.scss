@@ -1,0 +1,112 @@
+.canvasStyle {
+    //min-width: 628px;
+    //min-height: 314px;
+    max-width: 628px;
+    max-height: 314px;
+}
+
+.tablesRowsSize{
+    min-width: 238.5px;
+    min-height: 58px;
+    max-width: 238.5px;
+    max-height: 58px;
+    position: sticky;
+    top: 0px;
+    background: white;
+}
+
+.labelLink{
+    text-decoration: underline; 
+    color: #357ec1;
+    cursor: pointer;
+}
+
+.labelLink:hover{
+    text-decoration: underline; 
+    color: #b32032;
+}
+
+.colorBgBtnCharts{
+    color: white;
+    background-color: #357ec1;
+}
+
+.modalesSizeLg{
+    //min-width: 500px; 
+    min-height: 450px;
+    width: auto; 
+    max-width: 1350px;
+    max-height: 600px;
+}
+
+.modalesSizeSml{
+    //min-width: 500px; 
+    min-height: 450px;
+    width: auto; 
+    max-width: 900px;
+    max-height: 500px;
+}
+
+.divContainerTableSizeLg{
+    //min-width: 500px; 
+    min-height: 100px;
+    max-width: 1350px;
+    max-height: 600px;
+    width: 98%;
+    padding: 0px;
+    margin-left: 0.8rem;
+    border: solid 1px;
+    overflow: auto;
+    display: flex;
+    //justify-content: center;
+}
+
+.cellBorder{
+    border: solid 1px;
+}
+
+@media screen and (max-width: 992px){
+    .ocultarDivSeparador{
+        display: none;
+    }
+
+    .agrandarBarraBusqueda{
+        width: 70%;
+    }
+}
+
+.moverFecha{
+    margin-left: 75px;
+    @media screen and (max-width: 991px){
+        margin-left: 15px;
+        margin-right: 1.5%;
+    }
+}
+
+.suprimirIcono{
+    @media screen and (max-width: 669px){
+        display: none;
+    }
+    @media screen and (max-width: 991px){
+        display: unset;
+    }
+    @media screen and (max-width: 1480px) and (min-width: 992px){
+        display: none;
+    }
+}
+
+::ng-deep #modalTabla01 > thead > .mat-header-row {
+    height: 30px !important;
+}
+
+::ng-deep #modalTabla01 > tbody > .mat-row {
+    height: 35px !important;
+}
+
+::ng-deep #totalesModalVentas01 > .mat-header-row {
+    height: 30px !important;
+}
+
+::ng-deep #totalesModalVentas01 > .mat-row {
+    height: 35px !important;
+}

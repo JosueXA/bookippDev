@@ -1,0 +1,247 @@
+// LATO
+@use '@angular/material' as mat;
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+$LatoFont: mat.define-typography-config(
+    $font-family: 'Lato, sans-serif !important',
+);
+
+$LatoTheme: mat.define-light-theme((
+    typography: $LatoFont,
+));
+
+@include mat.all-component-themes($LatoTheme);
+
+
+/* You can add global styles to this file, and also import other style files */
+// @import "./assets/scss/google-material-icons.scss";
+// @import "./assets/scss/fonts.scss";
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+@import "./assets/fontawesome/css/all.css";
+@import "./assets/scss/styles-app.scss";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+// ESTILOS DEL MAPA
+@import "../node_modules/leaflet/dist/leaflet.css";
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Lato', sans-serif;
+}
+
+.error.mat-snack-bar-container {
+    background: #C5422D;
+    color: rgb(255, 255, 255);
+}
+
+.success.mat-snack-bar-container {
+    background: #4A9751;
+    color: white
+}
+
+
+// -------------------- APP COMPONENT --------------------
+
+// ----- COLORES -----
+.colorPrincipal {
+    color: red;
+    background: -webkit-linear-gradient(left, #337dc0 -200px, #57b477) !important;
+}
+
+.colorSegundario {
+    color: red;
+    background: -webkit-linear-gradient(left, #337dc0 -200px, #57b477) !important;
+}
+
+
+// -------------------- PAGE COMPONENT --------------------
+
+
+// ----- NG SELECT -----
+.ng-select-container {
+    outline: 1px solid #dce6ea !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}
+
+// Estilo al de error al ng-select con la clase de  " errorCampoSelect "
+.ng-select.errorCampoSelect, .ng-select.errorCampo {
+    .ng-select-container {
+        outline: red solid 1px !important;  
+    }
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option{
+    white-space: normal !important;
+}
+
+// ----- MAT SLIDE TOGGLE -----
+.mat-slide-toggle-bar {
+    height: 30px !important;
+    width: 50px !important;
+    border-radius: 25px !important;
+}
+
+.mat-slide-toggle-thumb-container {
+    top: 6px !important;
+    left: 8px !important;
+    height: 18px !important;
+    width: 18px !important;
+}
+
+.mat-slide-toggle-thumb {
+    height: 18px !important;
+    width: 18px !important;
+}
+
+.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+    background-color: #20c4e6;
+}
+
+.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+    background-color: white;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar{
+    background-color: #20c4e6 !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb{
+    background-color: white !important;
+}
+
+// ----- ERROR CAMPO -----
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+    z-index: 1001 !important;
+}
+
+.cdk-overlay-connected-position-bounding-box {
+    z-index: 1002 !important;
+}
+
+
+// ----- ICONOS -----
+.iconoNormal {
+    font-size: 2em;
+    cursor: pointer;
+    color: #20c4e6;
+    margin: auto auto;
+}
+
+.mat-expansion-panel-header-description, .mat-expansion-indicator::after { //Color la flecha del expansion panel
+  color: #b7c4c9 !important;
+}
+
+
+// -------------- SCROLL --------------
+
+::-webkit-scrollbar-track
+{
+	// -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #f3f6f7;
+	border-radius: 5px;
+}
+
+::-webkit-scrollbar
+{
+    height: 10px;
+	width: 10px;
+	background-color: #f3f6f7;
+}
+
+::-webkit-scrollbar-thumb
+{
+	border-radius: 5px;
+    background-color: #dce6ea;
+	// background-image: -webkit-gradient(linear,
+	// 								   left bottom,
+	// 								   left top,
+    //                                    color-stop(0.25, #8dcded),
+	// 								   color-stop(0.50, #bae1f4),
+	// 								   color-stop(0.75, #d1ebf7));
+}
+
+.mat-sort-header-container {  
+    justify-content: center !important;  
+}
+
+.cdk-overlay-container{
+    z-index: 1200 !important; 
+}
+
+.dialogCaja {
+    z-index: 800 !important;
+}
+
+.dialogInfoFiscalCliente {
+    z-index: 1100 !important;
+}
+
+// .modal-backdrop.show {
+// 	z-index: 1 !important;
+// }
+
+// .modal {
+// 	z-index: 2 !important;
+// }
+
+.mat-badge-medium.mat-badge-overlap.mat-badge-before .mat-badge-content {
+    left: -15px !important;
+}
+
+.mat-badge-medium.mat-badge-above .mat-badge-content {
+    top: -15px;
+}
+
+.mat-badge-medium .mat-badge-content {
+    width: 30px;
+    height: 28px;
+    line-height: 28px;
+}
+
+.mat-row:nth-child(even) {
+    background-color: #f3f6f7;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    background-color: #20c4e6;
+}
+
+.mat-dialog-container{ // Altura del Modal de Caja
+    height: 850px !important;
+}
+
+.iconosBookipp {
+    stroke: none !important;
+    fill: #b7c4c9 !important;
+    stroke-width: 1 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+}
+
+.iconosBookippStroke {
+    stroke: #b7c4c9 !important;
+    fill: none !important;
+    stroke-width: 1 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+}
+
+.iconoSize{
+    width: 24px !important;
+    height: 24px !important;
+    cursor: pointer;
+    margin: 0px 5px;
+}
+
+.iconoSizeHeader{
+    width: 30px !important;
+    height: 30px !important;
+    cursor: pointer;
+    margin: 0px 5px;
+}

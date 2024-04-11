@@ -1,0 +1,551 @@
+<mat-card class="mat-elevation-z8" style="padding: 16px 0px 0px;">
+    <mat-card-header>
+        <mat-card-title> {{'usuarioTranslate.usuarios' | translate}} </mat-card-title>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="irAAgenda()" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="irAAgenda()">{{'usuarioTranslate.inicio' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a (click)="irAUsuarios()" style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">{{'usuarioTranslate.usuarios' | translate}}</a>&nbsp;
+        </div>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+    
+    <mat-card-content>
+        <div style="width: 100%;">
+            <div style="margin: auto">
+                <!-- <div class="clearfix">
+                </div> -->
+                <div id="usuarioBody" class="ng-scope">
+                    <div class="col-lg-12" style="padding-left: 0px;">
+                        <div style="width: 100%;padding-bottom: 0px;">
+                        <div style="margin: auto">
+                            <div class="modal-body" ng-show="usuario.idUsuarioActualizar == 0 || dataUsuario.length > 0">
+                                <div style="width: 100%; position: relative; padding: 0px 30px 0px;">
+        
+                                    <!-- Titulo de sección -->                                    
+                                    <div class="col-md-12 page_seccion_titulo">
+                                        {{'usuarioTranslate.datosPersonales'| translate}}
+                                    </div>
+                                    <div class="col-md-12 page_seccion_titulo_barra">
+                                        <hr class="page_seccion_titulo_barra_contenido"/>
+                                    </div>                                    
+        
+                                    <!-- Row para nombre y apellido -->
+                                    <div class="row" >
+                                            <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-1">
+                                                    <label class="control-label" style="padding-top: 7px;">
+                                                        {{ 'usuarioTranslate.nombres' | translate }}
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <input id="nombreInput" type="text" maxlength="200" class="form-control borderAzul" [(ngModel)]="usuario.nombre" (focus)="usuario_cambiarColorBorde('nombreInput', 'nombre')"
+                                                        (blur)="usuario_cambiarColorBlur('nombre', 'nombreInput')" ng-disabled="usuario.esConsultaIndividual" style="width: 100%; font-size: 13px; height: 32px;" content="”body”">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="control-label text-left" style="padding-top: 7px; color: red;">
+                                                        {{usuario.errorNombre}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <br />
+        
+                                    <!-- Row para teléfono -->
+                                    <div class="row" >
+                                        <div class="form-group">
+                                            <div class="row">
+                                            <div class="col-lg-1">
+                                                <label class="control-label" style="padding-top: 7px;">
+                                                    {{ 'usuarioTranslate.telefono' | translate }}
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <input id="telefonoInput" type="text" maxlength="30" class="form-control borderAzul" [(ngModel)]="usuario.telefono" (focus)="usuario_cambiarColorBorde('telefonoInput', 'telefono')"
+                                                    (blur)="usuario_cambiarColorBlur('telefono', 'telefonoInput')" ng-disabled="usuario.esConsultaIndividual" style="width: 100%; font-size: 13px; height: 32px;" content="”body”">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="control-label text-left" style="padding-top: 7px; color: red;">
+                                                    {{usuario.errorTelefono}}
+                                                </label>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <br />
+                                            
+                                    <!-- Titulo de sección -->                                    
+                                    <div class="col-md-12 page_seccion_titulo">
+                                        {{'usuarioTranslate.datosUsuario'| translate}}
+                                    </div>
+                                    <div class="col-md-12 page_seccion_titulo_barra">
+                                        <hr class="page_seccion_titulo_barra_contenido"/>
+                                    </div>
+        
+                                    <!-- Row para personal -->
+                                    <div class="row" >
+                                        <div class="form-group">
+                                            <div class="row">
+                                            <div class="col-lg-1">
+                                                <label class="control-label" style="padding-top: 7px;">
+                                                    {{ 'usuarioTranslate.personal' | translate }}
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <ng-select id="personalInput" class="borderAzul"
+                                                    style="width: 100%;" 
+                                                    [multiple]="false" 
+                                                    appendTo="#personalInput" 
+                                                    [searchable]="false"
+                                                    [(ngModel)]="usuario.idPersonal" 
+                                                    [clearable]="false"
+                                                    placeholder="{{'usuarioTranslate.placeholderPersonal'| translate}}"
+                                                    [items]="usuario.dataPersonal" 
+                                                    bindLabel="nombre" 
+                                                    bindValue="idPersonal"
+                                                    (ngModelChange)="usuario_cargarDatosPersonal()">
+                                                </ng-select>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <br />
+        
+                                    <!-- Row para email-->
+                                    <div class="row" >
+                                        <div class="form-group">
+                                            <div class="row">
+                                            <div class="col-lg-1">
+                                                <label class="control-label" style="padding-top: 7px;">
+                                                    {{ 'usuarioTranslate.email' | translate }}
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <input id="emailInput" type="text" maxlength="100" class="form-control borderAzul" [(ngModel)]="usuario.email"  (focus)="usuario_cambiarColorBorde('emailInput', 'email')"
+                                                    (blur)="usuario_cambiarColorBlur('email', 'emailInput')" ng-disabled="usuario.esConsultaIndividual" style="width: 100%; font-size: 13px; height: 32px;" content="”body”">
+                                            </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Row para error email -->
+                                    <div class="row" *ngIf="usuario.errorEmail != '' && usuario.errorEmail != ' '" style="margin-bottom: -15px;">
+                                        <div class="form-group">
+                                            <div class="row">
+                                            <div class="col-lg-1">
+                                            </div>
+                                            <div class="col-md-11">
+                                                <label class="control-label text-left" style="padding-top: 7px; color: red;">
+                                                    {{usuario.errorEmail}}
+                                                </label>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <br />
+        
+                                    <!-- Row para contraseña-->
+                                    <div class="row" >
+                                        <div class="form-group">
+                                            <div class="row">
+                                            <div class="col-lg-1">
+                                                <label id="contraseniaLabel" class="control-label" style="padding-top: 5px;" *ngIf="!usuario.esActualizacion">
+                                                    {{ 'usuarioTranslate.contrasenia' | translate }}
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <input id="contraseniaInput" type="password" maxlength="40" class="form-control borderAzul" *ngIf="!usuario.esActualizacion" [(ngModel)]="usuario.contrasenia" (focus)="usuario_cambiarColorBorde('contraseniaInput', 'contrasenia')"
+                                                    (blur)="usuario_cambiarColorBlur('contrasenia', 'contraseniaInput')" ng-disabled="usuario.esConsultaIndividual" style="width: 100%; font-size: 13px; height: 32px;" content="”body”">
+                                                
+                                                <button class="buttonEstiloBlanco" type="button" *ngIf="usuario.esActualizacion" (click)="modalCambioContrasenia()"> {{ 'usuarioTranslate.cambiarContrasenia' | translate }} </button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <br />
+        
+                                    <!-- Row para confirmar contraseña-->
+                                    <div class="row" >
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-1">
+                                                    <label id="confirmarContraseniaLabel" class="control-label" *ngIf="!usuario.esActualizacion">
+                                                        {{ 'usuarioTranslate.confirmarContrasenia' | translate }}
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <input id="contraseniaConfirmInput" type="password" maxlength="40" class="form-control borderAzul" *ngIf="!usuario.esActualizacion" [(ngModel)]="usuario.contraseniaConfirmarNuevo"
+                                                        (focus)="usuario_cambiarColorBorde('contraseniaConfirmInput', 'contrasenia')" ng-disabled="usuario.esConsultaIndividual" style="width: 100%; font-size: 13px; height: 32px;" content="”body”">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row" *ngIf="usuario.errorContrasenia != '' && usuario.errorContrasenia != ' '" style="margin-top: -15px; margin-bottom: -15px;">
+                                        <div class="form-group">
+                                            <div class="row">
+                                            <div class="col-lg-1">
+                                            </div>
+                                            <div class="col-md-11">
+                                                <label class="control-label text-left" style="padding-top: 7px; color: red;">
+                                                    {{usuario.errorContrasenia}}
+                                                </label>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>                
+        
+                                    <br />                                             
+
+                                    <!-- Titulo de sección -->                                    
+                                    <div class="col-md-12 page_seccion_titulo">
+                                        Datos Configuración
+                                    </div>
+                                    <div class="col-md-12 page_seccion_titulo_barra">
+                                        <hr class="page_seccion_titulo_barra_contenido"/>
+                                    </div>
+
+                                     <!-- Row para perfil usuario -->
+                                    <div class="row" >
+                                        <div class="form-group">
+                                            <div class="row">
+                                            <div class="col-lg-1">
+                                                <label class="control-label">
+                                                    Perfil Usuario
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <ng-select id="slctPerfilUsuarios" 
+                                                    style="width: 100%;" 
+                                                    [multiple]="false" 
+                                                    appendTo="#slctPerfilUsuarios" 
+                                                    [searchable]="false"
+                                                    [(ngModel)]="usuario.idPerfilSucursal" 
+                                                    [clearable]="true"
+                                                    placeholder="Seleccionar el perfil para el usuario"
+                                                    [items]="usuario.perfilesUsuarios" 
+                                                    bindLabel="Nombre" 
+                                                    bindValue="idPerfilSucursal">
+                                                </ng-select>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                      <!-- Row para restringir horario -->
+                                
+                                    <div class="row" >
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <!-- <div class="col-md-6"> -->
+                                                    <div class="col-lg-1">
+                                                        <label class="control-label">
+                                                            Restringir Horario
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="col-md-9 page_seccion_campo_contenido">
+                                                            <div class="col-md-12 page_seccion_campo_contenido_valor">
+                                                                <mat-slide-toggle id="switchActivo"
+                                                                    [(ngModel)]="usuario.restringirHorario"
+                                                                    (ngModelChange)="usuario_HorarioCheck()">
+                                                                </mat-slide-toggle>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div *ngIf="usuario.restringirHorario == 1" class="col-lg-4">
+                                                        <div class="row">
+                                                            <div class="col-lg-5" style="border: 0px solid; border-color: green;">
+                                                                <ng-select id="txtHoraInicio" 
+                                                                style="width: 100%;" 
+                                                                [multiple]="false" 
+                                                                appendTo="#txtHoraInicio" 
+                                                                [searchable]="true"
+                                                                [(ngModel)]="usuario.horaInicio" 
+                                                                [clearable]="false"
+                                                                placeholder="Seleccionar el perfil para el usuario"
+                                                                [items]="usuario.hora"                                                     
+                                                                (ngModelChange)="usuario_valHorario()">
+                                                                </ng-select>                                                        
+                                                            </div>
+                                                            <div class="col-lg-2" style="border: 0px solid; border-color: green; padding-left: 3.5%;padding-top:7px">
+                                                                <label class="control-label">a</label>
+                                                            </div>
+                                                            <div class="col-lg-5" style="border: 0px solid; border-color: green;">
+                                                                <ng-select id="txtHoraFin" 
+                                                                style="width: 100%;" 
+                                                                [multiple]="false" 
+                                                                appendTo="#txtHoraFin" 
+                                                                [searchable]="true"
+                                                                [(ngModel)]="usuario.horaFin" 
+                                                                [clearable]="false"
+                                                                placeholder="Seleccionar el perfil para el usuario"
+                                                                [items]="usuario.hora"                                                     
+                                                                (ngModelChange)="usuario_valHorario()">
+                                                                </ng-select>                                                        
+                                                            </div>                                                            
+                                                        </div>
+                                                    </div>    
+                                                    <!-- </div> -->                                                
+                                                    <div class="col-md-6" *ngIf="!usuario.validacionHorario">
+                                                        <label class="col-md-12" style="color:red;padding: 0px;padding-top: 7px;">La hora fin debe ser mayor a la hora inicio</label>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                <br />
+                                <br />
+        
+                                <!-- Row para botones guardar y cancelar-->
+                                <div class="row" >
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <div class="text-center">                                                                                                
+                                                <div class="row">
+                                                    <div class="col-lg-2">                                            
+                                                    </div>
+                                                    <div class="col-lg-4 py-1">
+                                                        <div class="col-lg-1"></div>
+                                                        <div class="col-lg-10">
+                                                            <button id="guardarButton" *ngIf="!usuario.esConsultaIndividual" class="buttonEstiloBlanco" type="button" (click)="usuario_realizarOperacion()">
+                                                                {{ 'usuarioTranslate.guardar' | translate }}
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-4 py-1">
+                                                        <div class="col-lg-1"></div>
+                                                        <div class="col-lg-10">
+                                                            <button id="cancelarButton" class="buttonEstiloBlanco" type="button" [disabled]="usuario.directoNuevo" (click)="usuario_cancelar()">
+                                                                {{'usuarioTranslate.regresar' | translate }}
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-2">                                            
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                    <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </mat-card-content>
+
+</mat-card>
+
+<!-- DEFAULT: MODAL ALERT-->
+<div id="modal-alert" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-alert" style="z-index: 1200;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" (click)="modales.modalAlert.hide();" class="buttonEstiloBlanco" style="height: auto;">
+                        {{ 'usuarioTranslate.aceptar' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DEFAULT: MODAL ALERT REDIR-->
+<div id="modal-alert-redir" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-alert-redir" style="z-index: 1200;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-dismiss="modal" class="buttonEstiloBlanco" (click)="usuario_descartarCambios(); modales.modalAlertRedir.hide();" style="height: auto;">
+                        {{ 'usuarioTranslate.aceptar' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DEFAULT: MODAL DISCARD-->
+<div id="modal-discard" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-discard" style="z-index: 1200;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" (click)="modales.modalDiscard.hide();" class="buttonEstiloBlanco" style="height: auto;">
+                        {{ 'usuarioTranslate.cancelar' | translate }}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-dismiss="modal" class="buttonEstiloBlanco" (click)="usuario_descartarCambios(); modales.modalDiscard.hide();" style="height: auto;">
+                        {{ 'usuarioTranslate.si' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DEFAULT: MODAL DISCARD HOME-->
+<div id="modal-discard-home" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-discard-home" style="z-index: 1200;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" (click)="modales.modalDiscardHome.hide();" class="buttonEstiloBlanco" style="height: auto;">
+                        {{ 'usuarioTranslate.cancelar' | translate }}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-dismiss="modal" class="buttonEstiloBlanco" (click)="usuario_descartarCambiosHome(); modales.modalDiscardHome.hide();" style="height: auto;">
+                        {{ 'usuarioTranslate.si' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DEFAULT: MODAL Cambio contraseña-->
+<div id="modal-cambio-contrasenia" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-cambio-contrasenia" style="z-index: 1200;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="col-lg-12" style="width: 96%;"> {{ 'usuarioTranslate.cambiarContraMayus' | translate }} </span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" (click)="usuario_cancelarModal(); modales.modalCambioContrasenia.hide();" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body">
+                <br />
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="control-label" style="padding-top: 5px;">
+                            {{ 'usuarioTranslate.contraseniaActual' | translate }}
+                        </label>
+                    </div>
+                    <div class="col-lg-5">
+                        <input id="contraseniaAnteriorInputModal" type="password" maxlength="40" class="form-control borderAzul"
+                            [(ngModel)]="usuario.contraseniaAnteriorIngresada" (focus)="usuario_cambiarColorBorde('contraseniaAnteriorInputModal', 'contraseniaActual')"
+                            (blur)="usuario_cambiarColorBlurModal('contraseniaAnteriorInputModal', 'contraseniaActual')"
+                            style="width: 100%; font-size: 13px; height: 32px;" content="”body”">
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                </div>
+                <br /> 
+                <div class="row" *ngIf="usuario.errorContraseniaActualModal != '' && usuario.errorContraseniaActualModal != ' '" style="margin-top: -15px; margin-bottom: -15px;">
+                    <div class="form-group">
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-8">
+                            <label class="control-label text-left" style="padding-top: 7px; color: red;">
+                                {{usuario.errorContraseniaActualModal}}
+                            </label>
+                        </div>
+                        <div class="col-lg-2">
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="control-label" style="padding-top: 5px;">
+                            {{ 'usuarioTranslate.contraseniaNueva' | translate }}
+                        </label>
+                    </div>
+                    <div class="col-lg-5">
+                        <input id="contraseniaNuevaInputModal" type="password" maxlength="40" class="form-control borderAzul"
+                            [(ngModel)]="usuario.contraseniaNueva" (focus)="usuario_cambiarColorBorde('contraseniaNuevaInputModal', 'contraseniaNueva')"
+                            (blur)="usuario_cambiarColorBlurModal('contraseniaNuevaInputModal', 'contraseniaNueva')"
+                            style="width: 100%; font-size: 13px; height: 32px;" content="”body”">
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                </div>
+                <br /> 
+                <div class="row" *ngIf="usuario.errorContraseniaNuevaModal != '' && usuario.errorContraseniaNuevaModal != ' '" style="margin-top: -15px; margin-bottom: -15px;">
+                    <div class="form-group">
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-8">
+                            <label class="control-label text-left" style="padding-top: 7px; color: red;">
+                                {{usuario.errorContraseniaNuevaModal}}
+                            </label>
+                        </div>
+                        <div class="col-lg-2">
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="control-label">
+                            {{ 'usuarioTranslate.confirmarContrasenia' | translate }}
+                        </label>
+                    </div>
+                    <div class="col-lg-5">
+                        <input id="contraseniaConfirmarInputModal" type="password" maxlength="40" class="form-control borderAzul"
+                            [(ngModel)]="usuario.contraseniaConfirmar" (focus)="usuario_cambiarColorBorde('contraseniaConfirmarInputModal', 'contraseniaConfirmar')"
+                            (blur)="usuario_cambiarColorBlurModal('contraseniaConfirmarInputModal', 'contraseniaConfirmar')"
+                            style="width: 100%; font-size: 13px; height: 32px;" content="”body”">
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                </div>
+                <br /> 
+                <div class="row" *ngIf="usuario.errorContraseniaConfirmarModal != '' && usuario.errorContraseniaConfirmarModal != ' '" style="margin-top: -15px; margin-bottom: -15px;">
+                    <div class="form-group">
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-8">
+                            <label class="control-label text-left" style="padding-top: 7px; color: red;">
+                                {{usuario.errorContraseniaConfirmarModal}}
+                            </label>
+                        </div>
+                        <div class="col-lg-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" class="buttonEstiloBlanco" (click)="usuario_cambiarContrasenia()" style="height: auto;">
+                        {{ 'usuarioTranslate.guardar' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

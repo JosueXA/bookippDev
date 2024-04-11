@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="col-1" style="align-self: center; align-content: center; justify-content: center; align-items: center;">
+        <i class="{{data.button_type}}" style="cursor: pointer;" (click)="snackBarRef.dismiss()"></i>
+        <!-- <mat-icon matListIcon style="cursor: pointer;" (click)="snackBarRef.dismiss()"></mat-icon> -->
+    </div>
+    <div class="col-1">
+        <mat-divider vertical></mat-divider>
+    </div>
+    <div class="col-10">
+        <p style="margin-top: 1px;"><b>{{data.title}}</b></p>
+        <p style="margin-top: 1px;">{{data.message}}</p>
+    </div>
+</div>

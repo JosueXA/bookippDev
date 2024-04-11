@@ -1,0 +1,56 @@
+.canvasStyle {
+    max-height: 314px;
+}
+
+.tablesColSizeLg{
+    min-width: 220px;
+    min-height: 55px;
+    max-width: 220px;
+    max-height: 55px;
+}
+
+.tablesColSizeSm{
+    min-width: 120px;
+    min-height: 55px;
+    max-width: 120px;
+    max-height: 55px;
+}
+
+.labelLink{
+    text-decoration: underline; 
+    color: #357ec1;
+    cursor: pointer;
+}
+
+.labelLink:hover{
+    text-decoration: underline; 
+    color: #b32032;
+}
+
+.colorBgBtnCharts{
+    color: white;
+    background-color: #357ec1;
+}
+
+@media screen and (max-width: 991px){
+    .ocultarDivSeparador{
+        display: none;
+    }
+
+    .centrarCanvas{
+        justify-content: center;
+        display: flex;
+    }
+}
+
+.suprimirIcono{
+    @media screen and (max-width: 669px){
+        display: none;
+    }
+}
+
+.heightPred{
+    @media screen and (max-width: 767px){
+        min-height: 550px !important;
+    }
+}

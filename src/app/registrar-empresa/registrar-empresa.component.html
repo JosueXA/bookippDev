@@ -1,0 +1,328 @@
+<div class="container">
+	<div class="formulario">
+		<header>
+			{{'registroEmpresaTranslate.bienvenido'| translate}}
+		</header>
+
+		<main>
+			<mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true"
+				[(selectedIndex)]="tabSelect">
+				<!-- Pantalla de datos del usuario -->
+				<mat-tab [disabled]="true">
+					<ng-template mat-tab-label>
+						<!-- <img src="../../assets/icons/outline/outline-location-1.svg" alt="icono2" class="imgClass" /> -->
+						<mat-icon class="fillAzulBookipp imgClass" svgIcon="iconSucursal" matListIcon></mat-icon>
+					</ng-template>
+
+					<section>
+						<div class="row mx-auto">
+							<div class="col-lg-8 my-3">
+								<label>{{'registroEmpresaTranslate.nombreEmpresa'| translate}}</label>
+								<input id="txtNombreE" class="form-control borderAzul"
+									(focus)="validar('txtNombreE','5')"
+									(blur)="validarBlur('txtNombreE','5', empresa.nombre)" type="text"
+									[(ngModel)]="empresa.nombre" maxlength="120" />
+							</div>
+							<div class="col-lg-4 my-3">
+								<label>{{'registroEmpresaTranslate.telefonoEmpresa'| translate}}</label>
+								<input id="txtTelefonoE" class="form-control borderAzul"
+									(focus)="validar('txtTelefonoE','0')"
+									(blur)="validarBlur('txtTelefonoE','0', empresa.telefono)" type="text"
+									[(ngModel)]="empresa.telefono" maxlength="10" />
+								<label id="mTelefonoE" style="color: red !important;" *ngIf="mensaje[0]">
+									{{ mensaje[0] }}
+								</label>
+							</div>
+						</div>
+						<div class="row mx-auto">
+							<div class="col-lg-6 my-3">
+								<label>{{'registroEmpresaTranslate.categoria'| translate}}</label>
+								<ng-select id="txtCategoriaE" style="width: 100%"
+									placeholder="{{'registroEmpresaTranslate.placeholderCategorias'| translate}}"
+									appendTo="body" [searchable]="true" [clearable]="false"
+									[items]="empresa.dataCategoria" bindLabel="nombre" bindValue="idCategoria"
+									[multiple]="true" (change)="cargarSubcategoria(); validar('txtCategoriaE', null);"
+									[(ngModel)]="empresa.categoria">
+								</ng-select>
+							</div>
+							<div class="col-lg-6 my-3">
+								<label>{{'registroEmpresaTranslate.subcategoria'| translate}}</label>
+								<ng-select id="txtSubCategoriaE" style="width: 100%"
+									placeholder="{{'registroEmpresaTranslate.placeholderSubcategorias'| translate}}"
+									appendTo="body" [searchable]="true" [clearable]="false"
+									[items]="empresa.dataSubcategoria" bindLabel="nombre" bindValue="idSubcategoria"
+									[multiple]="true" (change)="validar('txtSubCategoriaE', null)"
+									[(ngModel)]="empresa.subcategoria">
+								</ng-select>
+							</div>
+						</div>
+						<div class="row mx-auto">
+							<div class="col-lg-3 my-3">
+								<label>{{'registroEmpresaTranslate.pais'| translate}}</label>
+								<ng-select id="txtPaisS" style="width: 100%" [disabled]="sucursal.desabilitarCampos"
+									placeholder="{{'registroEmpresaTranslate.placeholderPais'| translate}}"
+									appendTo="body" [searchable]="false" [clearable]="false" [items]="sucursal.dataPais"
+									bindLabel="nombre" bindValue="idPais" [(ngModel)]="sucursal.pais"
+									(click)="validar('txtPaisS', '5')" (change)="cargarEstado()">
+								</ng-select>
+							</div>
+							<div class="col-lg-3 my-3">
+								<label>{{'registroEmpresaTranslate.estado'| translate}}</label>
+								<ng-select id="txtEstadoS" style="width: 100%" [disabled]="sucursal.desabilitarCampos"
+									placeholder="{{'registroEmpresaTranslate.placeholderEstado'| translate}}"
+									appendTo="body" [searchable]="true" [clearable]="false"
+									[items]="sucursal.dataEstado" bindLabel="nombre" bindValue="idEstado"
+									[(ngModel)]="sucursal.estado" (click)="validar('txtEstadoS', '5')"
+									(change)="cargarCiudad()">
+								</ng-select>
+							</div>
+							<div class="col-lg-3 my-3">
+								<label>{{'registroEmpresaTranslate.ciudad'| translate}}</label>
+								<ng-select id="txtCiudadS" style="width: 100%" [disabled]="sucursal.desabilitarCampos"
+									placeholder="{{'registroEmpresaTranslate.placeholderCategorias'| translate}}"
+									appendTo="body" [searchable]="true" [clearable]="false"
+									[items]="sucursal.dataCiudad" bindLabel="nombre" bindValue="idCiudad"
+									[(ngModel)]="sucursal.ciudad" (change)="validar('txtCiudadS', '5')">
+								</ng-select>
+							</div>
+							<div class="col-lg-3 my-3">
+								<label class="">{{'registroEmpresaTranslate.colonia'| translate}}</label>
+								<input id="txtColoniaS" class="form-control borderAzul"
+									(focus)="validar('txtColoniaS','5')"
+									(blur)="validarBlur('txtColoniaS', '5',sucursal.colonia)"
+									[disabled]="sucursal.desabilitarCampos" type="text" [(ngModel)]="sucursal.colonia"
+									maxlength="50" />
+							</div>
+						</div>
+						<div class="row mx-auto">
+							<div class="col-lg-3 my-3">
+								<label class="">{{'registroEmpresaTranslate.calle'| translate}}</label>
+								<input id="txtCalleS" class="form-control borderAzul" (focus)="validar('txtCalleS','5')"
+									(blur)="validarBlur('txtCalleS', '5',sucursal.calle)"
+									[disabled]="sucursal.desabilitarCampos" type="text" [(ngModel)]="sucursal.calle"
+									maxlength="100" />
+							</div>
+							<div class="col-lg-3 my-3">
+								<label class="">{{'registroEmpresaTranslate.numero'| translate}}</label>
+								<input id="txtNumeroS" class="form-control borderAzul"
+									(focus)="validar('txtNumeroS','5')"
+									(blur)="validarBlur('txtNumeroS', '5',sucursal.numero)"
+									[disabled]="sucursal.desabilitarCampos" type="text" [(ngModel)]="sucursal.numero"
+									maxlength="10" />
+							</div>
+							<div class="col-lg-3 my-3">
+								<label class="">{{'registroEmpresaTranslate.numeroInter'| translate}}
+									<font size="1">{{'registroEmpresaTranslate.opc'| translate}}</font>
+								</label>
+								<input id="txtNumeroInteriorS" class="form-control borderAzul"
+									[disabled]="sucursal.desabilitarCampos" type="text"
+									[(ngModel)]="sucursal.numeroInterior" maxlength="30" />
+							</div>
+							<div class="col-lg-3 my-3">
+								<label class="">{{'registroEmpresaTranslate.codigoPostal'| translate}}</label>
+								<input id="txtCodigoPostalS" class="form-control borderAzul"
+									(focus)="validar('txtCodigoPostalS','5')"
+									(blur)="validarBlur('txtCodigoPostalS', '5',sucursal.codigoPostal)"
+									[disabled]="sucursal.desabilitarCampos" type="text"
+									[(ngModel)]="sucursal.codigoPostal" (keypress)="validarNum($event)" maxlength="5" />
+							</div>
+						</div>
+					</section>
+				</mat-tab>
+
+				<!-- Pantalla de personal -->
+				<mat-tab [disabled]="true">
+					<ng-template mat-tab-label>
+						<!-- <img src="../../assets/icons/outline/outline-users.svg" alt="icono2" class="imgClass" /> -->
+						<mat-icon class="fillAzulBookipp imgClass" svgIcon="iconUsuarios" matListIcon></mat-icon>
+					</ng-template>
+
+					<section>
+						<p class="subTitle">
+							{{'registroEmpresaTranslate.agregarTrabajan'| translate}}
+						</p>
+						<p class="subTitle">
+							{{'registroEmpresaTranslate.noTePreocupes'| translate}}
+						</p>
+
+						<div class="row mx-auto my-3" *ngFor="let item of personalTemp; let i = index;">
+							<div class="col-lg-4">
+								<label>{{'registroEmpresaTranslate.nombreCompleto'| translate}}</label>
+								<input id="txtNombreP{{i}}" class="form-control borderAzul"
+									placeholder="{{'registroEmpresaTranslate.placeholderNombre'| translate}}"
+									[(ngModel)]="item.nombre" maxlength="99" type="text" />
+								<label style="color: red !important; min-height: 36px;" *ngIf="mensaje2[i]">
+									{{ mensaje2[i] }}
+								</label>
+							</div>
+							<div class="col-lg-3">
+								<label>{{'registroEmpresaTranslate.correo'| translate}} <font size="1">
+										{{'registroEmpresaTranslate.opc'| translate}}</font></label>
+								<input id="txtEmailP{{i}}" class="form-control borderAzul"
+									placeholder="{{'registroEmpresaTranslate.placeholderCorreo'| translate}}"
+									[(ngModel)]="item.email" maxlength="30" type="text" />
+								<label style="color: red !important; min-height: 36px;" *ngIf="mensaje[i]">
+									{{ mensaje[i] }}
+								</label>
+							</div>
+							<div class="col-lg-3">
+								<label>{{'registroEmpresaTranslate.telefono'| translate}} <font size="1">
+										{{'registroEmpresaTranslate.opc'| translate}}</font></label>
+								<input id="txtTelefonoP{{i}}" class="form-control borderAzul"
+									[(ngModel)]="item.telefono" maxlength="10" />
+								<label style="color: red !important; min-height: 36px;" *ngIf="mensaje3[i]">
+									{{ mensaje3[i] }}
+								</label>
+							</div>
+							<div class="col-lg-2">
+								<div class="iconoSelector" *ngIf="i === personal.cuenta || i !== 0">
+									<mat-icon class="iconosBookipp iconoSize" svgIcon="iconAgregar" matListIcon
+										(click)="agregarPersonal()" *ngIf="i !== 4 && i === personal.cuenta"></mat-icon>
+
+									<mat-icon class="iconosBookipp iconoSize" svgIcon="iconEliminar" matListIcon
+										(click)="eliminarPersonal(i)" *ngIf="i !== 0"></mat-icon>
+								</div>
+							</div>
+						</div>
+					</section>
+				</mat-tab>
+
+				<!-- Pantalla de servicios -->
+				<mat-tab [disabled]="true">
+					<ng-template mat-tab-label>
+						<!-- <img src="../../assets/icons/outline/outline-bolt.svg" alt="icono3" class="imgClass" /> -->
+						<mat-icon class="fillAzulBookipp imgClass" svgIcon="iconServicios" matListIcon></mat-icon>
+					</ng-template>
+
+					<section>
+						<p class="subTitle">
+							{{'registroEmpresaTranslate.agregarServicios'| translate}}
+						</p>
+						<p class="subTitle">
+							{{'registroEmpresaTranslate.noTePreocupes'| translate}}
+						</p>
+
+						<div class="row mx-auto my-3" *ngFor="let serv of servicioTemp; let i = index;">
+							<div class="col-lg-4">
+								<label>{{'registroEmpresaTranslate.servicio'| translate}}</label>
+								<input id="txtNombreS{{i}}" class="form-control borderAzul"
+									placeholder="{{'registroEmpresaTranslate.placeholderNomServ'| translate}}"
+									[(ngModel)]="serv.nombre" maxlength="99" type="text" />
+							</div>
+							<div class="col-lg-3">
+								<label>{{'registroEmpresaTranslate.duracion'| translate}}</label>
+								<input id="txtDuracion{{i}}" class="form-control borderAzul"
+									placeholder="{{'registroEmpresaTranslate.placeholderMin'| translate}}"
+									(keypress)="validarNum($event)" maxlength="3" type="text"
+									[(ngModel)]="serv.duracion" />
+								<label style="color: red !important;" *ngIf="mensaje2[0]">
+									{{ mensaje2[0] }}
+								</label>
+							</div>
+							<div class="col-lg-3">
+								<label>{{'registroEmpresaTranslate.precio'| translate}}</label>
+								<input id="txtCosto{{i}}" class="form-control borderAzul"
+									placeholder="{{'registroEmpresaTranslate.placeholderMonto'| translate}}"
+									[(ngModel)]="serv.costo" maxlength="9" currencyMask
+									[options]="{ allowNegative: false, prefix: '', nullable: true, inputMode: 1 }" />
+								<span style="position:relative; right:-11px; top:-30px;">$</span>
+								<label style="color: red !important; margin-top: -14%;" *ngIf="mensaje[0]">
+									{{ mensaje[0] }}
+								</label>
+							</div>
+							<div class="col-lg-2">
+								<div class="iconoSelector" *ngIf="i === servicio.cuenta || i !== 0">
+									<mat-icon class="iconosBookipp iconoSize" svgIcon="iconAgregar" matListIcon
+										(click)="agregarServicio()" *ngIf="i !== 4 && i === servicio.cuenta"></mat-icon>
+
+									<mat-icon class="iconosBookipp iconoSize" svgIcon="iconEliminar" matListIcon
+										(click)="eliminarServicio(i)" *ngIf="i !== 0"></mat-icon>
+								</div>
+							</div>
+						</div>
+					</section>
+				</mat-tab>
+			</mat-tab-group>
+
+			<!-- Botones finales -->
+			<div class="botonesFinales">
+				<div>
+					<button class="buttonEstiloBlanco" style="width: 140px;" (click)="back()" *ngIf="tabSelect !== 0">
+						{{'registroEmpresaTranslate.anterior'| translate}}
+					</button>
+				</div>
+				<div>
+					<button class="buttonEstiloBlanco" style="width: 140px;" (click)="nextTab()">
+						{{tabSelect === 2 ? ('registroEmpresaTranslate.registrar'| translate)
+						: ('registroEmpresaTranslate.siguiente'| translate) }}
+					</button>
+				</div>
+			</div>
+		</main>
+	</div>
+</div>
+
+<!-- Modales -->
+<div id="modalConocerMas" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalConocerMas">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>{{'registroEmpresaTranslate.sabermas'| translate}}</span>
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<!-- Promotor seleccion de medio de contacto -->
+				<div class="row mx-auto my-3">
+					<div class="col-lg-4">
+						{{'registroEmpresaTranslate.comoEnterarse'| translate}}
+					</div>
+					<div class="col-lg-8">
+						<ng-select id="motivos" style="width: 100%"
+							placeholder="{{'registroEmpresaTranslate.selectMedio'| translate}}" appendTo="#motivos"
+							[searchable]="false" [clearable]="false" [(ngModel)]="registro.selectMotivo"
+							(change)="consultarPromotores(registro.selectMotivo)" [items]="registro.dataMotivos"
+							bindLabel="descripcion" bindValue="idEmpresaMotivoRegistro">
+						</ng-select>
+					</div>
+				</div>
+
+				<!-- Promotor si es que lo habilita el anterior select -->
+				<div class="row mx-auto my-3" *ngIf="registro.isPromotor">
+					<div class="col-lg-4">
+						{{'registroEmpresaTranslate.nombrePromotor'| translate}}
+					</div>
+					<div class="col-lg-8">
+						<ng-select id="nombrePromotor" style="width: 100%"
+							placeholder="{{'registroEmpresaTranslate.selectNombre'| translate}}"
+							appendTo="#nombrePromotor" [searchable]="false" [clearable]="false"
+							[items]="registro.dataPromotores" [(ngModel)]="registro.selectPromotor"
+							(change)="quitarError(registro.selectPromotor)" bindLabel="nombre" bindValue="idPromotor">
+						</ng-select>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button id="aceptar" type="button" class="buttonEstiloBlanco" style="width: 200px; height: 40px;"
+					(click)="registrarRespuesta()">
+					{{'registroEmpresaTranslate.registrarRespuestas'| translate}}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="modalCorreoEnviado" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalCorreoEnviado">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px">
+				{{ mensajeConfirmadoEnviado }}
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" class="buttonEstiloBlanco" style="width: 150px; height: 40px;"
+					(click)="redirectHome()">
+					{{'registroEmpresaTranslate.aceptar'| translate}}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

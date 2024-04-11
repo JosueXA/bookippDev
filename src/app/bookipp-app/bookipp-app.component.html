@@ -1,0 +1,561 @@
+<div class="container">
+	<div class="formulario">
+		<header>
+			{{ 'bookippAppTranslate.sucursal' | translate }}
+
+			<div>
+				<ng-select id="inputSelectorSucursal" style="width: 100%"
+					placeholder="{{'bookippAppTranslate.sucursalPH' | translate}}" appendTo="body" [searchable]="false"
+					[clearable]="false" [items]="empresa.listadoSucursales" bindLabel="nombre" bindValue="idSucursal"
+					[(ngModel)]="empresa.idSucursalSeleccionada" (change)="consultarInformacionSucursal()"
+					[disabled]="empresa.listadoSucursales.length <= 1">
+				</ng-select>
+			</div>
+		</header>
+
+		<main>
+			<div class="header">
+				Paso {{ wizard.pasoActualEncabezado }} de {{ wizard.pasosTotalesEncabezado }}
+			</div>
+
+			<div class="contenedor">
+				<!-- Paso de servicios -->
+				<div *ngIf="wizard.pasoActual === 1" class="contenedorItem">
+					<div *ngIf="empresa.idSucursalSeleccionada">
+						<!-- Selección de Cabina -->
+						<div id="cabinaSeleccionContenedor" class="row mx-auto"
+							*ngIf="sucursal.configuracion.elegirCabina">
+							<!-- Selección de Cabina Titulo -->
+							<div id="cabinaSeleccionTitulo" class="col-12 tituloSuperior">
+								Selecciona una Cabina
+							</div>
+
+							<div class="col-12">
+								<ng-select id="uiSelectCabina" style="width: 100%" placeholder="Sin Preferencia"
+									appendTo="body" (change)="cambiarCabina()" [searchable]="false" [clearable]="true"
+									[items]="sucursal.cabinas.listado" bindLabel="nombre" bindValue="idPersonal"
+									[(ngModel)]="sucursal.cabinas.idCabinaSeleccionada"
+									style="width: 100%; max-width: 400px; margin: 0px auto 30px auto;">
+								</ng-select>
+							</div>
+
+						</div>
+
+						<!-- Apartado de servicios -->
+						<div id="serviciosSeleccionContenedor" class="row mx-auto">
+							<!-- Titulo de seleccionador de servicios -->
+							<div id="serviciosSeleccionTitulo" class="col-12 tituloSuperior">
+								Selecciona el Servicio
+							</div>
+
+							<div class="col-12 servicioContainer">
+								<div class="borderAzul form-control inputSearch">
+									<mat-icon class="iconosBookipp iconoSize" svgIcon="iconSearch"
+										matListIcon></mat-icon>
+									<input id="serviciosSeleccionBuscador" placeholder="Servicio..."
+										[(ngModel)]="sucursal.servicios.textoBusqueda" (keyup)="buscarServicios()"
+										type="text" maxlength="500" />
+								</div>
+
+								<!-- Servicios -->
+								<div class="col-12" *ngFor="let s of sucursal.servicios.listadoMostrado; let i = index">
+									<div class="row mx-auto servicio">
+										<div class="col-lg-2 iconoServicio">
+											<mat-icon class="iconosBookipp imgClass" svgIcon="iconCheck"
+												*ngIf="s.seleccionado" (click)="seleccionarServicio(s)"
+												matListIcon></mat-icon>
+
+											<mat-icon class="iconosBookipp imgClass" svgIcon="iconOutline"
+												*ngIf="!s.seleccionado && cita.servicios.length < wizard.cantidadServicioslimite"
+												(click)="seleccionarServicio(s)" matListIcon></mat-icon>
+
+											<input id="cantidadServicio" type="text" class="form-control inputCantidad"
+												maxlength="1" *ngIf="s.seleccionado"
+												(keyup)="cambiarCantidadServicio(s, 'change')"
+												(blur)="cambiarCantidadServicio(s, 'blur')" [(ngModel)]="s.cantidad"
+												(keypress)="validarEntradaSoloNumeros($event)" />
+										</div>
+
+										<div class="col-lg-7">
+											<div class="d-flex flex-column" (click)="seleccionarServicio(s)">
+												<b>{{ s.nombre }}</b>
+												<label>{{ s.duracion }} min</label>
+											</div>
+										</div>
+
+										<div class="col-lg-3 d-flex align-items-center">
+											<b *ngIf="!s.costoMaximo">{{ s.costoMinimo | currency }}</b>
+											<b *ngIf="s.costoMaximo"> {{ s.costoMinimo | currency }} - {{ s.costoMaximo
+												| currency }} </b>
+										</div>
+									</div>
+								</div>
+
+								<!-- Sin servicios -->
+								<div class="col-12 servicio" *ngIf="sucursal.servicios.listadoMostrado.length === 0">
+									<div style="text-align: center; display: block;">
+										<b> No hay servicios disponibles </b>
+									</div>
+								</div>
+							</div>
+
+							<!-- Botones de servicios -->
+							<div id="botonesServicios" class="botonesServicios" *ngIf="wizard.mostrarBotonesPaso1">
+								<div class="row mx-auto">
+									<div class="col-lg-6 d-flex justify-content-start"></div>
+									<div class="col-lg-6 d-flex justify-content-end">
+										<button class="buttonEstiloBlanco buttonCustom" (click)="cambiarPaso('+')">
+											Siguiente
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Mensaje elegir sucursal -->
+					<div id="seleccionServiciosContendorSinSucursal" class="contenedorAviso"
+						*ngIf="!empresa.idSucursalSeleccionada && empresa.listadoSucursales.length > 0">
+						Selecciona una sucursal para empezar...
+					</div>
+
+					<!-- Mensaje no hay empresa registrada -->
+					<div id="seleccionServiciosContendorSinEmpresa" class="contenedorAviso"
+						*ngIf="!empresa.idSucursalSeleccionada && empresa.listadoSucursales.length === 0">
+						Empresa no registrada
+					</div>
+				</div>
+
+				<!-- Paso de personales -->
+				<div *ngIf="wizard.pasoActual === 2" class="contenedorItem">
+					<div class="row mx-auto">
+						<div class="col-12 tituloSuperior">
+							Selecciona el Personal
+						</div>
+						<div class="col-lg-12 containerPersonal">
+							<div class="row mx-auto seccionPersonalItem" *ngFor="let s of cita.servicios">
+								<div class="col-lg-6 my-2">
+									<ng-select id="personalesSeleccionServicio" style="width: 100%" appendTo="body"
+										[searchable]="false" [clearable]="false" [disabled]="true"
+										[items]="sucursal.servicios.listadoFiltrado" bindLabel="nombre"
+										bindValue="idServicio" [(ngModel)]="s.idServicio">
+									</ng-select>
+								</div>
+								<div class="col-lg-6 my-2">
+									<ng-select id="personalesSeleccionPersonal" style="width: 100%" appendTo="body"
+										[searchable]="false" [clearable]="true" [items]="s.listadoPersonal"
+										bindLabel="nombre" bindValue="idPersonal" [(ngModel)]="s.idPersonalElegido">
+									</ng-select>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Botones de servicios -->
+					<div id="botonesPersonal" class="botonesServicios">
+						<div class="row mx-auto">
+							<div class="col-lg-6 d-flex justify-content-start">
+								<button class="buttonEstiloBlanco buttonCustom" (click)="cambiarPaso('-')">
+									Anterior
+								</button>
+							</div>
+							<div class="col-lg-6 d-flex justify-content-end">
+								<button class="buttonEstiloBlanco buttonCustom" (click)="cambiarPaso('+')">
+									Siguiente
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Paso de horarios -->
+				<div *ngIf="wizard.pasoActual === 3" class="contenedorItem">
+					<div class="row mx-auto">
+						<div class="col-lg-12 tituloSuperior">
+							<p
+								style="font-size: 1.5rem; color: #092a38; text-align: center; font-weight: bold; margin: 0px;">
+								Selecciona el Horario
+							</p>
+						</div>
+
+						<!-- Seleccion del horario -->
+						<div class="col-lg-12">
+							<div class="containerCard">
+								<div>
+									<i class="fa fa-chevron-left iconoFlechaDias"
+										*ngIf="sucursal.horarioDisponible.mostrarBoton7DiasAnteriores"
+										(click)="horarioCambiarDeDias('-')"
+										style="cursor: pointer; color: #092a38; font-size: 2rem; margin: auto auto;"></i>
+								</div>
+								<ng-container *ngFor="let d of sucursal.horarioDisponible.diasListado">
+									<div class="tarjetaHorario" *ngIf="d.mostrarDia">
+										<label>{{d.mesMostrar ? d.mes : ''}}</label>
+										<div class="cuerpoCard" [class.active]="d.seleccionado"
+											(click)="consultarHorarioHorasDisponibles(d)">
+											<span>{{d.diaSemana}}</span>
+											{{d.dia}}
+										</div>
+									</div>
+								</ng-container>
+								<div>
+									<i class="fa fa-chevron-right iconoFlechaDias"
+										*ngIf="sucursal.horarioDisponible.mostrarBoton7DiasSiguientes"
+										(click)="horarioCambiarDeDias('+')"
+										style="cursor: pointer; color: #092a38; font-size: 2rem; margin: auto auto;"></i>
+								</div>
+							</div>
+						</div>
+
+						<!-- Horas -->
+						<div class="col-lg-12" *ngIf="sucursal.horarioDisponible.horasListado.length > 0">
+							<div class="my-3" style="max-width: 550px; margin: auto;">
+								<ng-container *ngFor="let h of sucursal.horarioDisponible.horasListado">
+									<div class="selectHorario" [class.active]="h.seleccionado"
+										(click)="seleccionarHorarioHora(h)">
+										<b> {{ h.horario }} </b>
+										<i class="fa fa-angle-double-right"
+											style="font-size: 1.2rem; float: right; margin-top: 0.8%;"></i>
+									</div>
+								</ng-container>
+							</div>
+						</div>
+
+						<!-- Horas sin selección de día -->
+						<div class="col-lg-12"
+							*ngIf="sucursal.horarioDisponible.horasListado.length === 0 && !sucursal.horarioDisponible.diaEstaSeleccionado && !sucursal.horarioDisponible.cargaEnProgreso">
+							<div class="horarioHoraAlert"
+								style="border-top: 1px solid #5d5d5d; border-bottom: 1px solid #5d5d5d;">
+								<div style="width: 90%; margin: auto auto; font-size: 1.2rem; text-align: center;">
+									<b> Aún no se selecciona un día </b>
+								</div>
+							</div>
+						</div>
+
+						<!-- Horas no encontradas -->
+						<div class="col-lg-12"
+							*ngIf="sucursal.horarioDisponible.horasListado.length === 0 && sucursal.horarioDisponible.diaEstaSeleccionado && !sucursal.horarioDisponible.cargaEnProgreso">
+							<div class="horarioHoraAlert"
+								style="border-top: 1px solid #5d5d5d; border-bottom: 1px solid #5d5d5d;">
+								<div style="width: 90%; margin: auto auto; font-size: 1.2rem; text-align: center;">
+									<b> No hay horarios disponibles </b>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Botones de servicios -->
+					<div id="botonesPersonal" class="botonesServicios">
+						<div class="row mx-auto">
+							<div class="col-lg-6 d-flex justify-content-start">
+								<button class="buttonEstiloBlanco buttonCustom" (click)="cambiarPaso('-')">
+									Anterior
+								</button>
+							</div>
+							<div class="col-lg-6 d-flex justify-content-end" *ngIf="wizard.mostrarBotonesPaso3">
+								<button class="buttonEstiloBlanco buttonCustom" (click)="cambiarPaso('+')">
+									Siguiente
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Paso de cliente -->
+				<div *ngIf="wizard.pasoActual === 4" class="contenedorItem">
+					<div class="row mx-auto">
+						<div class="col-lg-12 tituloSuperior">
+							<p
+								style="font-size: 1.5rem; color: #092a38; text-align: center; font-weight: bold; margin: 0px;">
+								Ingresa tu información
+							</p>
+						</div>
+
+						<div class="col-lg-12">
+							<div class="clientePanel">
+								<!-- Cliente nombre -->
+								<div class="row mx-auto clienteItem">
+									<div class="col-lg-4">
+										Nombre Completo*
+									</div>
+									<div class="col-lg-8">
+										<input id="clienteNombre" type="text" class="form-control borderAzul"
+											maxlength="250" placeholder="Nombre y Apellidos"
+											[(ngModel)]="cita.cliente.nombre"
+											(ngModelChange)="validarClienteInformacion('change', 1)"
+											(blur)="validarClienteInformacion('blur', 1)" />
+									</div>
+								</div>
+
+								<!-- Cliente correo -->
+								<div class="row mx-auto clienteItem">
+									<div class="col-lg-4">
+										Correo*
+									</div>
+									<div class="col-lg-8">
+										<input id="clienteCorreo" type="text" class="form-control borderAzul"
+											maxlength="250" placeholder="Ingrese su correo electrónico"
+											[(ngModel)]="cita.cliente.correo"
+											(ngModelChange)="validarClienteInformacion('change', 3)"
+											(blur)="validarClienteInformacion('blur', 3)" />
+									</div>
+								</div>
+
+								<!-- Cliente teléfono -->
+								<div class="row mx-auto clienteItem">
+									<div class="col-lg-4">
+										Teléfono*
+									</div>
+									<div class="col-lg-8">
+										<input id="clienteTelefono" type="text" class="form-control borderAzul"
+											maxlength="13" placeholder="Ingrese su teléfono"
+											[(ngModel)]="cita.cliente.telefono"
+											(ngModelChange)="validarClienteInformacion('change', 2)"
+											(blur)="validarClienteInformacion('blur', 2)"
+											(keypress)="validarEntradaSoloNumeros($event)" />
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Mensaje de información requerida -->
+						<div id="clienteInformacionRequerida" class="col-lg-12">
+							* Información requerida
+						</div>
+					</div>
+
+					<!-- Botones de servicios -->
+					<div id="botonesPersonal" class="botonesServicios">
+						<div class="row mx-auto">
+							<div class="col-lg-6 d-flex justify-content-start">
+								<button class="buttonEstiloBlanco buttonCustom" (click)="cambiarPaso('-')">
+									Anterior
+								</button>
+							</div>
+							<div class="col-lg-6 d-flex justify-content-end" *ngIf="wizard.mostrarBotonesPaso4">
+								<button class="buttonEstiloBlanco buttonCustom" (click)="cambiarPaso('+')">
+									Siguiente
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Paso de confirmación cita -->
+				<div *ngIf="wizard.pasoActual === 5" class="contenedorItem">
+					<div class="row mx-auto">
+						<div class="col-lg-12 tituloSuperior">
+							<p
+								style="font-size: 1.5rem; color: #092a38; text-align: center; font-weight: bold; margin: 0px;">
+								Confirmación
+							</p>
+						</div>
+
+						<!-- Cita Cliente -->
+						<div class="col-lg-12 my-3">
+							<h4> Cliente </h4>
+
+							<!-- Cliente nombre -->
+							<div class="row mx-auto my-3">
+								<div class="col-lg-3">
+									<b> Nombre: </b>
+								</div>
+								<div class="col-lg-9">
+									{{ cita.cliente.nombre }}
+								</div>
+							</div>
+
+							<!-- Cliente teléfono -->
+							<div class="row mx-auto my-3">
+								<div class="col-lg-3">
+									<b> Teléfono: </b>
+								</div>
+								<div class="col-lg-9">
+									{{ cita.cliente.telefono }}
+								</div>
+							</div>
+
+							<!-- Cliente correo -->
+							<div class="row mx-auto my-3">
+								<div class="col-lg-3">
+									<b> Correo: </b>
+								</div>
+								<div class="col-lg-9">
+									{{ cita.cliente.correo }}
+								</div>
+							</div>
+						</div>
+
+						<!-- Cita Cita -->
+						<div class="col-lg-12 my-3">
+							<h4> Cita </h4>
+
+							<!-- Cita Fecha -->
+							<div class="row mx-auto my-3">
+								<div class="col-lg-3">
+									<b> Fecha: </b>
+								</div>
+								<div class="col-lg-9">
+									{{ cita.fechaMostrar }}
+								</div>
+							</div>
+
+							<!-- Cita Hora -->
+							<div class="row mx-auto my-3">
+								<div class="col-lg-3">
+									<b> Hora: </b>
+								</div>
+								<div class="col-lg-9">
+									{{ cita.horaInicio }} - {{ cita.horaFin }}
+								</div>
+							</div>
+
+							<!-- Cita Cabina -->
+							<div class="row mx-auto my-3">
+								<div class="col-lg-3">
+									<b> Cabina: </b>
+								</div>
+								<div class="col-lg-9">
+									{{ sucursal.cabinas.nombreCabinaSeleccionada }}
+								</div>
+							</div>
+
+							<!-- Cita Total -->
+							<div class="row mx-auto my-3">
+								<div class="col-lg-3">
+									<b> Total: </b>
+								</div>
+								<div class="col-lg-9">
+									{{ cita.total | currency }}
+								</div>
+							</div>
+						</div>
+
+						<!-- Tabla de citas detalles -->
+						<div class="col-lg-12 my-3">
+							<table class="table">
+								<thead>
+									<tr>
+										<th *ngIf="sucursal.configuracion.pagoConPaypal">
+											<i class="fa-brands fa-paypal" style="color: #092a38;"></i>
+										</th>
+										<th>Servicio</th>
+										<th>Horario</th>
+										<th>Duración</th>
+										<th>Personal</th>
+										<th>Costo</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngFor="let s of cita.servicios">
+										<td *ngIf="sucursal.configuracion.pagoConPaypal">
+											<mat-checkbox [(ngModel)]="s.pagoConPaypal" (change)="generarBotonPaypal()"
+												[color]="'primary'" [disabled]="s.pagoConPaypalObligatorio">
+											</mat-checkbox>
+										</td>
+										<td>
+											{{ s.nombre }}
+										</td>
+										<td>
+											{{ s.horaInicio }} - {{ s.horaFin }}
+										</td>
+										<td>
+											{{ s.duracion }} min
+										</td>
+										<td>
+											{{ s.personalNombre }}
+										</td>
+										<td>
+											<label *ngIf="!s.costoMaximo">{{ s.costoMinimo | currency }}</label>
+											<label *ngIf="s.costoMaximo">{{ s.costoMinimo | currency }} a {{
+												s.costoMaximo | currency }}</label>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="col-lg-12 mt-1 mb-4" *ngIf="wizard.mostrarBotonPaypal">
+							<div class="row mx-auto my-2">
+								<div class="col-lg-4">
+									<b>Subtotal Paypal:</b>
+								</div>
+								<div class="col-lg-8">
+									{{ cita.subtotalPaypal | currency }}
+								</div>
+							</div>
+
+							<div class="row mx-auto my-2">
+								<div class="col-lg-4">
+									<b>Comisión Paypal:</b>
+								</div>
+								<div class="col-lg-8">
+									{{ cita.comisionPaypal | currency }}
+								</div>
+							</div>
+
+							<div class="row mx-auto my-2">
+								<div class="col-lg-4">
+									<b>Total Paypal:</b>
+								</div>
+								<div class="col-lg-8">
+									{{ cita.paypalTotal | currency }}
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Botones de servicios -->
+					<div id="botonesPersonal" class="botonesServicios">
+						<div class="row mx-auto">
+							<div class="col-lg-6 d-flex justify-content-start">
+								<button class="buttonEstiloBlanco buttonCustom" (click)="cambiarPaso('-')">
+									Anterior
+								</button>
+							</div>
+							<div class="col-lg-6 d-flex justify-content-end">
+								<button class="buttonEstiloBlanco buttonCustom" *ngIf="wizard.mostrarBotonAgendar"
+									(click)="agendarSinPagar()">
+									Agendar
+								</button>
+
+								<div id="botonesPaypal" class="wizardBotonDerecho" *ngIf="wizard.mostrarBotonPaypal">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+</div>
+
+<!-- Modales -->
+<div id="modalAlert" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalAlert">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px">
+				{{ textModalAlert }}
+			</div>
+			<div class="modal-footer" style="height: 62px; display: flex">
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+					{{ 'bookippAppTranslate.aceptar' | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modalCitaAgendada" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalCitaAgendada">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px">
+				{{ textModalCitaAgendada }}
+			</div>
+			<div class="modal-footer" style="height: 62px; display: flex">
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+					{{ 'bookippAppTranslate.aceptar' | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

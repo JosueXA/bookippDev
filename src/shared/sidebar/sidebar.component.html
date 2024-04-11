@@ -1,0 +1,368 @@
+<!-- Menu de inicial -->
+<mat-nav-list @detailExpand>
+    <ng-container *ngIf="menuOpen === true">
+        <div class="row mx-auto" style="min-height: 150px;">
+            <div class="col-12" style="display: flex;">
+                <img class="img-thumbnail" src="{{ _pantallaService.datos_pantalla.img }}"
+                    style="border-radius: 300px !important; margin: auto auto; width: 100px; height: 100px;" />
+            </div>
+            <div class="col-12" style="display: flex;">
+                <span style="margin: auto auto;" mat-line> {{ _pantallaService.datos_pantalla.nSucursal }}</span>
+            </div>
+            <div class="col-12" style="display: flex;">
+                <span style="margin: auto auto;" mat-line> {{ _pantallaService.datos_pantalla.nUsuario }}</span>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+    </ng-container>
+
+    <!-- Agenda -->
+    <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.agenda">
+        <a mat-list-item style="height: 0;"></a>
+        <a matSubheader mat-list-item routerLink="/procesos/agenda" title="{{'agendaTranslate.tipoExcepcion' | translate}}" routerLinkActive="true">
+            <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconCalendario"></mat-icon>
+            <span *ngIf="menuOpen === true" mat-line> {{'agendaTranslate.tipoExcepcion' | translate}} </span>
+        </a>
+    </ng-container>
+
+    <!-- Caja -->
+    <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.mostrarCaja">
+        <a mat-list-item style="height: 0;"></a>
+        <a matSubheader mat-list-item (click)="openModalCaja()" title="Punto de Venta" routerLinkActive="true">
+            <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconCaja"></mat-icon>
+            <span *ngIf="menuOpen === true" mat-line> Punto de Venta </span>
+        </a>
+    </ng-container>
+
+    <!-- Sucursal -->
+    <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.sucursal">
+        <a mat-list-item style="height: 0;"></a>
+        <a matSubheader mat-list-item routerLink="/catalogos/sucursal" title="{{'sucursalTranslate.sucursal' | translate}}" routerLinkActive="true">
+            <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconSucursal"></mat-icon>
+            <span *ngIf="menuOpen === true" mat-line>{{'sucursalTranslate.sucursal' | translate}}</span>
+        </a>
+    </ng-container>
+
+    <!-- Servicio -->
+    <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.servicio">
+        <a mat-list-item style="height: 0;"></a>
+        <a matSubheader mat-list-item routerLink="/catalogos/servicio"
+            title="{{'servicioTranslate.servicios' | translate}}" routerLinkActive="true">
+            <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconServicios"></mat-icon>
+            <span *ngIf="menuOpen === true" mat-line>{{'servicioTranslate.servicios' | translate}}</span>
+        </a>
+    </ng-container>
+
+    <!-- Personal -->
+    <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.personal">
+        <a mat-list-item style="height: 0;"></a>
+        <a matSubheader mat-list-item routerLink="/catalogos/personal" title="{{'personalTranslate.personal' | translate}}" routerLinkActive="true">
+            <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconPersonal"></mat-icon>
+            <span *ngIf="menuOpen === true" mat-line>{{'personalTranslate.personal' | translate}}</span>
+        </a>
+    </ng-container>
+
+    <!-- Formulario -->
+    <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.formulario">
+        <a mat-list-item style="height: 0;"></a>
+        <a matSubheader mat-list-item routerLink="/catalogos/formulario" title="{{'formsTranslate.formularios' | translate}}" routerLinkActive="true">
+            <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconForms"></mat-icon>
+            <span *ngIf="menuOpen === true" mat-line>{{'formsTranslate.formularios' | translate}}</span>
+        </a>
+    </ng-container>
+
+    <!-- Cliente -->
+    <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.cliente">
+        <a mat-list-item style="height: 0;"></a>
+        <a matSubheader mat-list-item routerLink="/catalogos/cliente" [queryParams]="{idEtiqueta: 'N'}" title="{{'clienteTranslate.clientes' | translate}}" routerLinkActive="true">
+            <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconClientes"></mat-icon>
+            <span *ngIf="menuOpen === true" mat-line>{{'clienteTranslate.clientes' | translate}}</span>
+        </a>
+    </ng-container>
+
+    <!-- Promoción -->
+    <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.promocion">
+        <a mat-list-item style="height: 0;"></a>
+        <a matSubheader mat-list-item routerLink="/catalogos/promociones" title="{{'promocionesTranslate.promociones' | translate}}" routerLinkActive="true">
+            <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconPromociones"></mat-icon>
+            <span *ngIf="menuOpen === true" mat-line>{{'promocionesTranslate.promociones' | translate}}</span>
+        </a>
+    </ng-container>
+</mat-nav-list>
+
+<!-- Menu de inventarios -->
+<mat-accordion *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.mostrarInventario">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header style="padding: 28px 20px; height: 0 !important;">
+            <mat-panel-title class="menuDesplod">
+                <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconInventario" style="margin-right: 21px;"></mat-icon>
+                {{'producto.inventarioNombre' | translate}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-nav-list @detailExpand>
+
+            <!-- Producto -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.producto">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/inventario/productos"
+                    title="{{'consultaProductosTranslate.nombreProducto' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconProducto"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'consultaProductosTranslate.nombreProducto' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Recepción -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.productoRecepcion">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/inventario/recepcion-productos"
+                    title="{{'consultaOrdenCompraTranslate.ordenCompra' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconRecepcionProducto"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'consultaOrdenCompraTranslate.ordenCompra' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+        </mat-nav-list>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<!-- Menu de reportes -->
+<mat-accordion *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.mostrarReportes">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header style="padding: 28px 20px; height: 0 !important;">
+            <mat-panel-title class="menuDesplod">
+                <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconReportes" style="margin-right: 21px;"></mat-icon>
+                {{'reporteProductividad.reporteS' | translate}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-nav-list @detailExpand>
+            <!-- Reporte Productividad -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.reporteProductividad">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/reportes/reporteProductividad"
+                    title="{{'reporteProductividad.reporteProductividad' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconReporteProductividad"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'reporteProductividad.reporteProductividad' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Reporte Cita -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.reporteCitas">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/reportes/reporteCitas"
+                    title="{{'reporteVentasTranslate.reporteventas' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconReporteCitas"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'reporteVentasTranslate.reporteventas' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Reporte Ingresos -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.reporteIngresos">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/reportes/reporteIngresos"
+                    title="{{'reporteVentaProductoTranslate.ventaProducto' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconReporteIngresos"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'reporteVentaProductoTranslate.ventaProducto' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Reporte Clientes -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.reporteClientes">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/catalogos/cliente" [queryParams]="{idEtiqueta: 'C'}" title="{{'clienteTranslate.clientesConfigurables' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconConsultaClientes"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'clienteTranslate.clientesConfigurables' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+        </mat-nav-list>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<!-- Menu de facturación -->
+<mat-accordion *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.mostrarFacturacion">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header style="padding: 28px 20px; height: 0 !important;">
+            <mat-panel-title class="menuDesplod">
+                <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconArchivoLleno" style="margin-right: 21px;"></mat-icon>
+                {{'facturaTranslate.facturacion' | translate}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-nav-list @detailExpand>
+            <!-- Series -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.facturacionConfiguracion">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/facturacion/facturacionSerie"
+                    title="{{'configuracionSucursalTranslate.configuracion' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconArchivoMas"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'configuracionSucursalTranslate.configuracion' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Listado Facturas -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.facturacion">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/facturacion/factura"
+                    title="{{'facturaTranslate.facturacion' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconArchivoAceptar"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'facturaTranslate.facturacion' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+        </mat-nav-list>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<!-- Menu de configuraciones -->
+<mat-accordion *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.mostrarConfiguracion">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header style="padding: 28px 20px; height: 0 !important;">
+            <mat-panel-title class="menuDesplod">
+                <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconConfiguracion" style="margin-right: 21px;"></mat-icon>
+                {{'configuracionSucursalTranslate.configuracion' | translate}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-nav-list @detailExpand>
+            <!-- Equipos -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.equipos">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/configuraciones/consultaEquipos"
+                    title="{{'equiposTranslate.equipos' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconEquipos"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'equiposTranslate.equipos' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Tipos Excepción -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.tiposExcepcion">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/configuraciones/consultaTipoExcepcion"
+                    title="{{'excepcionesTranslate.tipoExcepcion' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconTiposExcepcion"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'excepcionesTranslate.tipoExcepcion' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Tipo Cambio -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.tipoCambio">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/configuraciones/consultaCambioTipo"
+                    title="{{'cambioTipoTranslate.tipoCambio' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconTiposCambios"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'cambioTipoTranslate.tipoCambio' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Perfil -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.perfil">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/configuraciones/configurarPerfilUsuario"
+                    title="Perfil de Usuario" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconPerfilUsuario"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        Perfil de Usuario
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Usuario -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.usuario">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/configuraciones/consultaUsuario"
+                    title="{{'usuarioTranslate.usuarios' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconUsuarios"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'usuarioTranslate.usuarios' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Configuración Ticket -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.configuracionTicket">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/configuraciones/configurar-ticket"
+                    title="{{'configurarTicketTranslate.configTicket' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconConfiguracionTicket"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'configurarTicketTranslate.configTicket' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Configuración Parámetros -->
+            <ng-container
+                *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.configuracionParametros">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/configuraciones/configurar-sucursal"
+                    title="{{'configuracionSucursalTranslate.configuracionPara' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconConfiguracionParametros"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'configuracionSucursalTranslate.configuracionPara' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Configuración Receta -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.configuracionReceta">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/configuraciones/configurar-receta"
+                    title="{{'configuracionSucursalTranslate.configReceta' | translate}}" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconConfiguracionReceta"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        {{'configuracionSucursalTranslate.configReceta' | translate}}
+                    </span>
+                </a>
+            </ng-container>
+
+            <!-- Configuración Receta Electrónica -->
+            <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.configuracionRecetaElectronica">
+                <a mat-list-item style="height: 0;"></a>
+                <a matSubheader mat-list-item routerLink="/configuraciones/configurar-receta-electronica"
+                    title="Receta Electronica" routerLinkActive="true">
+                    <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconConfiguracionReceta"></mat-icon>
+                    <span *ngIf="menuOpen === true" mat-line>
+                        Receta Electronica
+                    </span>
+                </a>
+            </ng-container>
+        </mat-nav-list>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<!-- Suscripción -->
+<mat-nav-list @detailExpand>
+    <ng-container *ngIf="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.suscripcion">
+        <a mat-list-item style="height: 0;"></a>
+        <a matSubheader mat-list-item routerLink="/procesos/suscripcion" title="{{'suscripcionTranslate.suscripcion' | translate}}" routerLinkActive="true">
+            <mat-icon matListIcon class="iconMenu iconosBookipp" svgIcon="iconSuscripcion"></mat-icon>
+            <span *ngIf="menuOpen === true" mat-line>{{'suscripcionTranslate.suscripcion' | translate}}</span>
+        </a>
+    </ng-container>
+</mat-nav-list>
+
+
+<mat-nav-list @detailExpand>
+    
+</mat-nav-list>

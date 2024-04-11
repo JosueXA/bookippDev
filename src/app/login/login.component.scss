@@ -1,0 +1,179 @@
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: #1c9cdb;
+    // margin-top: 80px;
+}
+
+.mat-card {
+    padding: 0;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 3%;
+}
+
+.buttonEstiloBlancoLogin {
+    height: 50px;
+    width: 100%;
+    border-radius: 25px;
+    color: #ffffff !important;
+    background: #20c4e6;
+    border: 3px solid #20c4e6 !important;
+
+    display: inline-block;
+    text-transform: capitalize;
+    text-decoration: none;
+    transition: all 0.4s ease 0s;
+    font-weight: bold;
+}
+
+.buttonEstiloBlancoLogin:hover {
+    color: #20c4e6 !important;
+    background: #ffffff;
+    border-color: #20c4e6 !important;
+    transition: all 0.4s ease 0s;
+}
+
+.buttonEstiloBlancoLoginFB {
+    height: 50px;
+    width: 100%;
+    border-radius: 10px;
+    color: black !important;
+    background: #ffffff;
+    border: 3px solid #20c4e6 !important;
+
+    display: inline-block;
+    text-decoration: none;
+    transition: all 0.4s ease 0s;
+    font-weight: bold;
+    font-size: large;
+}
+
+.buttonEstiloBlancoLoginFB:hover {
+    color: #ffffff !important;
+    background: #20c4e6;
+    border-color: #20c4e6 !important;
+    transition: all 0.4s ease 0s;
+}
+
+.logo {
+    margin: auto;
+}
+
+.imputInicial{
+    margin-top: 13px;
+    margin-bottom: 13px;
+    border-radius: 1.5rem;
+    padding-left: 50px; 
+    width: 349.38px; 
+    height: 40px;
+}
+
+.mat-card-action {
+    text-align: center;
+    justify-content: center;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-start {
+    border-radius: 0px !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-end {
+    border-radius: 0px !important;
+}
+
+.mat-form-field-outline {
+    background-color: rgb(255, 255, 255) !important;
+}
+
+.mat-imput {
+    background-color: white;
+}
+
+
+.button-border-radius-none {
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    border-radius: 0px !important;
+
+}
+
+.btn-facebook {
+    color: rgb(255, 255, 255);
+    background-color: rgb(51, 125, 192);
+    border: 0;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    align-items: center;
+    justify-content: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.btn-registrar {
+    color: rgb(255, 255, 255);
+    background-color: rgb(87, 180, 119);
+    border: 0;
+    width: 100%;
+    margin-bottom: 5px;
+    align-items: center;
+    justify-content: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.btn-entrar {
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 67, 83);
+    border: 0;
+    width: 100%;
+    margin-bottom: 5px;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+::ng-deep .headerLogin > .mat-card-header-text {
+    margin: 0 !important;
+}
+
+.headerLogin {
+    background: #20c4e6;
+    background-color: #20c4e6;
+    text-align: center; 
+    height: 40px;
+}
+
+// ----- ERROR CAMPO -----
+.errorCampo {
+    outline: red solid 1px !important;
+    outline-offset: 0 !important;
+}
+
+.errorCampo:focus {
+    outline: #ff9191 solid 1px !important;
+    outline-offset: 0 !important;
+}
+
+.errorCampo2 {
+    outline: red solid 2px !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}
+
+.errorCampo2:focus {
+    outline: #ff9191 solid 2px !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}
+
+.widthPred{
+    @media screen and (max-width: 556px){
+        width: 100% !important;
+    }
+}

@@ -1,0 +1,298 @@
+<mat-card class="mat-elevation-z8">
+	<mat-card-header style="display: flex; justify-content: space-between;">
+		<mat-card-title>{{'informacionFiscalClienteTranslate.titulo' | translate}}</mat-card-title>
+		<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconCerrarModal"
+			(click)="closeModalInformacion()"></mat-icon>
+	</mat-card-header>
+	<mat-divider></mat-divider>
+
+	<mat-card-content class="mt-3">
+		<div class="row mx-auto" *ngIf="pantallaDatosIn">
+			<!-- Lado izquierdo -->
+			<div class="col-lg-6">
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.tipoPersona' | translate}}
+					</div>
+					<div class="col-lg-8">
+						<mat-radio-group aria-label="Select an option"
+							style="display: flex; justify-content: space-around;" (ngModelChange)="checkRadio()"
+							[(ngModel)]="informacionFiscalSucursal.radioTipo">
+							<mat-radio-button value="0">
+								{{'informacionFiscalClienteTranslate.fisica' | translate}}
+							</mat-radio-button>
+							<mat-radio-button value="1">
+								{{'informacionFiscalClienteTranslate.moral' | translate}}
+							</mat-radio-button>
+						</mat-radio-group>
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.rfc' | translate}}
+					</div>
+					<div class="col-lg-8">
+						<input id="rfcInputFiscal" class="form-control borderAzul" type="text" maxlength="13"
+							[(ngModel)]="informacionFiscalSucursal.RFC" />
+						<label id="errorrfcInputFiscal" style="color: red;"></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.nombre' | translate}}
+					</div>
+					<div class="col-lg-8">
+						<input id="nombreInputFiscal" class="form-control borderAzul" type="text" maxlength="250"
+							[(ngModel)]="informacionFiscalSucursal.nombre" />
+						<label id="errornombreInputFiscal" style="color: red;"></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.pais' | translate}}
+					</div>
+					<div class="col-lg-8">
+						<ng-select id="paisInput" appendTo="#paisInput" [searchable]="false" [clearable]="false"
+							[items]="informacionFiscalSucursal.dataPaises" bindLabel="nombre" bindValue="idPais"
+							[(ngModel)]="informacionFiscalSucursal.pais" (change)="cargarEstados('cambio')"
+							placeholder="{{'informacionFiscalClienteTranslate.placehholderPais' | translate}}">
+						</ng-select>
+						<label></label>
+					</div>
+				</div>
+			</div>
+
+			<!-- Lado derecho -->
+			<div class="col-lg-6">
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.codigoPostal' | translate}}
+					</div>
+					<div class="col-lg-8">
+						<input id="codigoPostalInput" class="form-control borderAzul" type="text" maxlength="5"
+							(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')"
+							[(ngModel)]="informacionFiscalSucursal.codigoPostal" />
+						<label id="errorcodigoPostalInput" style="color: red;"></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'configuracionSucursalTranslate.usoCFDI'| translate}} *
+					</div>
+					<div class="col-lg-8">
+						<ng-select id="usoCFDISelect" appendTo="#usoCFDISelect" [searchable]="false" [clearable]="false"
+							[items]="informacionFiscalSucursal.usosCFDI" bindLabel="descripcion"
+							bindValue="idDatosFiscalesUsoCFDI" [(ngModel)]="informacionFiscalSucursal.cfdi"
+							placeholder="Selecciona el uso de CFDI">
+						</ng-select>
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'configuracionSucursalTranslate.metodosDePago'| translate}} *
+					</div>
+					<div class="col-lg-8">
+						<ng-select id="metodosDePagoSelectFiscal" appendTo="#metodosDePagoSelectFiscal"
+							[searchable]="false" [clearable]="false" [items]="informacionFiscalSucursal.metodosDePago"
+							bindLabel="descripcion" bindValue="idDatosFiscalesMetodoPago"
+							[(ngModel)]="informacionFiscalSucursal.metodoPago"
+							placeholder="Selecciona el metodo de pago">
+						</ng-select>
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'configuracionSucursalTranslate.formasDePago'| translate}} *
+					</div>
+					<div class="col-lg-8">
+						<ng-select id="formasDePagoSelectFiscal" appendTo="#formasDePagoSelectFiscal"
+							[searchable]="false" [clearable]="false" [items]="informacionFiscalSucursal.formasDePago"
+							bindLabel="descripcion" bindValue="idDatosFiscalesFormaPago"
+							[(ngModel)]="informacionFiscalSucursal.formaPago" placeholder="Selecciona la forma de pago">
+						</ng-select>
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'configuracionSucursalTranslate.regimenFiscalReceptor'| translate}}*
+					</div>
+					<div class="col-lg-8">
+						<ng-select id="RegimenFiscalSelect" appendTo="#RegimenFiscalSelect" [searchable]="false"
+							[clearable]="false" [items]="informacionFiscalSucursal.dataRegimen" bindLabel="descripcion"
+							bindValue="idRegimenFiscal" [(ngModel)]="informacionFiscalSucursal.regimenFiscalReceptor"
+							placeholder="Selecciona el uso de Regimen Fiscal">
+						</ng-select>
+						<label id="errorRegimenFiscal" style="color: red;"></label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mx-auto" *ngIf="pantallaDatosOut">
+			<!-- Lado izquierdo -->
+			<div class="col-lg-6">
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.tipoPersona' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{ informacionFiscalSucursal.radioTipo === "0" ? ('informacionFiscalClienteTranslate.fisica' | translate) : ('informacionFiscalClienteTranslate.moral' | translate) }}
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.rfc' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{ informacionFiscalSucursal.RFC }}
+						<label id="errorrfcInputFiscal" style="color: red;"></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.nombre' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{ informacionFiscalSucursal.nombre }}
+						<label id="errornombreInputFiscal" style="color: red;"></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.pais' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{nombrePais}}
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.estado' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{nombreEstado}}
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.ciudad' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{informacionFiscalSucursal.ciudad}}
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.email' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{informacionFiscalSucursal.email}}
+						<label></label>
+					</div>
+				</div>
+			</div>
+
+			<!-- Lado derecho -->
+			<div class="col-lg-6">
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.colonia' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{informacionFiscalSucursal.colonia}}
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.codigoPostal' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{informacionFiscalSucursal.codigoPostal}}
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.calle' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{informacionFiscalSucursal.calle}}
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.numero' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{informacionFiscalSucursal.numero}}
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.numeroInterior' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{informacionFiscalSucursal.numeroInterior}}
+						<label></label>
+					</div>
+				</div>
+
+				<div class="row mx-auto my-1">
+					<div class="col-lg-4">
+						{{'informacionFiscalClienteTranslate.telefono' | translate}}
+					</div>
+					<div class="col-lg-8">
+						{{informacionFiscalSucursal.telefono}}
+						<label></label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="footerModal">
+			<button class="buttonEstiloBlanco" style="width: 140px; height: 40px;" 
+				(click)="guardarInformacionFiscalSucursal()"
+				*ngIf="pantallaDatosIn">
+				{{'informacionFiscalClienteTranslate.guardar' | translate}}
+			</button>
+
+			<button class="buttonEstiloBlanco" style="width: 140px; height: 40px;" 
+				(click)="regresar()" *ngIf="pantallaDatosOut">
+				{{'informacionFiscalClienteTranslate.regresar' | translate}}
+			</button>
+
+			<button class="buttonEstiloBlanco" style="width: 140px; height: 40px;" 
+				(click)="facturar()" *ngIf="pantallaDatosOut">
+				{{'informacionFiscalClienteTranslate.facturar' | translate}}
+			</button>
+		</div>
+	</mat-card-content>
+</mat-card>

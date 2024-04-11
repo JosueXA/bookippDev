@@ -1,0 +1,549 @@
+<mat-card class="mat-elevation-z8" id="mainMatCard">
+    <mat-card-header>
+        <div style="width: 100%;">
+            <mat-card-title> {{'reporteProductividad.reporteProductividad'| translate}} </mat-card-title>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="cancelarPantalla()" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6;  top: -6px; position: relative;" (click)="cancelarPantalla()">{{'reporteProductividad.inico'| translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a style="color: #20c4e6;  top: -6px; position: relative;">{{'reporteProductividad.reporteProductividad'| translate}}</a>&nbsp;
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="py-5">
+        <!-- Calendario -->
+        <div class="row page_seccion_campo" style="margin-bottom:3%; margin-top:15px">
+            <div class="col-lg-4">
+                <div style="padding-left: 15px;">
+                    <mat-icon class="iconosBookipp" svgIcon="iconCalendarioEditar" style="position: absolute; margin: 8px 0px 0px 30px;"></mat-icon>
+                    <input type="text"
+                        ngxDaterangepickerMd
+                        class="form-control borderAzul"
+                        style="cursor: pointer; height: 40px; width: 350px; padding-left: 90px; border-radius: 1.5rem;"
+                        [(ngModel)]="reporte.fechas"
+                        (ngModelChange)="reporte_cambioFecha()"
+                        [showCustomRangeLabel]="true"
+                        [alwaysShowCalendars]="true"
+                        [ranges]="this.ranges"
+                        [linkedCalendars]="true"
+                        [isInvalidDate] = "isInvalidDate"
+                        [showClearButton]="false"
+                        [locale] = "this.locale"
+                        [showDropdowns]="true"
+                        placeholder="DD/MM/YYYY - DD/MM/YYYY"
+                        autocomplete="nuevo-rango"
+                    />
+                    <mat-icon class="iconosBookipp" svgIcon="iconFlechaAbajoPeque" style="position: absolute; margin: -30px 0px 0px 300px;"></mat-icon>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestañas -->
+        <mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true" #tabGroup>
+            <div id="myTabContent" class="tab-content">
+                <!-- Pestaña Citas por Personal -->
+                <mat-tab id="pestañaCitasPersonal" style="width: 50%;">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="iconosBookipp" svgIcon="iconUsuario" style="cursor: pointer; height: 20px; position: relative; top: -4px;"></mat-icon>
+                        <label> {{'reporteProductividad.citasPersonal2' | translate}} </label>
+                    </ng-template>
+
+                    <div id="personal" class="px-5 pb-5 pt-3 heightPred" style="width: 100%;">
+                        <div class="row col-lg-12" *ngIf="!hayRegistros[0]" style="font-style: italic; font-size: large; justify-content: center;">
+                            {{this.msgSinCitas[0]}}
+                        </div>
+
+                        <div style="min-height: 350px;" [hidden]="!hayRegistros[0]">
+                            <div class="row">
+                                <div class="col-lg-10"></div>
+
+                                <!-- Tabla de Citas por Personal -->
+                                <div class="col-lg-5" id="tablaCitasPersonal">
+                                    <div class="ocultarDivSeparador" style="height: 38px;"></div>
+                                    <mat-card-content style="margin-top: 10px; max-height: 280px; overflow: auto;">
+                                        <table mat-table id="tablaPersonal" [dataSource]="personal.dataPersonalFiltrada" class="mat-elevation-z8" style="width: 97%; margin-left: 15px; border-top: solid 2px #ebebeb;">
+                                            <ng-container matColumnDef="nombre">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesRowsSize">
+                                                    {{'reporteProductividad.personal'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                                    <!-- PopOver -->
+                                                    <ng-template #popPersonal>
+                                                        <div style="padding-left: 0px; padding-right: 0px; width: 250px; height: 200px;">
+                                                            <canvas id="gPopPersonal" style="width: 240px; height: 200px;margin: 0; padding-left: 0px; padding-right: 0px;"></canvas>
+                                                        </div>
+                                                    </ng-template>
+
+                                                    <label class="labelLink"
+                                                        [ngbPopover]="popPersonal"
+                                                        (click)="mostrarDetalle(element.id)"
+                                                        container="body">
+                                                        {{element.nombre}}
+                                                    </label>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="cantidadCitas">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesRowsSize">
+                                                    {{'reporteProductividad.cantidadCitas'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.cantidadCitas}} </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns_CitasPersonal"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns_CitasPersonal;"></tr>
+                                        </table>
+                                    </mat-card-content>
+                                    <div style="text-align: right; margin-right: 40px;">{{'reporteProductividad.totalCitas'| translate}} {{personal.total}}</div>
+                                </div>
+
+                                <div class="col-lg-1"></div>
+
+                                <!-- Gráfico de Citas por Personal -->
+                                <div class="col-lg-6" id="graficoCitasPersonal">
+                                    <!-- Botón PopOver de Descarga y Filtro -->
+                                    <div class="col-lg-12" style="text-align: right;">
+                                        <!-- Botón de Filtrado -->
+                                        <button type="button" class="btn btn-square mx-1" (click)="modalFiltrar(0);" style="border: #b7c4c9 solid 1px; border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconFiltro" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+
+                                        <!-- Dentro del PopOver -->
+                                        <ng-template #popOpcionesGra01>
+                                            <button class="btn mt-2 mb-4 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCP('impresion')">
+                                                {{'reporteProductividad.imprimirGrafica'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCP('png')">
+                                                {{'reporteProductividad.descargarPNG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCP('jpg')">
+                                                {{'reporteProductividad.descargarJPG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCP('pdf')">
+                                                {{'reporteProductividad.descargarPDF'| translate}}
+                                            </button>
+                                        </ng-template>
+
+                                        <!-- PopOver de Descarga -->
+                                        <button type="button" class="btn btn-square mx-2" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;"
+                                            [ngbPopover]="popOpcionesGra01"
+                                            container="body">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconMenuHamburguesa" style="stroke: none; height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+                                    </div>
+
+                                    <canvas id="gPersonal" class="canvasStyle"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Pestaña Citas Canceladas -->
+                <mat-tab id="pestañaCitasCanceladas" style="width: 50%;">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="iconosBookipp" svgIcon="iconCalendarioCancelar" style="cursor: pointer; height: 21px; position: relative; top: -4px;"></mat-icon>
+                        <label> {{'reporteProductividad.citasCanceladas3' | translate}} </label>
+                    </ng-template>
+
+                    <div id="citasCanceladas" class="px-5 pb-5 pt-3 heightPred" style="width: 100%;">
+                        <div class="row col-lg-12" *ngIf="!hayRegistros[1]" style="font-style: italic; font-size: large; justify-content: center;">
+                            {{this.msgSinCitas[1]}}
+                        </div>
+                        <div style="min-height: 350px;" [hidden]="!hayRegistros[1]">
+                            <div class="row">
+                                <div class="col-lg-10"></div>
+                                <!-- Tabla de Citas Canceladas -->
+                                <div class="col-lg-5 pb-2" id="tablaCitasPersonal">
+                                    <div class="ocultarDivSeparador" style="height: 38px;"></div>
+                                    <mat-card-content style="margin-top: 10px; max-height: 280px; overflow: auto;">
+                                        <table mat-table id="tablaCitasCanceladas" [dataSource]="citasCanceladas.dataCitasCanceladasFiltrada" class="mat-elevation-z8" style="width: 97%; margin-left: 15px; border-top: solid 2px #ebebeb;">
+                                            <ng-container matColumnDef="nombre">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesRowsSize">
+                                                    {{'consultaClienteTranslate.cliente'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.nombre}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="citasCanceladas">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesRowsSize">
+                                                    {{'reporteProductividad.citas'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.citasCanceladas}} </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns_CitasCancel"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns_CitasCancel;"></tr>
+                                        </table>
+                                    </mat-card-content>
+                                    <div style="text-align: right; margin-right: 40px;">{{'reporteProductividad.totalCitasCanceladas'| translate}} {{citasCanceladas.total}}</div>
+                                </div>
+                                <div class="col-lg-1"></div>
+
+                                <!-- Gráfico de Citas Canceladas -->
+                                <div class="col-lg-6" id="graficoCitasPersonal">
+                                    <!-- Botón PopOver de Descarga y Filtro -->
+                                    <div class="col-lg-12" style="text-align: right;">
+                                        <!-- Botón de Filtrado -->
+                                        <button type="button" class="btn btn-square mx-1" (click)="modalFiltrar(1);" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconFiltro" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+
+                                        <!-- Dentro del PopOver -->
+                                        <ng-template #popOpcionesGra02>
+                                            <button class="btn mt-2 mb-4 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCC('impresion')">
+                                                {{'reporteProductividad.imprimirGrafica'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCC('png')">
+                                                {{'reporteProductividad.descargarPNG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCC('jpg')">
+                                                {{'reporteProductividad.descargarJPG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCC('pdf')">
+                                                {{'reporteProductividad.descargarPDF'| translate}}
+                                            </button>
+                                        </ng-template>
+
+                                        <!-- PopOver de Descarga -->
+                                        <button type="button" class="btn btn-square mx-2" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;"
+                                            [ngbPopover]="popOpcionesGra02"
+                                            container="body">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconMenuHamburguesa" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+                                    </div>
+                                    <canvas id="gCitasCanceladas" class="canvasStyle"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Pestaña Citas por Estátus -->
+                <mat-tab id="pestañaCitasEstatus" style="width: 50%;">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="iconosBookipp" svgIcon="iconInfoCirculo" style="cursor: pointer; height: 20px; position: relative; top: -4px; overflow: visible;"></mat-icon>
+                        <label> {{'reporteProductividad.citasEstatus3' | translate}} </label>
+                    </ng-template>
+
+                    <div id="citasCanceladas" class="px-5 pb-5 pt-3 heightPred" style="width: 100%;">
+                        <div class="row col-lg-12" *ngIf="!hayRegistros[2]" style="font-style: italic; font-size: large; justify-content: center;">
+                            {{this.msgSinCitas[0]}}
+                        </div>
+                        <div style="min-height: 350px;" [hidden]="!hayRegistros[2]">
+                            <div class="row">
+                                <div class="col-lg-10"></div>
+                                <!-- Tabla de Citas por Estátus -->
+                                <div class="col-lg-5  pb-2" id="tablaCitasPorEstatus">
+                                    <div class="ocultarDivSeparador" style="height: 38px;"></div>
+                                    <mat-card-content style="margin-top: 10px; max-height: 300px; overflow: auto;">
+                                        <table mat-table id="tablaCitaEstatus" [dataSource]="citasEstatus.dataCitasEstatusFiltrada" class="mat-elevation-z8" style="width: 100%; border-top: solid 2px #ebebeb;">
+                                            <ng-container matColumnDef="nombre">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesRowsSize">
+                                                    {{'reporteProductividad.estatus'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                                    <label class="labelLink" for="{{element.nombre}}" (click)="consultaEstatusCita(element.id)"> {{element.nombre}} </label>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="cantidadCitas">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesRowsSize">
+                                                    {{'reporteProductividad.citas'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.cantidadCitas}} </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns_CitasEstatus"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns_CitasEstatus;"></tr>
+                                        </table>
+                                    </mat-card-content>
+                                    <div style="text-align: right; margin-right: 40px;">{{'reporteProductividad.totalCitas'| translate}} {{ citasEstatus.total }}</div>
+                                </div>
+
+                                <div class="col-lg-1"></div>
+
+                                <!-- Gráfico de Citas por Estátus -->
+                                <div class="col-lg-6" id="graficoCitasPersonal">
+                                    <!-- Botón PopOver de Descarga y Filtro -->
+                                    <div class="col-lg-12" style="text-align: right;">
+                                        <!-- Botón de Filtrado -->
+                                        <button type="button" class="btn btn-square mx-1" (click)="modalFiltrar(2);" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconFiltro" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+
+                                        <!-- Dentro del PopOver -->
+                                        <ng-template #popOpcionesGra03>
+                                            <button class="btn mt-2 mb-4 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCE('impresion')">
+                                                {{'reporteProductividad.imprimirGrafica'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCE('png')">
+                                                {{'reporteProductividad.descargarPNG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCE('jpg')">
+                                                {{'reporteProductividad.descargarJPG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCE('pdf')">
+                                                {{'reporteProductividad.descargarPDF'| translate}}
+                                            </button>
+                                        </ng-template>
+
+                                        <!-- PopOver de Descarga -->
+                                        <button type="button" class="btn btn-square mx-2" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;"
+                                            [ngbPopover]="popOpcionesGra03"
+                                            container="body">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconMenuHamburguesa" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+                                    </div>
+
+                                    <canvas id="gCitasEstatus" class="canvasStyle"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Pestaña Citas por Origen -->
+                <mat-tab id="pestañaCitasOrigen" style="width: 50%;">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="iconosBookipp" svgIcon="iconCelular" style="cursor: pointer; height: 21px; position: relative; top: -4px;"></mat-icon>
+                        <label> {{'reporteProductividad.citasOrigen3' | translate}} </label>
+                    </ng-template>
+
+                    <div id="citasOrigen" class="px-5 pb-5 pt-3 heightPred" style="width: 100%;">
+                        <div class="row col-lg-12" *ngIf="!hayRegistros[3]" style="font-style: italic; font-size: large; justify-content: center;">
+                            {{this.msgSinCitas[0]}}
+                        </div>
+                        <div style="min-height: 350px;" [hidden]="!hayRegistros[3]">
+                            <div class="row">
+                                <div class="col-lg-10"></div>
+                                <!-- Tabla de Citas por Origen -->
+                                <div class="col-lg-5 pb-2" id="tablaCitasPorOrigen">
+                                    <div class="ocultarDivSeparador" style="height: 38px;"></div>
+                                    <mat-card-content style="margin-top: 10px; max-height: 280px; overflow: auto;">
+                                        <table mat-table id="tablaCitaEstatus" [dataSource]="citasOrigen.dataCitasOrigenFiltrada" class="mat-elevation-z8" style="width: 97%; margin-left: 15px; border-top: solid 2px #ebebeb; background-color: gay;">
+                                            <ng-container matColumnDef="nombre">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesRowsSize">
+                                                    {{'reporteProductividad.origen'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                                    {{element.nombre}}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="cantidadCitas">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesRowsSize">
+                                                    {{'reporteProductividad.citas'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.cantidadCitas}} </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns_CitasOrigen"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns_CitasOrigen;"></tr>
+                                        </table>
+                                    </mat-card-content>
+                                    <div style="text-align: right; margin-right: 40px;">{{'reporteProductividad.totalCitas'| translate}} {{citasOrigen.total}}</div>
+                                </div>
+
+                                <div class="col-lg-1"></div>
+
+                                <!-- Gráfico de Citas Canceladas -->
+                                <div class="col-lg-6" id="graficoCitasPersonal">
+                                    <!-- Botón PopOver de Descarga y Filtro -->
+                                    <div class="col-lg-12" style="text-align: right;">
+                                        <!-- Botón de Filtrado -->
+                                        <button type="button" class="btn btn-square mx-1" (click)="modalFiltrar(3);" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconFiltro" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+
+                                        <!-- Dentro del PopOver -->
+                                        <ng-template #popOpcionesGra04>
+                                            <button class="btn mt-2 mb-4 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCO('impresion')">
+                                                {{'reporteProductividad.imprimirGrafica'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCO('png')">
+                                                {{'reporteProductividad.descargarPNG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCO('jpg')">
+                                                {{'reporteProductividad.descargarJPG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCO('pdf')">
+                                                {{'reporteProductividad.descargarPDF'| translate}}
+                                            </button>
+                                        </ng-template>
+
+                                        <!-- PopOver de Descarga -->
+                                        <button type="button" class="btn btn-square mx-2" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;"
+                                            [ngbPopover]="popOpcionesGra04"
+                                            container="body">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconMenuHamburguesa" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+                                    </div>
+
+                                    <canvas id="gCitasOrigen" class="canvasStyle"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+            </div>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
+
+<!-- Modal filtrar-->
+<div id="modal-filtrar" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-filtrar">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: auto;">
+            <div class="modal-header">
+                <span>{{tabActiveName}}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="resetColorCampoModal()" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body">
+                <div [hidden]="tabActive != 0">
+                    <label class="col-md-5" style="margin-top: 6px; margin-bottom: 6px;">{{'reporteProductividad.personal'| translate}}</label>
+                    <div class="col-md-7" style="padding: 0; margin-bottom: 6px; min-height: 36px; width: 100%;">
+                        <ng-select id="ddlPersonal" style="width: 100%;" [multiple]="true" appendTo="#modal-filtrar" [searchable]="true"
+                            [(ngModel)]="dataFiltro.select" (click)="verificarSeleccionFiltros(personal.dataPersonal)" [clearable]="true"
+                            placeholder="{{'reporteProductividad.selectPersonal'| translate}}"
+                            [items]="personal.dataPersonal" bindLabel="nombre" bindValue="id">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div [hidden]="tabActive != 1">
+                    <label class="col-md-5" style="margin-top: 6px; margin-bottom: 6px;">{{'consultaClienteTranslate.cliente'| translate}}</label>
+                    <div class="col-md-7" style="padding: 0; margin-bottom: 6px; min-height: 36px;  width: 100%;">
+                        <ng-select id="ddlCitasCanceladas" style="width: 100%;" [multiple]="true" appendTo="#modal-filtrar" [searchable]="true"
+                            [(ngModel)]="dataFiltro.select" (click)="verificarSeleccionFiltros(citasCanceladas.dataCitasCanceladas)" [clearable]="true"
+                            placeholder="{{'reporteProductividad.selectServicio'| translate}}"
+                            [items]="citasCanceladas.dataCitasCanceladas" bindLabel="nombre" bindValue="id">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div [hidden]="tabActive != 2">
+                    <label class="col-md-5" style="margin-top: 6px; margin-bottom: 6px;">{{'reporteProductividad.estatus'| translate}}</label>
+                    <div class="col-md-7" style="padding: 0; margin-bottom: 6px; min-height: 36px; width: 100%;">
+                        <ng-select id="ddlCitasEstatus" style="width: 100%;" [multiple]="true" appendTo="#modal-filtrar" [searchable]="true"
+                            [(ngModel)]="dataFiltro.select" (click)="verificarSeleccionFiltros(citasEstatus.dataCitasEstatus)" [clearable]="true"
+                            placeholder="{{'reporteProductividad.selectEstatus'| translate}}"
+                            [items]="citasEstatus.dataCitasEstatus" bindLabel="nombre" bindValue="id">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div [hidden]="tabActive != 3">
+                    <label class="col-md-5" style="margin-top: 6px; margin-bottom: 6px;">{{'reporteProductividad.origen'| translate}}</label>
+                    <div class="col-md-7" style="padding: 0; margin-bottom: 6px; min-height: 36px; width: 100%;">
+                        <ng-select id="ddlCitasOrigen" style="width: 100%;" [multiple]="true" appendTo="#modal-filtrar" [searchable]="true"
+                            [(ngModel)]="dataFiltro.select" (click)="verificarSeleccionFiltros(citasOrigen.dataCitasOrigen)" [clearable]="true"
+                            placeholder="{{'reporteProductividad.selectOrigen'| translate}}"
+                            [items]="citasOrigen.dataCitasOrigen" bindLabel="nombre" bindValue="id">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button"  class="buttonEstiloBlanco" style="color: white; height: auto;" (click)="filtrar()">
+                        {{'reporteProductividad.filtrar'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal EstatusCitas-->
+<div id="estatus-cita" tabindex="2" role="dialog" aria-hidden="true" class="modal fade estatus-cita">
+    <div class="modal-dialog" style="width: auto; max-width: max-content;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span> {{'reporteProductividad.citaPorEstatus'| translate}} </span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body" style="overflow: auto;">
+                <table mat-table id="tablaEstatus" [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width: 97%; margin-left: 15px; border: solid 1px black;">
+                    <ng-container matColumnDef="fechaCita">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center; min-width: 100px;" class="tablesRowsSize">
+                            {{'reporteProductividad.fechaCita'| translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                             {{element.fechaCita |  date:'dd/MM/yyyy'}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cliente">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center; min-width: 200px;" class="tablesRowsSize">
+                            {{'reporteProductividad.cliente'| translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                            <label class="labelLink" for="{{element.cliente}}" (click)="irACliente(element)"> {{element.cliente}} </label>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="telefono">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center; min-width: 100px;" class="tablesRowsSize">
+                            {{'reporteProductividad.telefono'| translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                            {{element.telefono}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="servicio">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center; min-width: 140px;" class="tablesRowsSize">
+                            {{'reporteProductividad.servicio'| translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                            {{element.servicio}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="personal">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center; min-width: 200px;" class="tablesRowsSize">
+                            {{'reporteProductividad.personal'| translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                            {{element.personal}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nota">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center; min-width: 100px;" class="tablesRowsSize">
+                            {{'reporteProductividad.nota'| translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                            {{element.nota}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="descripcion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center; min-width: 90px;" class="tablesRowsSize">
+                            {{'reporteProductividad.estatus'| translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                            {{element.descripcion}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Usuario de Cancelacion -->
+                    <ng-container matColumnDef="usuarioCancelacion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center; min-width: 200px;" class="tablesRowsSize">
+                            {{'reporteProductividad.usuario'| translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">
+                            {{element.usuarioCancelacion}}
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns_ModalCitasEstatus"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns_ModalCitasEstatus"></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.fillAzulBookipp{
+    fill:#20c4e6;
+}
+
+.strokeAzulBookipp{
+    fill: none;
+    stroke:#20c4e6;
+}
+
+.anchoBuscador{
+    padding-left: 0;
+    @media screen and (max-width: 992px){
+        padding-left: 29px;
+    }
+}

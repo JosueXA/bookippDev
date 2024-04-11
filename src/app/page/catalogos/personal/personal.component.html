@@ -1,0 +1,1541 @@
+<mat-card class="mat-elevation-z8" id="mainMatCard">
+    <mat-card-header>
+        <mat-card-title> {{'personalTranslate.personal'| translate}}&nbsp; </mat-card-title>
+        <div class="col-lg-2" style="display: flex;">
+            <mat-icon id="btnNuevo" class="iconosBookipp" svgIcon="iconAgregar" (click)="nuevoPersonal()" style="cursor: pointer; width: 30px; height: 30px; position: relative; left: -5px;"></mat-icon>
+            <mat-icon id="Li1" class="iconosBookipp" svgIcon="iconConfiguracion" (click)="abrirConfiguracion()" *ngIf="this.accesosPantalla.personal.configuracionPersonal == 1" style="cursor: pointer; width: 30px; height: 30px; position: relative; left: -5px;"></mat-icon>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="descartar('agenda')" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="descartar('agenda')">{{'personalTranslate.inicio'| translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a style="color: #20c4e6; top: -6px; position: relative;">{{'personalTranslate.personal'| translate}}</a>
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="py-5">
+        <!-- Lista de Personal -->
+        <div id="contenedorListaPersonal" class="row mx-auto" style="width: 100%;">
+            <div class="col-lg-12">
+                <div class="col-lg-12" style="overflow-x: auto;">
+                    <div id="divPersonales">
+                        <ul id="navListPersonal" class="d-flex navClass">
+                            <li id="{{empleado.idPersonal}}" *ngFor="let empleado of personal.dataPersonales"
+                                class="d-flex flex-column text-center mx-2" style="align-items: center;">
+                                <mat-icon id="borrar{{empleado.idPersonal}}" svgIcon="iconCruz"
+                                    *ngIf="personal.dataPersonales.length > 1 "
+                                    class="d-block iconosBookipp" style="cursor: pointer; width: 20px;"
+                                    aria-hidden="true"
+                                    [class.itemActiveLabel]="empleado.idPersonal === personal.idPersonal"
+                                    (click)="personal_preparacionBorrar(empleado.idPersonal)"></mat-icon>
+
+                                <img id="img{{empleado.idPersonal}}" class="img-thumbnail"
+                                    src="assets/images/migracion/Imagen-PersonaGris-300x300.png"
+                                    style="border-radius: 300px !important; margin-bottom: 5px !important; cursor: pointer; width: 70px; height: 70px;"
+                                    [class.itemActiveCircle]="empleado.idPersonal === personal.idPersonal"
+                                    (click)="personal_cargarPersonalEditarPersonal(empleado.idPersonal)" />
+    
+                                <label id="lbl{{empleado.idPersonal}}"
+                                    [class.itemActiveLabel]="empleado.idPersonal === personal.idPersonal"
+                                    style="width: 70px; overflow: hidden; white-space: nowrap; cursor: pointer; text-overflow: ellipsis; cursor: pointer; text-align: center;"
+                                    (click)="personal_cargarPersonalEditarPersonal(empleado.idPersonal)">
+                                    {{empleado.nombre}}
+                                </label>
+                            </li>
+                        </ul> 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestañas -->
+        <mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true" #tabGroup>
+            <div id="myTabContent" class="tab-content"  style="padding-bottom: 0;">
+                <!-- Pestaña Datos Generales -->
+                <mat-tab id="pestañaDatosGenerales" label="{{'personalTranslate.datosGenerales'| translate}}" style="width: 50%;">
+                    <div id="datosGenerales" class="p-3" style="width: 100%;">
+                        <div style="min-height: 350px;">
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="row col-lg-12 py-2">
+                                        <label id="NombrePersona" class="col-lg-3 control-label" *ngIf="!personal.cabina.isCabina" style="padding-top: 7px;">
+                                            {{'personalTranslate.nombreCompleto'| translate}}
+                                        </label>
+                                        <label id="NombreCabina" class="col-lg-3 control-label" *ngIf="personal.cabina.isCabina" style="padding-top: 7px;">
+                                            Nombre Cabina
+                                        </label>
+                                        <div class="col-lg-7">
+                                            <input tabindex="5" id="txtNombre" class="form-control ng-pristine ng-valid borderAzul" maxlength="100"
+                                                type="text" [(ngModel)]="personal.nombre" (focus)="onFocusTxt('txtNombre')" (blur)="onBlurTxt('txtNombre')"
+                                                style="width: 100%;">
+                                        </div>
+
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-7 pt-2" style="color: red; margin-top: -2px;">
+                                            {{msgNombre}}
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-lg-12 py-2">
+                                        <label class="col-lg-3 control-label" style="padding-top: 6px;">
+                                            Tipo Cabina
+                                        </label>
+                                        <div class="col-lg-7" style="padding-left: 11px;">
+                                            <div class="col-lg-12">
+                                                <mat-slide-toggle id="switchActivo2"
+                                                    [(ngModel)]="personal.cabina.isCabina"
+                                                    (change)="transformarPersonalCabina()"
+                                                    [disabled] = "!personal.cabina.isPersonalNuevo">
+                                                </mat-slide-toggle>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-lg-12 py-2" id="hdntxtTelefono" *ngIf="!personal.cabina.isCabina">
+                                        <label class="col-lg-3 control-label">
+                                            {{'personalTranslate.telefono'| translate}}
+                                        </label>
+                                        <div class="col-lg-7">
+                                            <input tabindex="5" id="txtTelefono" class="form-control borderAzul ng-pristine ng-valid" maxlength="30"
+                                                type="text" [(ngModel)]="personal.telefono"
+                                                style="width: 100%;">
+                                        </div>
+
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-7 pt-2" style="color: red; margin-top: -2px;">
+                                            {{msgTelefono}}
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-lg-12 py-2" id="hdntxtEmail" *ngIf="!personal.cabina.isCabina">
+                                        <label class="col-lg-3 control-label">
+                                            {{'personalTranslate.email'| translate}}
+                                        </label>
+                                        <div class="col-lg-7">
+                                            <input tabindex="5" id="txtEmail" class="form-control borderAzul ng-pristine ng-valid" maxlength="100"
+                                                type="text" [(ngModel)]="personal.email"
+                                                style="width: 100%;">
+                                        </div>
+
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-7 pt-2" style="color: red; margin-top: -2px;">
+                                            {{msgEmail}}
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-lg-12 py-2" id="serviciosMostrar" *ngIf="!personal.cabina.isCabina">
+                                        <label class="col-lg-3 control-label">
+                                            {{'personalTranslate.servicios'| translate}}
+                                        </label>
+                                        <div class="col-lg-7" >
+                                            <ng-select id="ddlServicio" style="width: 100%;" [multiple]="true" appendTo="#mainMatCard" [searchable]="true"
+                                                [(ngModel)]="personal.servicio" (click)="onClickDdl('ddlServicio')" [clearable]="false"
+                                                placeholder="{{'personalTranslate.serviciosG'| translate}}"
+                                                [items]="personal.dataServicio" bindLabel="nombre" bindValue="idServicio">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-lg-12 py-2" id="Div1" *ngIf="personal.cabina.isCabina">
+                                        <label class="col-lg-3 control-label">
+                                            Servicios Cabina
+                                        </label>
+                                        <div class="col-lg-7" >
+                                            <ng-select id="ddlServiciosCabina" style="width: 100%;" [multiple]="true" appendTo="#ddlServiciosCabina" [searchable]="true"  
+                                                [(ngModel)]="personal.cabina.servicios" (click)="onClickDdl('ddlServiciosCabina')" [clearable]="false"
+                                                placeholder="{{'personalTranslate.serviciosG'| translate}}"
+                                                [items]="personal.dataServicio" bindLabel="nombre" bindValue="idServicio">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-lg-12 py-2" id="personalesMostrar" *ngIf="personal.cabina.isCabina">
+                                        <label class="col-lg-3 control-label">
+                                            Personales Cabina
+                                        </label>
+                                        <div class="col-lg-7" >
+                                            <ng-select id="ddlPeresonalesCabina" style="width: 100%;" [multiple]="true" appendTo="#ddlPeresonalesCabina" [searchable]="true"  
+                                                [(ngModel)]="personal.cabina.personales" (click)="onClickDdl('ddlPeresonalesCabina')" [clearable]="false"
+                                                placeholder="Seleccione un personal"
+                                                [items]="personal.dataPersonalesCabina" bindLabel="nombre" bindValue="idPersonal">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-lg-12 py-2" *ngIf="false">
+                                        <label class="col-lg-3 control-label" style="padding-top: 0;">
+                                            {{'personalTranslate.comisionPorServicio'| translate}}
+                                        </label>
+                                        <div class="col-lg-7" >
+                                            <span id="Span1" style="position: absolute; margin-top: 9px; right: 21px;">%</span>
+                                            <input tabindex="5" id="inputComisionServicio" class="form-control borderAzul ng-pristine ng-valid" maxlength="5"
+                                                type="text" [(ngModel)]="personal.comisionServicio"
+                                                currency-mask (keypress)=" validate($event)"
+                                                style="width: 100%;">
+                                        </div>
+
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-7 pt-2" style="color: red; margin-top: 1%;">
+                                            {{msgComisionServicio}}
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-lg-12 py-2" *ngIf="false">
+                                        <label class="col-lg-3 control-label" style="padding-top: 0;">
+                                            {{'personalTranslate.comisionPorProducto'| translate}}
+                                        </label>
+                                        <div class="col-lg-7" >
+                                            <span id="iconoPorciento" style="position: absolute; margin-top: 9px; right: 21px;">%</span>
+                                            <input tabindex="5" id="inputComisionProducto" class="form-control borderAzul ng-pristine ng-valid" maxlength="5"
+                                                type="text" [(ngModel)]="personal.comisionProducto"
+                                                currency-mask (keypress)="validate($event)"
+                                                style="width: 100%;">
+                                        </div>
+
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-7 pt-2" style="color: red; margin-top: 1%;">
+                                            {{msgComisionProducto}}
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-lg-12 py-2">
+                                        <label class="col-lg-3 control-label" style="padding-top: 6px;">
+                                            Visible Agenda
+                                        </label>
+                                        <div class="col-lg-7" style="padding-left: 11px;">
+                                            <div class="col-lg-12">
+                                                <mat-slide-toggle id="switchActivo"
+                                                    [(ngModel)]="personal.visibleAgenda">
+                                                </mat-slide-toggle>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--Switch Servicios por Cabina -->
+                                    <div class="row col-lg-12 py-2" *ngIf="personal.cabina.isCabina">
+                                        <label class="col-lg-3 control-label" style="padding-top: 6px;">
+                                            Visible Limite Cabina
+                                        </label>
+                                        <div class="col-lg-7">
+                                            <div class="col-lg-12">
+                                                <mat-slide-toggle id="switchActivo3"
+                                                        [(ngModel)]="personal.visibleLimiteCabina">
+                                                </mat-slide-toggle>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <!--Numero de Servicios por Cabina -->
+                                    <div class="row col-lg-12 py-2" *ngIf="personal.cabina.isCabina && personal.visibleLimiteCabina">
+                                        <label id="lblserviciocabina" class="col-lg-2 control-label" *ngIf="!personal.cabina.isCabina" style="padding-top: 7px;">
+                                        </label>
+                                        <label id="Label2" class="col-lg-3 control-label" *ngIf="personal.cabina.isCabina" style="padding-top: 7px;">
+                                            Numero de Servicio Cabina
+                                        </label>
+                                        <div class="col-lg-7" *ngIf="personal.cabina.isCabina">
+                                            <input tabindex="5" id="divserviciocabina" class="form-control borderAzul ng-pristine ng-valid" maxlength="2"
+                                                type="text" [(ngModel)]="personal.limitecabina" 
+                                                style="width: 100%;">
+                                        </div>                               
+                                    </div>
+        
+                                    <div class="row col-lg-12 py-2">
+                                        <label class="col-lg-3 control-label">
+                                            {{'personalTranslate.color'| translate}}
+                                        </label>
+                                        <div id="selectColor" class="col-lg-1 page_seccion_campo_contenido" style="padding-left: 11px;">
+                                            <input id="inputSelectColor" class="form-control borderAzul"
+                                                style="height: 27px; width: 40px;" type="color" maxlength="100"
+                                                [(ngModel)]="this.color"/>
+                                        </div>
+
+                                        <div class="col-lg-1" style="padding: 0;">
+                                            <!-- Dentro del PopOver -->
+                                            <ng-template #popInfo>
+                                                <label> {{'personalTranslate.colorPer'| translate}} </label>
+                                            </ng-template>
+                                            
+                                            <!-- PopOver de Descarga -->
+                                            <span type="button" class="mx-3"
+                                                [ngbPopover]="popInfo"
+                                                container="body">
+                                                <mat-icon class="iconosBookipp" svgIcon="iconInfoCirculo" style="position: relative; top: 1px;"></mat-icon>
+                                            </span> 
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-5">
+                                    <div class="col-lg-12" style="margin-left: 3%; max-width: 400px;">
+                                        <mat-icon id="btnBorrarImagen" class="iconosBookipp" svgIcon="iconCruz" (click)="borrarImagen()" style="position: relative; margin-left: 82.95%; cursor: pointer; display: none; right: 6px; top: 24px; background-color: #fbf9f9; border-top: rgb(206, 204, 204) 1px solid; border-right: rgb(206, 204, 204) 1px solid;"></mat-icon>
+                                        <!-- <img id="btnBorrarImagen" href="#" (click)="borrarImagen()"
+                                            style="cursor: pointer; color: #777; width: 15px; margin: 0px auto"
+                                            src="../../../../assets/icons/outline/outline-cross.svg" /> -->
+                                        <img id="txtImagen" src="assets/images/migracion/Imagen-Foto-300x300.png" style="width: 350px; height: 325px;" />
+                                        <div class="col-lg-6" style="padding: 1% 0px 0px 1%; text-align: center; width: 350px;">
+                                            <button type="button" class="buttonEstiloBlanco" (click)="openImg()" 
+                                                    style="width:300px; font-size: 14px; height: 40px;">
+                                                    Seleccionar Archivo
+                                            </button>
+                                            <input id="files" 
+                                                (change)="onchangeImg($event)" 
+                                                [hidden]="true" 
+                                                style="margin-top: 3%; padding: 0; width:150px; font-size: 15.4px;" 
+                                                type="file" 
+                                                accept="image/*"/>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="row" style="margin-left: 3%;">
+                                        <div class="col-lg-6" style="padding: 1% 0px 0px 1%; text-align: center;">
+                                            <button type="button" class="buttonEstiloBlanco" (click)="openImg()" 
+                                                    style="width:300px; font-size: 14px; height: 40px;">
+                                                    Seleccionar Archivo
+                                            </button>
+                                            <input id="files" 
+                                                (change)="onchangeImg($event)" 
+                                                [hidden]="true" 
+                                                style="margin-top: 3%; padding: 0; width:150px; font-size: 15.4px;" 
+                                                type="file" 
+                                                accept="image/*"/>
+                                        </div>
+                                        <!-- <div class="col-lg-8" style="padding: 0; text-align: center;">
+                                            <input id="files" style="margin-top: 20px; width: 285px;" type="file" accept="image/png, image/gif, image/jpeg" (change)="onchangeImg($event)"/>
+                                        </div> 
+                                    </div> -->
+                                    <div class="row" style="margin-left: 1%">
+                                        <div class="col-lg-9" style="color: red;">
+                                            {{msgImagen}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Pestaña Horario -->
+                <mat-tab id="pestañaHorario" label="{{'personalTranslate.horario'| translate}}" style="width: 50%;">
+                    <div id="horario" class="p-3" style="width: 100%;">
+                        <div class="row">
+                            <div class="row col-lg-12">
+                                <label class="control-label" style="color: red; text-align: center;">{{msgHorariosLaboral}} </label>
+                            </div>
+                        </div>
+                        <!-- Lunes -->
+                        <div class="row col-lg-12 p-3" *ngIf="sucursal.lunes">
+                            <div class="row col-lg-8">
+                                <div class="col-lg-2" style="text-align: left;">
+                                    <label class="control-label">{{'personalTranslate.lunes'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <mat-slide-toggle id="ChkLunes"
+                                        [(ngModel)]="personal.lunes"
+                                        (ngModelChange)="onChangeChkLunes()">
+                                    </mat-slide-toggle>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <ng-select id="txtHoraInicioLunes" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                            [(ngModel)]="personal.horaInicioLunes"   [disabled]="!personal.lunes"  (click)="onClickDdl('txtHoraInicioLunes');"
+                                            [class.errorCampoSelect]="msgLunes" [items]="this.listarHora" bindLabel="label" bindValue="value">
+                                    </ng-select>
+                                </div>
+                                <div class="col-lg-1" style="border: 0px solid; border-color: green; padding-left: 3.5%;">
+                                    <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <ng-select id="txtHoraFinLunes" style="width: 100%"  class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaFinLunes"   [disabled]="!personal.lunes"  (click)="onClickDdl('txtHoraInicioLunes');"
+                                        [class.errorCampoSelect]="msgLunes" [items]="this.listarHora" bindLabel="label" bindValue="value">
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4" >
+                                <label *ngIf="!validLunes" style="color: red;" class="control-label pt-1">{{msgLunes}} </label>
+                            </div>
+                        </div>
+                        <!-- Martes -->
+                        <div class="row col-lg-12 p-3" *ngIf="sucursal.martes">
+                            <div class="row col-lg-8" >
+                                <div class="col-lg-2" style="text-align: left;">
+                                    <label class="control-label">{{'personalTranslate.martes'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <mat-slide-toggle id="ChkMartes"
+                                        [(ngModel)]="personal.martes"
+                                        (ngModelChange)="onChangeChkMartes()">
+                                    </mat-slide-toggle>
+                                </div>
+                                <div class="col-lg-3">
+                                    <ng-select id="txtHoraInicioMartes" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaInicioMartes"  [disabled]="!personal.martes" (click)="onClickDdl('txtHoraInicioMartes');"
+                                        [class.errorCampoSelect]="msgMartes" [items]="this.listarHora" bindLabel="label" bindValue="value">
+                                    </ng-select>
+                                </div>
+                                <div class="col-lg-1" style="border: 0px solid; border-color: green; padding-left: 3.5%;">
+                                    <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <ng-select id="txtHoraFinMartes" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaFinMartes"  [disabled]="!personal.martes" (click)="onClickDdl('txtHoraFinMartes');"
+                                        [class.errorCampoSelect]="msgMartes" [items]="this.listarHora" bindLabel="label" bindValue="value">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4" >
+                                <label *ngIf="!validMartes" style="color: red;" class="control-label pt-1">{{msgMartes}} </label>
+                            </div>
+
+                        </div>
+                        <!-- Miércoles -->
+                        <div class="row col-lg-12 p-3" *ngIf="sucursal.miercoles">
+                            <div class="row col-lg-8" >
+                                <div class="col-lg-2" style="text-align: left;">
+                                    <label class="control-label">{{'personalTranslate.miercoles'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <mat-slide-toggle id="ChkMiercoles"
+                                        [(ngModel)]="personal.miercoles"
+                                        (ngModelChange)="onChangeChkMiercoles()">
+                                    </mat-slide-toggle>
+                                </div>
+                                <div class="col-lg-3">
+                                    <ng-select id="txtHoraInicioMiercoles" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaInicioMiercoles"  [disabled]="!personal.miercoles" (click)="onClickDdl('txtHoraInicioMiercoles');"
+                                        [class.errorCampoSelect]="msgMiercoles" [items]="this.listarHora" bindLabel="label" bindValue="value">
+                                    </ng-select>
+                                </div>
+                                <div class="col-lg-1" style="border: 0px solid; border-color: green; padding-left: 3.5%;">
+                                    <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <ng-select id="txtHoraFinMiercoles" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaFinMiercoles"  [disabled]="!personal.miercoles" (click)="onClickDdl('txtHoraFinMiercoles');"
+                                        [class.errorCampoSelect]="msgMiercoles" [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <label *ngIf="!validMiercoles" style="color: red;" class="control-label pt-1">{{msgMiercoles}} </label>
+                            </div>
+                        </div>
+                        <!-- Jueves -->
+                        <div class="row col-lg-12 p-3" *ngIf="sucursal.jueves">
+                            <div class="row col-lg-8">
+                                <div class="col-lg-2" style="text-align: left;">
+                                    <label class="control-label">{{'personalTranslate.jueves'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <mat-slide-toggle id="ChkJueves"
+                                        [(ngModel)]="personal.jueves"
+                                        (ngModelChange)="onChangeChkJueves()">
+                                    </mat-slide-toggle>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <ng-select id="txtHoraInicioJueves" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaInicioJueves"  [disabled]="!personal.jueves" (click)="onClickDdl('txtHoraInicioJueves');"
+                                        [class.errorCampoSelect]="msgJueves" [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                    </ng-select>
+                                    </div>
+                                <div class="col-lg-1" style="border: 0px solid; border-color: green; padding-left: 3.5%;">
+                                    <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <ng-select id="txtHoraFinJueves" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaFinJueves"  [disabled]="!personal.jueves" (click)="onClickDdl('txtHoraFinJueves');"
+                                        [class.errorCampoSelect]="msgJueves" [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4" >
+                                <label *ngIf="!validJueves" style="color: red;" class="control-label  pt-1">{{msgJueves}} </label>
+                            </div>
+                        </div>
+                        <!-- Viernes -->
+                        <div class="row col-lg-12 p-3" *ngIf="sucursal.viernes">
+                            <div class="row col-lg-8" >
+                                <div class="col-lg-2" style="text-align: left;">
+                                    <label class="control-label">{{'personalTranslate.viernes'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <mat-slide-toggle id="ChkViernes"
+                                        [(ngModel)]="personal.viernes"
+                                        (ngModelChange)="onChangeChkViernes()">
+                                    </mat-slide-toggle>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <ng-select id="txtHoraInicioViernes" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaInicioViernes"  [disabled]="!personal.viernes" (click)="onClickDdl('txtHoraInicioViernes');"
+                                        [class.errorCampoSelect]="msgViernes" [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                    </ng-select>
+                                </div>
+                                <div class="col-lg-1" style="border: 0px solid; border-color: green; padding-left: 3.5%;">
+                                    <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <ng-select id="txtHoraFinViernes" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaFinViernes"  [disabled]="!personal.viernes" (click)="onClickDdl('txtHoraFinViernes');"
+                                        [class.errorCampoSelect]="msgViernes" [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4" >
+                                <label *ngIf="!validViernes" style="color: red;" class="control-label  pt-1">{{msgViernes}} </label>
+                            </div>
+                        </div>
+                        <!-- Sábado -->
+                        <div class="row col-lg-12 p-3" *ngIf="sucursal.sabado">
+                            <div class="row col-lg-8" >
+                                <div class="col-lg-2" style="text-align: left;">
+                                    <label class="control-label">{{'personalTranslate.sabado'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3" >
+                                <mat-slide-toggle id="ChkSabado"
+                                    [(ngModel)]="personal.sabado"
+                                    (ngModelChange)="onChangeChkSabado()">
+                                </mat-slide-toggle>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <ng-select id="txtHoraInicioSabado" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaInicioSabado"  [disabled]="!personal.sabado" (click)="onClickDdl('txtHoraInicioSabado');"
+                                        [class.errorCampoSelect]="msgSabado" [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                    </ng-select>
+                                </div>
+                                <div class="col-lg-1" style="border: 0px solid; border-color: green; padding-left: 3.5%;">
+                                    <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <ng-select id="txtHoraFinSabado" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaFinSabado"  [disabled]="!personal.sabado" (click)="onClickDdl('txtHoraFinSabado');" 
+                                        [class.errorCampoSelect]="msgSabado" [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4" >
+                                <label *ngIf="!validSabado" style="color: red;" class="control-label  pt-1">{{msgSabado}} </label>
+                            </div>
+                        </div>
+                        <!-- Domingo -->
+                        <div class="row col-lg-12 p-3" *ngIf="sucursal.domingo">
+                            <div class="row col-lg-8" >
+                                <div class="col-lg-2" style="text-align: left;">
+                                    <label class="control-label">{{'personalTranslate.domingo'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <mat-slide-toggle id="ChkDomingo"
+                                        [(ngModel)]="personal.domingo"
+                                        (ngModelChange)="onChangeChkDomingo()">
+                                    </mat-slide-toggle>
+                                </div>
+                                <div class="col-lg-3" >
+                                    <ng-select id="txtHoraInicioDomingo" style="width: 100%"  appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaInicioDomingo"  [disabled]="!personal.domingo" (click)="onClickDdl('txtHoraInicioDomingo');"
+                                        [class.errorCampoSelect]="msgDomingo" [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                    </ng-select>
+                                    </div>
+                                <div class="col-lg-1" style="border: 0px solid; border-color: green; padding-left: 3.5%;">
+                                    <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                </div>
+                                <div class="col-lg-3" >
+                                        <ng-select id="txtHoraFinDomingo" style="width: 100%" appendTo="#mainMatCard" [searchable]="true" [clearable]="false"
+                                        [(ngModel)]="personal.horaFinDomingo"  [disabled]="!personal.domingo" (click)="onClickDdl('txtHoraFinDomingo'); "
+                                        [class.errorCampoSelect]="msgDomingo" [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4" >
+                                <label *ngIf="!validDomingo" style="color: red;" class="control-label  pt-1">{{msgDomingo}} </label>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Pestaña Descanso -->
+                <mat-tab id="pestañaDescanso" label="{{'personalTranslate.descansos'| translate}}" style="width: 50%;" *ngIf="this.personal.cabina.isCabina == false">
+                    <div id="descanso" class="p-3" style="width: 100%;">
+                        <div [hidden]="personal.contadorLunes <= 0 && personal.contadorMartes <= 0 && personal.contadorMiercoles <= 0 && personal.contadorJueves <= 0 && personal.contadorViernes <= 0 && personal.contadorSabado <= 0 && personal.contadorDomingo <= 0 && personal.idSucursal == ''">
+                            <div class="row">
+                                <div class="row col-lg-12">
+                                    <!-- <label style="color: red; padding-top: 0; padding-bottom: 2%; text-align: left;" class="col-lg-12 control-label">msgMaxDescansos </label> -->
+                                </div>
+                            </div>
+                            <div [hidden]="(!personal.lunes) || (!sucursal.lunes)" class="row py-3" style="padding-left: 20px;">
+                                <div class="row col-lg-12">
+                                    <div class="col-lg-1" style="min-width: 157px; width: auto;"><label class="control-label">{{'personalTranslate.lunes'| translate}} </label></div>
+                                    <div class="col-lg-2" style="width: auto;">
+                                        <mat-icon class="iconosBookipp" svgIcon="iconAgregar" (click)="personal_sumarContadorLunes()" style="position: relative; top: 1px; width: 32px; height: 32px; cursor: pointer; "></mat-icon>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="row" [hidden]="personal.contadorLunes < 1" *ngIf="personal.contadorLunes >= 1" style="padding-bottom:2%; padding-top:.5%">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtLunesDescansoInicio0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoLunes[0].horaInicio"   (click)="onClickDdl('txtLunesDescansoInicio0'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">    
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtLunesDescansoFin0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoLunes[0].horaFin"   (click)="onClickDdl('txtLunesDescansoFin0'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorLunes(0)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgLunesDescansos[0]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorLunes < 2" *ngIf="personal.contadorLunes >= 2"  style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtLunesDescansoInicio1" style="width: 100%" class = "" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoLunes[1].horaInicio"   (click)="onClickDdl('txtLunesDescansoInicio1'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtLunesDescansoFin1" style="width: 100%" class = "" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoLunes[1].horaFin"   (click)="onClickDdl('txtLunesDescansoFin1'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorLunes(1)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgLunesDescansos[1]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorLunes < 3" *ngIf="personal.contadorLunes >= 3" style="padding-bottom:2%;"> 
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtLunesDescansoInicio2" style="width: 100%" class = "" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoLunes[2].horaInicio"   (click)="onClickDdl('txtLunesDescansoInicio2'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtLunesDescansoFin2" style="width: 100%" class = "" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoLunes[2].horaFin"   (click)="onClickDdl('txtLunesDescansoFin2'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorLunes(2)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgLunesDescansos[2]}} </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div [hidden]="(!personal.martes) || (!sucursal.martes)" class="row py-3" style="padding-left: 20px;">
+                                <div class="row col-lg-12" >
+                                    <div class="col-lg-1" style="min-width: 157px; width: auto;"><label class="control-label">{{'personalTranslate.martes'| translate}} </label></div>
+                                    <div class="col-lg-2" style="width: auto;">
+                                        <mat-icon class="iconosBookipp" svgIcon="iconAgregar" (click)="personal_sumarContadorMartes()" style="position: relative; top: 1px; width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="row" [hidden]="personal.contadorMartes < 1" *ngIf="personal.contadorMartes >= 1"  style="padding-bottom:2%; padding-top:.5%">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtMartesDescansoInicio0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMartes[0].horaInicio"   (click)="onClickDdl('txtMartesDescansoInicio0'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtMartesDescansoFin0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMartes[0].horaFin" (click)="onClickDdl('txtMartesDescansoFin0'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorMartes(0)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgMartesDescansos[0]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorMartes < 2" *ngIf="personal.contadorMartes >= 2" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtMartesDescansoInicio1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMartes[1].horaInicio"   (click)="onClickDdl('txtMartesDescansoInicio1'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtMartesDescansoFin1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMartes[1].horaFin"   (click)="onClickDdl('txtMartesDescansoFin1'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorMartes(1)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgMartesDescansos[1]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorMartes < 3" *ngIf="personal.contadorMartes >= 3" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtMartesDescansoInicio2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMartes[2].horaInicio" (click)="onClickDdl('txtMartesDescansoInicio2'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                    <ng-select id="txtMartesDescansoFin2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMartes[2].horaFin" (click)="onClickDdl('txtMartesDescansoFin2'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorMartes(0)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgMartesDescansos[2]}} </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div [hidden]="(!personal.miercoles) || (!sucursal.miercoles)" class="row py-3" style="padding-left: 20px;">
+                                <div class="row col-lg-12" >
+                                    <div class="col-lg-1" style="min-width: 157px; width: auto;"><label class="control-label">{{'personalTranslate.miercoles'| translate}} </label></div>
+                                    <div class="col-lg-2" style="width: auto;">
+                                        <mat-icon class="iconosBookipp" svgIcon="iconAgregar" (click)="personal_sumarContadorMiercoles()" style="position: relative; top: 1px; width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="row" [hidden]="personal.contadorMiercoles < 1" *ngIf="personal.contadorMiercoles >= 1" style="padding-bottom:2%; padding-top:.5%">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtMiercolesDescansoInicio0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMiercoles[0].horaInicio"   (click)="onClickDdl('txtMiercolesDescansoInicio0');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtMiercolesDescansoFin0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMiercoles[0].horaFin"   (click)="onClickDdl('txtMiercolesDescansoFin0');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorMiercoles(0)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgMiercolesDescansos[0]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorMiercoles < 2" *ngIf="personal.contadorMiercoles >= 2" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" > 
+                                                <ng-select id="txtMiercolesDescansoInicio1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMiercoles[1].horaInicio"   (click)="onClickDdl('txtMiercolesDescansoInicio1');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtMiercolesDescansoFin1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMiercoles[1].horaFin"   (click)="onClickDdl('txtMiercolesDescansoFin1'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorMiercoles(1)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgMiercolesDescansos[1]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorMiercoles < 3" *ngIf="personal.contadorMiercoles >= 3" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtMiercolesDescansoInicio2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoMiercoles[2].horaInicio"   (click)="onClickDdl('txtMiercolesDescansoInicio2'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtMiercolesDescansoFin2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true"  
+                                                    [(ngModel)]="personal.objetoMiercoles[2].horaFin"   (click)="onClickDdl('txtMiercolesDescansoFin2'); " [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorMiercoles(2)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgMiercolesDescansos[2]}} </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div [hidden]=" (!personal.jueves) || (!sucursal.jueves)" class="row py-3" style="padding-left: 20px;">
+                                <div class="row col-lg-12" >
+                                    <div class="col-lg-1" style="min-width: 157px; width: auto;"><label class="control-label">{{'personalTranslate.jueves'| translate}} </label></div>
+                                    <div class="col-lg-2" style="width: auto;">
+                                        <mat-icon class="iconosBookipp" svgIcon="iconAgregar" (click)="personal_sumarContadorJueves()" style="position: relative; top: 1px; width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="row" [hidden]="personal.contadorJueves < 1" *ngIf="personal.contadorJueves >= 1" style="padding-bottom:2%; padding-top:.5%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtJuevesDescansoInicio0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoJueves[0].horaInicio"   (click)="onClickDdl('txtJuevesDescansoInicio0');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                    <ng-select id="txtJuevesDescansoFin0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoJueves[0].horaFin"   (click)="onClickDdl('txtJuevesDescansoFin0');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorJueves(0)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgJuevesDescansos[0]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorJueves < 2" *ngIf="personal.contadorJueves >= 2" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtJuevesDescansoInicio1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true"
+                                                    [(ngModel)]="personal.objetoJueves[1].horaInicio"   (click)="onClickDdl('txtJuevesDescansoInicio1');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtJuevesDescansoFin1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoJueves[1].horaFin"   (click)="onClickDdl('txtJuevesDescansoFin1');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorJueves(1)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgJuevesDescansos[1]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorJueves < 3" *ngIf="personal.contadorJueves >= 3" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtJuevesDescansoInicio2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoJueves[2].horaInicio"   (click)="onClickDdl('txtJuevesDescansoInicio2');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtJuevesDescansoFin2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoJueves[2].horaFin"   (click)="onClickDdl('txtJuevesDescansoFin2');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorJueves(2)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgJuevesDescansos[2]}} </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div [hidden]=" (!personal.viernes) || (!sucursal.viernes)" class="row py-3" style="padding-left: 20px;">
+                                <div class="row col-lg-12">
+                                    <div class="col-lg-1" style="min-width: 157px; width: auto;">
+                                        <label class="control-label">{{'personalTranslate.viernes'| translate}} </label>
+                                    </div>
+                                    <div class="col-lg-2" style="width: auto;">
+                                        <mat-icon class="iconosBookipp" svgIcon="iconAgregar" (click)="personal_sumarContadorViernes()" style="position: relative; top: 1px; width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="row" [hidden]="personal.contadorViernes < 1" *ngIf="personal.contadorViernes >= 1" style="padding-bottom:2%; padding-top:.5%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtViernesDescansoInicio0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoViernes[0].horaInicio"   (click)="onClickDdl('txtViernesDescansoInicio0');" [clearable]="false"
+                                                        [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtViernesDescansoFin0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoViernes[0].horaFin"   (click)="onClickDdl('txtViernesDescansoFin0');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorViernes(0)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgViernesDescansos[0]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorViernes < 2" *ngIf="personal.contadorViernes >= 2" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtViernesDescansoInicio1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoViernes[1].horaInicio"   (click)="onClickDdl('txtViernesDescansoInicio1');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtViernesDescansoFin1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoViernes[1].horaFin" (click)="onClickDdl('txtViernesDescansoFin1');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorViernes(1)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgViernesDescansos[1]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorViernes < 3" *ngIf="personal.contadorViernes >= 3" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                    <ng-select id="txtViernesDescansoInicio2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoViernes[2].horaInicio"   (click)="onClickDdl('txtViernesDescansoInicio2');" [clearable]="false"
+                                                                [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                    <ng-select id="txtViernesDescansoFin2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoViernes[2].horaFin"   (click)="onClickDdl('txtViernesDescansoFin2');" [clearable]="false"
+                                                                [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorViernes(2)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgViernesDescansos[2]}} </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div [hidden]=" (!personal.sabado) || (!sucursal.sabado)" class="row py-3" style="padding-left: 20px;">
+                                <div class="row col-lg-12" >
+                                    <div class="col-lg-1" style="min-width: 157px; width: auto;"><label class="control-label">{{'personalTranslate.sabado'| translate}} </label></div>
+                                    <div class="col-lg-2" style="width: auto;">
+                                        <mat-icon class="iconosBookipp" svgIcon="iconAgregar" (click)="personal_sumarContadorSabado()" style="position: relative; top: 1px; width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="row" [hidden]="personal.contadorSabado < 1" *ngIf="personal.contadorSabado >= 1" style="padding-bottom:2%;padding-top:.5%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtSabadoDescansoInicio0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoSabado[0].horaInicio" (click)="onClickDdl('txtSabadoDescansoInicio0');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                    <ng-select id="txtSabadoDescansoFin0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoSabado[0].horaFin"   (click)="onClickDdl('txtSabadoDescansoFin0');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorSabado(0)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgSabadoDescansos[0]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorSabado < 2" *ngIf="personal.contadorSabado >= 2" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtSabadoDescansoInicio1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoSabado[1].horaInicio"   (click)="onClickDdl('txtSabadoDescansoInicio1');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                    <ng-select id="txtSabadoDescansoFin1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoSabado[1].horaFin"   (click)="onClickDdl('txtSabadoDescansoFin1');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                            </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorSabado(1)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgSabadoDescansos[1]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorSabado < 3" *ngIf="personal.contadorSabado >= 3" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtSabadoDescansoInicio2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoSabado[2].horaInicio"   (click)="onClickDdl('txtSabadoDescansoInicio2');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtSabadoDescansoFin2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoSabado[2].horaFin"   (click)="onClickDdl('txtSabadoDescansoFin2');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorSabado(2)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgSabadoDescansos[2]}} </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div  [hidden]="(!personal.domingo) || (!sucursal.domingo)" class="row py-3" style="padding-left: 20px;">
+                                <div class="row col-lg-12" >
+                                    <div class="col-lg-1" style="min-width: 157px; width: auto;"><label class="control-label">{{'personalTranslate.domingo'| translate}} </label></div>
+                                    <div class="col-lg-2" style="width: auto;">
+                                        <mat-icon class="iconosBookipp" svgIcon="iconAgregar" (click)="personal_sumarContadorDomingo()" style="position: relative; top: 1px; width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="row" [hidden]="personal.contadorDomingo < 1" *ngIf="personal.contadorDomingo >= 1" style="padding-bottom:2%;padding-top:.5%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtDomingoDescansoInicio0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoDomingo[0].horaInicio"   (click)="onClickDdl('txtDomingoDescansoInicio0');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtDomingoDescansoFin0" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoDomingo[0].horaFin"   (click)="onClickDdl('txtDomingoDescansoFin0');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorDomingo(0)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgDomingoDescansos[0]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorDomingo < 2" *ngIf="personal.contadorDomingo >= 2" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtDomingoDescansoInicio1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoDomingo[1].horaInicio"   (click)="onClickDdl('txtDomingoDescansoInicio1');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;">
+                                                <ng-select id="txtDomingoDescansoFin1" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoDomingo[1].horaFin"   (click)="onClickDdl('txtDomingoDescansoFin1');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorDomingo(1)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgDomingoDescansos[1]}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" [hidden]="personal.contadorDomingo < 3" *ngIf="personal.contadorDomingo >= 3" style="padding-bottom:2%;">
+                                            <div class="col-lg-2" style="min-width:150px;" >
+                                                <ng-select id="txtDomingoDescansoInicio2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoDomingo[2].horaInicio"   (click)="onClickDdl('txtDomingoDescansoInicio2');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center;">
+                                                <label class="control-label">{{'personalTranslate.a'| translate}} </label>
+                                            </div>
+                                            <div class="col-lg-2" style="min-width:150px;"> 
+                                                <ng-select id="txtDomingoDescansoFin2" style="width: 100%" class = "ddlHeight" appendTo="#mainMatCard" [searchable]="true" 
+                                                    [(ngModel)]="personal.objetoDomingo[2].horaFin"   (click)="onClickDdl('txtDomingoDescansoFin2');" [clearable]="false"
+                                                    [items]="this.listarHora" bindLabel="label" bindValue="value">  
+                                                </ng-select>
+                                                </div>
+                                            <div class="col-lg-1" style="text-align: center; padding-top: .5%;">
+                                                <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="personal_restarContadorDomingo(2)" style="width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                            </div>
+                                            <div class="col-lg-5 pt-1">
+                                                <label style="color: red;" class="control-label">{{msgDomingoDescansos[2]}} </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <span style="text-align: center;font-style: italic;font-size: large;" *ngIf="personal.contadorLunes == 0 && personal.contadorMartes == 0 && personal.contadorMiercoles == 0 && personal.contadorJueves == 0 && personal.contadorViernes  == 0 && personal.contadorSabado == 0 && personal.contadorDomingo == 0 && personal.actualizar == 0 && personal.idSucursal != 'N'"> {{'personalTranslate.noAgredadoDescansos'| translate}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Pestaña Categoría -->
+                <mat-tab id="pestañaCategoria" label="Categorías" style="width: 50%;" *ngIf="this.personal.cabina.isCabina == false && this.accesosPantalla.personal.categorias == 1">
+                    <div id="categoria" class="row p-3">
+                        <div class="row col-lg-12 pb-5 pt-2">
+                            <div class="col-lg-2" style="padding-top: 7px;">
+                                <label>Categoría</label>
+                            </div>
+                            <div class="row col-lg-3 modAnchoDdl">
+                                <div class="col-lg-12">
+                                    <ng-select id="ddlCategoria" style="width: 100%;" [searchable]="true" appendTo="#mainMatCard"  
+                                        [(ngModel)]="this.categoria.categoriaSeleccionada" [clearable]="false"
+                                        [items]="this.categoria.dataCategoriasMostrar" bindLabel="descripcion" bindValue="idCategoria">
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="row col-lg-1" style="width: auto;">
+                                <mat-icon class="iconosBookipp" svgIcon="iconAgregar" (click)="agregarCategoriasPersonal()" style="position: relative; top: 1px; width: auto; height: 32px; cursor: pointer;"></mat-icon>
+                            </div>
+                        </div>
+                            
+                        <div class="row col-lg-12" >
+                            <hr style="background-color: #357EC1; height: 2px;">
+                        </div>
+                        
+                        <div class="col-lg-12">
+                            <div class="row col-lg-12" style="margin-top: 20px;" *ngIf="categoria.categoriasDelPersonal.length != 0">
+                                <div class="col-2">
+                                </div>
+                                <div class="col-9">
+                                    <div class="row col-12">
+                                        <div class="col-6">
+                                            <b>Descripción</b>
+                                        </div>
+                                        <div class="col-3">
+                                            <b>Tipo</b>
+                                        </div>
+                                        <div class="col-3">
+                                            <b>Cantidad</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1">
+                                </div>
+                            </div>
+                            <div class="col-lg-12" style="margin-top: 10px;" *ngIf="categoria.categoriasDelPersonal.length != 0">
+                                <hr class="gradBarra">
+                            </div>
+                            <div class="row col-12" *ngFor="let cat of categoria.categoriasDelPersonal" style="margin-top: 10px;">
+                                <div class="col-2">
+                                    {{cat.descripcion}}
+                                </div>
+                                <div class="col-9" style="text-align: center;" *ngIf="!cat.ver">
+                                    <a (click)="verInfoCategoria(cat)" style="cursor: pointer;"> Ver información </a>
+                                </div>
+                                <div class="col-9" *ngIf="cat.ver">
+                                    <div class="row col-12" *ngFor="let s of cat.servicios">
+                                        <div class="col-6">
+                                            <div *ngIf="s.descripcion != null">{{s.descripcion}}</div>
+                                            <div *ngIf="s.descripcion == null"> Todos los servicios </div>
+                                        </div>
+                                        <div class="col-3">
+                                            {{s.tipo}}
+                                        </div>
+                                        <div class="col-3" style="padding-left: 30px;">
+                                            <div *ngIf="s.tipo == 'Porcentual'">{{s.cantidad}} %</div>
+                                            <div *ngIf="s.tipo == 'Fijo'"> $ {{s.cantidad}}</div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-12" *ngFor="let p of cat.productos">        
+                                        <div class="col-6">
+                                            <div *ngIf="p.descripcion != null">{{p.descripcion}}</div>
+                                            <div *ngIf="p.descripcion == null"> Todos los productos </div>
+                                        </div>
+                                        <div class="col-3">
+                                            {{p.tipo}}
+                                        </div>
+                                        <div class="col-3" style="padding-left: 30px;">
+                                            <div *ngIf="p.tipo == 'Porcentual'">{{p.cantidad}} %</div>
+                                            <div *ngIf="p.tipo == 'Fijo'"> $ {{p.cantidad}}</div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row col-12" *ngFor="let p of cat.paquetes">        
+                                        <div class="col-6">
+                                            <div *ngIf="p.descripcion != null">{{p.descripcion}}</div>
+                                            <div *ngIf="p.descripcion == null"> Todos los paquetes </div>
+                                        </div>
+                                        <div class="col-3">
+                                            {{p.tipo}}
+                                        </div>
+                                        <div class="col-3" style="padding-left: 30px;">
+                                            <div *ngIf="p.tipo == 'Porcentual'">{{p.cantidad}} %</div>
+                                            <div *ngIf="p.tipo == 'Fijo'"> $ {{p.cantidad}}</div>
+                                        </div>
+                                    </div>
+        
+                                </div>
+                                <div class="col-1">
+                                    <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="eliminarCategoriaPersonal(cat)" style="position: relative; top: 1px; width: 32px; height: 32px; cursor: pointer;"></mat-icon>
+                                </div>
+                                <div class="col-lg-12" >
+                                    <hr style="background-color: #357EC1; height: 1px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+            </div>
+        </mat-tab-group>
+
+        <!-- Boton de guardado -->
+        <div class="col-lg-12" style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+            <div class="row">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4">
+                    <button id="btnGuardar" (click)="personal_guardarPersonal($event)" class="buttonEstiloBlanco" *ngIf="personal.cabina.isPersonalNuevo">
+                        {{'personalTranslate.guardar'| translate}}
+                    </button>
+
+                    <button id="Button1" (click)="personal_actualizarPersonal($event)" class="buttonEstiloBlanco" *ngIf="!personal.cabina.isPersonalNuevo">
+                        Actualizar
+                    </button>
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!--Modal Reprogramar-->
+<div id="modal-reprog" class="modal fade modal-reprog" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                <div style="width: 100%; position: relative; padding-bottom: 0px;">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row" style="margin-bottom:20px;">
+                                <mat-icon id="btnCerrarModal" class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="cancelarRecortadoImagen()" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+                            </div>
+                            <label class="col-lg-5" style="margin-top: 6px; margin-bottom: 6px;">{{'personalTranslate.personal'| translate}}</label>
+                            <div class="col-lg-7" style="padding: 0; margin-bottom: 6px; min-height: 36px;">
+                                <!-- <ng-select id="ddlPersonalRepro" (click)="ddlClick('ddlPersonalRepro')" appendTo="#true" [searchable]="false" [(ngModel)]="citas.idPersonal"  style="width: 100%" appendTo="#" -->
+                                <ng-select id="ddlPersonalRepro" [searchable]="false" [(ngModel)]="citas.idPersonal"  style="width: 100%" appendTo="#ddlPersonalRepro"
+                                    placeholder="{{'personalTranslate.placeholderPersonal'| translate}}"
+                                    [items]="citas.dataPersonal" bindLabel="nombre" bindValue="idPersonal">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer" style="text-align:center;">
+                <div class="col-lg-12">
+                    <div class="col-lg-3">
+                        <button type="button" class="buttonEstiloBlanco" style="margin-left:5px;margin-bottom:3px;" (click)="reprogramarCitas()">
+                            {{'personalTranslate.reprogramar'| translate}}
+                        </button>
+                    </div>
+                    <div class="col-lg-3">
+                        <button type="button" class="buttonEstiloBlanco" style="margin-bottom:3px;" (click)="modalCancelarCitas()">
+                            {{'personalTranslate.cancelarCitas'| translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal confirmEliminar-->
+<div id="modal-confirmEliminar" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirmEliminar">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 600px;">
+            <div class="modal-body" style="min-height: 50px;" id="Div2">
+                {{msg_modalConfirmEliminar}}
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                        {{'personalTranslate.cancelar'| translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="personal_validarCitasDetalle()">
+                        {{'personalTranslate.si'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal confirm2-->
+<div id="modal-confirm2" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modal-confirm2">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+            </div>
+            
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="personal_borrarPersonal('')">
+                        {{'excepcionesTranslate.no'| translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"  (click)="personal_validarCitas()">
+                        {{'personalTranslate.si'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
+<!--Modal Confirm-->
+<div id="modal-confirm" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modal-confirm">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" class="buttonEstiloBlanco" (click)="cancelarDescartar()">
+                        {{'personalTranslate.cancelar'| translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="confirmDescartar()">
+                        {{'personalTranslate.si'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal confirmSwithCabina-->
+<div id="modal-confirmSwithCabina" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modal-confirmSwithCabina">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+            </div>
+            
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" class="buttonEstiloBlanco" (click)="cancelarDescartarCabina()">
+                        {{'personalTranslate.cancelar'| translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="confirmDescartarCabina()">
+                        {{'personalTranslate.si'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal confirmDescartarActualizar-->
+<div id="modal-confirmDescartarActualizar" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modal-confirmDescartarActualizar">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" class="buttonEstiloBlanco" (click)="cancelarDescartarActualizar()">
+                        {{'personalTranslate.cancelar'| translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="confirmDescartarActualizar()">
+                        {{'personalTranslate.si'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>          
+    </div>
+</div>
+
+<!--Modal confirmServicios-->
+<div id="modal-confirmServicios" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modal-confirmServicios">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+            </div>
+            
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="personal_home()">
+                        {{'personalTranslate.cancelar'| translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="personal_agregarServicio();">
+                        {{'personalTranslate.si'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal confirmUbicacion-->
+<div id="modal-confirmUbicacion" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modal-confirmUbicacion">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+            </div>
+            <div class="modal-footer">
+                <div class="col-3">
+                    <button type="button" class="buttonEstiloBlanco" (click)="cerrarModalUbicacion()"> 
+                        {{'personalTranslate.cancelar'| translate}}
+                    </button>
+                </div>
+                <!-- <button type="button" class="buttonEstiloBlanco" (click)="descartarUbicacion()">
+                    {{'personalTranslate.si'| translate}}</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal alertBorrado-->
+<div id="modal-alertBorrado" tabindex="-1" role="dialog" class="modal fade modal-alertBorrado">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;" id="mensaje1">
+            </div>
+                <hr class="gradBarra"/>
+            <div class="modal-footer">
+                <div class="col-3">
+                    <button type="button"  data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                        {{'personalTranslate.aceptar'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Citas Pendientes-->
+<div id="modal-citasP" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modal-citasP">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{'personalTranslate.unaOMasCitasNo'| translate}}
+            </div>
+            
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" (click)="reprogramarManual()" class="btn btn-success">
+                        {{'personalTranslate.reprogramar'| translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" class="buttonEstiloBlanco" (click)="modalCancelarCitas()">
+                        {{'personalTranslate.cancelarCitas'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal cancelar citas-->
+<div id="modalCancelarCitas" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modalCancelarCitas">
+    <div class="modal-dialog" style="max-width: 600px;" role="document" style="margin-top: 50px;">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+            </div>
+            
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                        {{'excepcionesTranslate.no'| translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" (click)="cancelarCitas()" class="buttonEstiloBlanco">
+                        {{'personalTranslate.si'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal CargarImagen-->
+<div id="modalCargarImagen" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalCargarImagen" >
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-header">
+                <span>{{'personalTranslate.cargarImagen'| translate}}</span>
+                <mat-icon id="btnCerrarModal" class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="cancelarRecortadoImagen()" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div> 
+            <div class="modal-body" style="min-height: 50px;">
+                <div id="cropImage"></div>
+                <canvas id="Canvas1" width="300" height="300" style="display: none;"></canvas>
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button id="btnRecortarFoto" type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="height: 35px; width: 25%;"
+                    (click)="recortarImagen()">
+                    {{'personalTranslate.aceptar' | translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

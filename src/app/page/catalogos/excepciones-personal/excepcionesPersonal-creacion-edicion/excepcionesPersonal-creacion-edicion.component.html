@@ -1,0 +1,269 @@
+<mat-card class="mat-elevation-z8" id="mainMatCard">
+    <mat-card-header>
+        <div style="width: 100%;">
+            <mat-card-title> {{'excepcionesTranslate.excepciones' | translate}} </mat-card-title>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="cancelarPantalla('procesos/agenda')" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a (click)="cancelarPantalla('procesos/agenda')" style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">{{'excepcionesTranslate.inicio' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a (click)="cancelarPantalla('catalogos/excepciones-personal')" style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">{{'excepcionesTranslate.excepciones' | translate}}</a>
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="py-5">
+            <div id="myTabContent" class="tab-content">
+                <div id="divComisiones" class="p-3" style="width: 100%;">
+                    <div style="min-height: 350px;">
+                        <div class="row">
+                            <!-- Información General -->
+                            <div class="col-lg-12" id="infoPaquetes">
+                                <!-- Personal -->
+                                <div class="row col-lg-12 py-2">
+                                    <label class="col-lg-2 control-label" style="padding-top: 7px;">
+                                        {{'excepcionesTranslate.personal' | translate}}
+                                    </label>
+                                    <div class="col-lg-4">
+                                        <ng-select id="ddlPersonal" style="width: 100%;" [multiple]="true" appendTo="#ddlPersonal" [searchable]="true"
+                                            [(ngModel)]="excepcion.personal" [clearable]="true"
+                                            placeholder="{{'excepcionesTranslate.placeholderPersonal' | translate}}"
+                                            [items]="excepcion.dataPersonal" bindLabel="nombre" bindValue="idPersonal">
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <!-- Tipo de Excepción -->
+                                <div class="row col-lg-12 py-2">
+                                    <label class="col-lg-2 control-label" style="padding-top: 7px;">
+                                        {{'excepcionesTranslate.tipoExcepcion' | translate}}
+                                    </label>
+                                    <div class="col-lg-4">
+                                        <ng-select id="ddlExcepcion" style="width: 100%;" [multiple]="false" appendTo="#ddlExcepcion" [searchable]="true"
+                                            [(ngModel)]="excepcion.tipoExcepcion" [clearable]="false"
+                                            placeholder="{{'excepcionesTranslate.placeholderExcepcion' | translate}}"
+                                            [items]="excepcion.dataExcepcion" bindLabel="descripcion" bindValue="idExcepcionTipo">
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <!-- Fecha Inicio -->
+                                <div class="row col-lg-12 py-2">
+                                    <label class="col-lg-2 control-label" style="padding-top: 7px;">
+                                        {{'excepcionesTranslate.fechaInicio' | translate}}
+                                    </label>
+                                    <div class="col-lg-4">
+                                        <input id="fechaInicio" class="form-control borderAzul" style="height: 100%;"
+                                            type="date" required max="01-01-2040" [(ngModel)]="excepcion.fechaInicio"/>
+                                    </div>
+                                </div>
+
+                                <!-- Fecha Fin -->
+                                <div class="row col-lg-12 py-2">
+                                    <label class="col-lg-2 control-label" style="padding-top: 7px;">
+                                        {{'excepcionesTranslate.fechaFin' | translate}}
+                                    </label>
+                                    <div class="col-lg-4">
+                                        <input id="fechaFin" class="form-control borderAzul" style="height: 100%;"
+                                            type="date" required max="01-01-2040" [(ngModel)]="excepcion.fechaFin"/>
+                                    </div>
+                                    <label *ngIf="this.msgError_fechaFin" class="col-lg-3 control-label" style="padding-top: 7px; color: red;">
+                                        {{this.msgError_fechaFin}}
+                                    </label>
+                                </div>
+
+                                <!-- Todo el Día -->
+                                <div class="row col-lg-12 py-2">
+                                    <label class="col-lg-2 control-label" style="padding-top: 7px;">
+                                        {{'excepcionesTranslate.todoElDia' | translate}}
+                                    </label>
+                                    <div class="col-lg-4">
+                                        <mat-slide-toggle id="ChkTodoElDia" 
+                                            [(ngModel)]="excepcion.todoElDia">
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+
+                                <!-- Hora Inicio -->
+                                <div class="row col-lg-12 py-2" [hidden]="excepcion.todoElDia">
+                                    <label class="col-lg-2 control-label" style="padding-top: 7px;">
+                                        {{'excepcionesTranslate.horaInicio' | translate}}
+                                    </label>
+                                    <div class="col-lg-4">
+                                        <ng-select id="txtHoraInicio" appendTo="#txtHoraInicio"
+                                            style="height: 100%; width: 100%;" [searchable]="true" [clearable]="false"
+                                            [items]="this.listarHora" bindLabel="label" bindValue="value"
+                                            [(ngModel)]="excepcion.horaInicio">
+                                        </ng-select>
+                                    </div>
+                                    <label *ngIf="this.msgError_horaInicio" class="col-lg-3 control-label" style="padding-top: 7px; color: red;">
+                                        {{this.msgError_horaInicio}}
+                                    </label>
+                                </div>
+
+                                <!-- Hora Fin -->
+                                <div class="row col-lg-12 py-2" [hidden]="excepcion.todoElDia">
+                                    <label class="col-lg-2 control-label" style="padding-top: 7px;">
+                                        {{'excepcionesTranslate.horaFin' | translate}}
+                                    </label>
+                                    <div class="col-lg-4">
+                                        <ng-select id="txtHoraFin" appendTo="#txtHoraFin"
+                                            style="height: 100%; width: 100%;" [searchable]="true" [clearable]="false"
+                                            [items]="this.listarHora" bindLabel="label" bindValue="value"
+                                            [(ngModel)]="excepcion.horaFin">
+                                        </ng-select>
+                                    </div>
+                                    <label *ngIf="this.msgError_horaFin" class="col-lg-3 control-label" style="padding-top: 7px; color: red;">
+                                        {{this.msgError_horaFin}}
+                                    </label>
+                                </div>
+
+                                <!-- Descripción -->
+                                <div class="row col-lg-12 py-2">
+                                    <label class="col-lg-2 control-label" style="padding-top: 7px;">
+                                        {{'excepcionesTranslate.descripcion' | translate}}
+                                    </label>
+                                    <div class="col-lg-4">
+                                        <textarea id="idObservaciones" rows="5" class="form-control borderAzul" style="width: 100%; resize: none; overflow: hidden !important;"
+                                            [(ngModel)]="excepcion.descripcion" maxlength="100">
+                                        </textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Boton de guardado -->
+                                <div class="row col-lg-12" style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+                                    <div class="row">
+                                        <div class="col-lg-4"></div>
+                                        <div class="col-lg-2 py-1">
+                                            <button id="btnGuardar" (click)="bloo()" class="buttonEstiloBlanco">
+                                                {{'excepcionesTranslate.guardar' | translate}}
+                                            </button>
+                                        </div>
+                                        <div class="col-lg-2 py-1">
+                                            <button id="btnCancelar" (click)="cancelarPantalla('catalogos/excepciones-personal')" class="buttonEstiloBlanco">
+                                                {{'excepcionesTranslate.regresar' | translate}}
+                                            </button>
+                                        </div>
+                                        <div class="col-lg-4"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </mat-card-content>
+</mat-card>
+
+<!--Modal Reprogramar-->
+<div id="modal-reprog" role="dialog" aria-hidden="true" class="modal fade modal-reprog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>{{'excepcionesTranslate.reprogramacionCitas' | translate}}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body">
+                <div style="width: 100%; position: relative; padding-bottom: 0px;">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <label class="col-md-5" style="margin-top: 6px; margin-bottom: 6px;">{{'excepcionesTranslate.personal' | translate}}</label>
+                            <div class="col-md-7" style="padding: 0; margin-bottom: 6px; min-height: 36px;">
+                                <ng-select id="ddlPersonalRepro" appendTo="#ddlPersonalRepro"
+                                    style="height: 100%; width: 100%;" [searchable]="true" [clearable]="false"
+                                    [items]="citas.dataPersonal" bindLabel="nombre" bindValue="idPersonal" 
+                                    placeholder="{{'excepcionesTranslate.placeholderPersonal' | translate}}"
+                                    [(ngModel)]="citas.idPersonal">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-3">
+                    <button type="button" class="buttonEstiloBlanco" style="height: 55px; margin-left: 5px; margin-bottom: 3px;" (click)="btnLock(1)">
+                        {{'excepcionesTranslate.reprogramar' | translate}}
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="height: auto; margin-bottom: 3px;" (click)="citasNada()">
+                        {{'excepcionesTranslate.noHacerNada' | translate}}
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="buttonEstiloBlanco" style="height: auto; margin-bottom: 3px;" (click)="btnLock(2)">
+                        {{'excepcionesTranslate.cancelarCita' | translate}}
+                    </button>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Citas Pendientes-->
+<div id="modal-citasP" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modal-citasP">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                {{'excepcionesTranslate.citasNoAsignadas' | translate}}
+            </div>
+            <div class="modal-footer">
+                <div class="col-3">
+                    <button type="button" data-bs-dismiss="modal" (click)="reprogramarManual()" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'excepcionesTranslate.reprogramar' | translate}}
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="buttonEstiloBlanco" (click)="modalCancelarCitas()" style="height: auto;">
+                        {{'excepcionesTranslate.cancelarCitas' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal cancelar 1-->
+<div id="modal-confirm1" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modal-confirm1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-3">
+                    <button type="button" data-bs-dismiss="modal" (click)="confirm1Cancelar()" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'excepcionesTranslate.no' | translate}}
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button type="button" data-bs-dismiss="modal" (click)="redirecTo()" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'excepcionesTranslate.si' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal cancelar 2-->
+<div id="modal-confirm2" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modal-confirm2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'excepcionesTranslate.no' | translate}}
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button type="button" data-bs-dismiss="modal" (click)="cancelarCitas()" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'excepcionesTranslate.si' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

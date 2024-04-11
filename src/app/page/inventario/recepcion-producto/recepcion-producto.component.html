@@ -1,0 +1,120 @@
+<mat-card class="mat-elevation-z8">
+  <mat-card-header class="cardHeaderMaterial">
+    <mat-card-title style="min-width: 205px;">
+      {{ "consultaOrdenCompraTranslate.ordenCompra" | translate }}
+    </mat-card-title>
+
+	<mat-icon id="btnNuevo" matListIcon (click)="nuevaOrdenCompra()" *ngIf="permisoAccionRecepcionProducto === 1" 
+	class="iconosBookipp iconoSizeHeader" svgIcon="iconAgregar"></mat-icon>
+
+	<div class="breadcrumbCustom">
+		<a href="/procesos/agenda">
+			<mat-icon matListIcon class="iconosBookipp iconoSize" 
+			style="margin: 0px 0px 3px 0px;" svgIcon="iconCasita"></mat-icon>
+			<span>Inicio</span>
+		</a>
+		<a href="#">
+			<mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;" svgIcon="iconFlechaDerecha"></mat-icon>
+		</a>
+		<a href="#" class="active">
+			<span>{{ "consultaOrdenCompraTranslate.ordenCompra" | translate }}</span>
+		</a>
+	</div>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+
+  <mat-card-content style="margin-top: 10px">
+    <!-- Filtro y busqueda -->
+    <div class="row mx-auto">
+      <div class="col-lg-6 my-2">
+        <div
+          class="d-flex align-items-center position-relative"
+          style="max-width: 350px"
+        >
+          <mat-icon matListIcon class="iconosBookipp position-absolute" style="width: 24px; height: 24px; left: 30px; top: 8px" svgIcon="iconAgenda"></mat-icon>
+          <input
+            type="text"
+            ngxDaterangepickerMd
+            [(ngModel)]="fechaCalendario"
+            (ngModelChange)="consultaOrdenCompra()"
+            [showCustomRangeLabel]="true"
+            [alwaysShowCalendars]="false"
+            [ranges]="ranges"
+            [linkedCalendars]="true"
+            [locale]="{
+              format: 'DD/MM/YYYY',
+              applyLabel: calendarioTranslate.aceptar,
+              cancelLabel: calendarioTranslate.cancelar,
+              customRangeLabel: calendarioTranslate.rango
+            }"
+            [isInvalidDate]="isInvalidDate"
+            [showClearButton]="false"
+            [showCancel]="true"
+            placeholder="Select please..."
+            class="inputCalenderSelect"
+          />
+          <mat-icon matListIcon class="iconosBookipp position-absolute" style="cursor: pointer; width: 24px; height: 24px; right: 30px; top: 8px" svgIcon="iconFlechaAbajo"></mat-icon>
+        </div>
+      </div>
+      <div class="col-lg-6 my-2">
+        <div class="form-control borderAzul barSearch">
+          <mat-icon matListIcon class="iconosBookipp iconoSize" style="margin: 0px;" svgIcon="iconBuscar"></mat-icon>
+          <input
+            id="inputAjuste"
+            placeholder="{{
+              'consultaOrdenCompraTranslate.mensajeBuscar' | translate
+            }}"
+            [(ngModel)]="ordenCompra.pruebaOrden"
+            (ngModelChange)="busquedaOrdenCompra()"
+            type="text"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- tabla -->
+    <div class="row mx-auto">
+      <div class="col-lg-12 my-3 overflow-auto">
+        <div class="mat-elevation-z8 my-2" style="min-width: 700px">
+          <table mat-table [dataSource]="dataSourceTable" style="width: 100%">
+            <ng-container
+              *ngFor="let column of columnsTable"
+              [matColumnDef]="column.nameCol"
+            >
+              <th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+                {{ column.title }}
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let element"
+                [style]="column.styleCssRow"
+              >
+                {{
+                  column.nameCol !== "folio" ||
+                  (permisoAccionRecepcionProducto === 0 &&
+                    column.nameCol === "folio")
+                    ? element[column.nameCol]
+                    : ""
+                }}
+
+                <span
+                  *ngIf="
+                    column.nameCol === 'folio' &&
+                    permisoAccionRecepcionProducto === 1
+                  "
+                  class="colorPrimario"
+                  style="cursor: pointer"
+                  (click)="nuevaOrdenCompra(element)"
+                >
+                  {{ element[column.nameCol] }}
+                </span>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedTable"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedTable"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

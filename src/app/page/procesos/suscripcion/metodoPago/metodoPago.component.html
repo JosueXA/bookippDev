@@ -1,0 +1,673 @@
+<mat-card class="mat-elevation-z8" id="mainMatCard" style="height: 850px;">
+    <mat-card-header>
+        <div style="width: 100%;">
+            <mat-card-title> {{ 'metodoPagoTranslate.suscripcion' | translate }} </mat-card-title>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="irAAgenda()" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="irAAgenda()">{{'suscripcionTranslate.inicio' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a (click)="irASuscripcion()" style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">{{'suscripcionTranslate.suscripcion' | translate}}</a>&nbsp;
+        </div>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+	<mat-card-content class="pb-5 pt-3" style="margin-left: 30px;">
+		<div id="cuerpo" style="display:none;">
+            <div class="row col-lg-12">
+                <div class="col-lg-2">
+                    <label>
+                        {{ 'metodoPagoTranslate.paqueteContratar' | translate }}
+                    </label>
+                </div>
+
+                <div class="col-lg-10">
+                    <label>
+                        {{nombre}}
+                    </label>
+                </div>
+
+                <div class="col-lg-2" style="padding-top: 15px;">
+                    <label>
+                        {{ 'metodoPagoTranslate.duracionPaquete' | translate }}
+                    </label>
+                </div>
+
+                <div class="col-lg-3" style="padding-top:10px;">
+                    <div class="col-lg-12" style="padding: 0;">
+                        <ng-select id="ddlOpcionPaquete" style="width: 100%;" [multiple]="false" appendTo="#ddlOpcionPaquete" [searchable]="false"
+                            [(ngModel)]="metodoPago.idOpcionPaquete" [clearable]="false"
+                            (ngModelChange)="getPrecioOpcion();"
+                            [items]="metodoPago.cantidadOpciones" bindLabel="duracion" bindValue="idPaqueteOpcionesPago"
+                            placeholder="{{ 'metodoPagoTranslate.seleccioneDuraccionPh' | translate }}">
+                        </ng-select>
+                   </div>
+                </div>
+
+                <div style="padding-top:10px;" class="col-lg-10">
+                        <label style="cursor: pointer" *ngIf="metodoPago.idOpcionPaquete != ''">
+                            <input id="CheckAceptarTerminos" style="cursor:pointer" type="checkbox" [(ngModel)]="metodoPago.aceptaTerminos" (ngModelChange)="generarTicket()"
+                                cd-true-value="1" cd-false-value="0" value="1"/>
+                            {{ 'metodoPagoTranslate.terminosUno' | translate }}&nbsp;
+                        </label> 
+                        <label> <a style="cursor:pointer" *ngIf="metodoPago.idOpcionPaquete != ''" (click)="prueba()" class="letras" target="_blank">{{ 'metodoPagoTranslate.terminosDos' | translate }}</a></label>
+                </div>
+
+                <div style="padding-top:10px;" class="col-lg-10">
+                        <label *ngIf="metodoPago.idOpcionPaquete != ''">{{ 'metodoPagoTranslate.avisoPrivacidadUno' | translate }}&nbsp;</label> 
+                        <label> <a style="cursor:pointer" *ngIf="metodoPago.idOpcionPaquete != ''" (click)="avisoPrueba()" class="letras" target="_blank">{{ 'metodoPagoTranslate.avisoPrivacidadDos' | translate }}</a></label>
+                </div>
+
+                <div style="padding-top: 15px;" *ngIf="descuentoCambio > 0" class="col-lg-12">
+                    <label>
+                        {{ 'metodoPagoTranslate.graciasPorSuscripcion' | translate }}
+                    </label>
+                </div>
+            </div>
+
+            <div *ngIf="( ((precioDescuento - descuentoCambio) <= 0) && metodoPago.idOpcionPaquete != '' && precioTotal != '')" class="col-lg-12">
+                <div class="col-lg-7">
+                    <label>
+                        {{ 'metodoPagoTranslate.cambioPaqueteSinCosto' | translate }}
+                    </label>
+                </div>
+                <div class="col-lg-2">
+                    <div>
+                        <a (click)="confirmGratis()" class="buttonEstiloBlanco" style="margin-right: 25px;">{{ 'metodoPagoTranslate.cambiar' | translate }}</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activar la Suspcripcion -->
+            <div *ngIf="metodoPago.aceptaTerminos" style="margin-top: 10px;">
+                <label style="cursor: pointer">
+                    <input id="CheckEsSuscripcion" style="cursor:pointer" type="checkbox" [(ngModel)]="esSuscripcion"
+                        cd-true-value="1" cd-false-value="0" value="1" [disabled]="deshabilitarSuspcripcion"/>
+                    {{ 'metodoPagoTranslate.suscripcion' | translate }}&nbsp;
+                </label> 
+            </div>
+
+            <div *ngIf="( ((precioDescuento - descuentoCambio) > 0))" class="col-lg-12" >
+                <div style="display: flex; justify-content: center;" *ngIf="metodoPago.mostrarPagos">
+                    <div class="block" [hidden]="!metodoPago.activarBanorte" (click)="setActivo(1)" [ngClass]="{'selected':activo==1}">
+                        <img width="200" height="100" src="assets/images/system/Tarjeta-Esp.png" alt="{{ 'metodoPagoTranslate.pagoTarjeta' | translate }}" />
+                    </div>
+                    <div class="block" [hidden]="!metodoPago.activarPayPal" (click)="setActivo(2)" [ngClass]="{'selected':activo==2}">
+                        <img width="200" height="100" src="assets/images/system/PayPal-Esp.png" alt="{{ 'metodoPagoTranslate.pagoPaypal' | translate }}" />                        
+                    </div>
+                    <div class="block" (click)="setActivo(3)" [ngClass]="{'selected':activo==3}">
+                        <img width="200" height="100" src="assets/images/system/Transferencia-Esp.png" alt="{{ 'metodoPagoTranslate.pagoDeposito' | translate }}" />
+                    </div>
+                    <div style="text-align:center; display:none" class="col-lg-12">
+                        <label (click)="validarDatosfiscales()">
+                            <input id="checkFactura" type="checkbox" 
+                                [(ngModel)]="metodoPago.requiereFactura" 
+                                cd-true-value="1" cd-false-value="0"/>
+                        {{ 'metodoPagoTranslate.facElec' | translate }}</label> 
+                    </div>
+                </div>
+            </div>
+
+            <div [hidden]="( ((precioDescuento - descuentoCambio) == 0) && duracion == 0 )" class="col-lg-12" id="contenidoMetodo">
+                <!-- Tarjeta con Conekta -->
+                <!-- <div id="tarjetaCredito" [hidden]="activo != 1">
+                    <div class="row col-lg-12" style="padding-bottom: 5px;">                        
+                        <label>
+                            {{ 'metodoPagoTranslate.llenarCampos' | translate }}
+                        </label>
+                    </div>
+
+                    <div class="row col-lg-12" style="padding-bottom: 5px; padding-left:0px; padding-top:10px;"> 
+                        <div class="col-lg-2">
+                            <label>
+                                {{ 'metodoPagoTranslate.tarjetaHabiente' | translate }}
+                            </label>
+                        </div>
+                        <div class="col-lg-3">
+                            <input id="nombre" class="form-control borderAzul" [(ngModel)]="metodoPago.nombre" type="text" placeholder="Nombre Completo" />
+                        </div>
+                        <div class="col-lg-1"></div>
+                        <div id="errorNombre" class="col-lg-6" style="display:none; padding-top: 7px; color: red">
+                            <label>{{ 'metodoPagoTranslate.errorNombre' | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-12" style="padding-bottom: 5px; padding-left:0px; padding-top:10px;"> 
+                        <div class="col-lg-2">
+                            <label>
+                                {{ 'metodoPagoTranslate.email' | translate }}
+                            </label>
+                        </div>
+                        <div class="col-lg-3">
+                            <input id="email" class="form-control borderAzul" [(ngModel)]="metodoPago.email" type="text" placeholder="email@algo.com" />
+                        </div>
+                        <div class="col-lg-1"></div>
+                        <div id="errorMail" class="col-lg-6" style="display:none; padding-top: 7px; color: red">
+                            <label>{{ 'metodoPagoTranslate.errorMail' | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-12" style="padding-bottom: 5px; padding-left:0px; padding-top:10px;"> 
+                        <div class="col-lg-2">
+                            <label>
+                                {{ 'metodoPagoTranslate.numeroTarjeta' | translate }}
+                            </label>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <input id="numeroTarjeta" (keypress)="validarNum($event)" class="form-control borderAzul" maxlength="16" [(ngModel)]="metodoPago.numeroTarjeta" type="text" placeholder="1234 1234 1234 1234" />
+                        </div>
+
+                        <div class="col-lg-1"></div>
+
+                        <div id="errorTarjeta" class="col-lg-6" style="display:none; padding-top: 7px; color: red">
+                            <label>{{ 'metodoPagoTranslate.tarjetaContener' | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-12" style="padding-bottom: 5px; padding-left:0px; padding-top:10px;">
+                        <div class="col-lg-2">
+                            <label>
+                                {{ 'metodoPagoTranslate.fechaExpiracion' | translate }}
+                            </label>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <ng-select id="mesSelect" class="borderAzul" style="width: 100%;" [multiple]="false" appendTo="#mesSelect" [searchable]="false"
+                                [(ngModel)]="metodoPago.mes" [clearable]="false"
+                                [items]="metodoPago.mesesSelect" bindLabel="mes" bindValue="mes"
+                                placeholder="{{ 'metodoPagoTranslate.mesPh' | translate }}">
+                            </ng-select>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <ng-select id="agnoSelect" class="borderAzul" style="width: 100%;" [multiple]="false" appendTo="#agnoSelect" [searchable]="false"
+                                [(ngModel)]="metodoPago.agno" [clearable]="false"
+                                [items]="metodoPago.agnoSelect" bindLabel="agno" bindValue="agno"
+                                placeholder="{{ 'metodoPagoTranslate.anoPh' | translate }}">
+                            </ng-select>
+                        </div>
+
+                        <div id="errorMesAgno" class="col-lg-6" style="display:none; padding-top: 7px; color: red">
+                            <label>{{mensajeErrorMesAngo}}</label>
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-12" style="padding-bottom: 5px; padding-left: 0px; padding-top: 10px;">
+                        <div class="col-lg-2">
+                            <label>
+                                CCV                                   
+                            </label>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <input id="CCVInput" (keypress)="validarNum($event)" class="form-control borderAzul" maxlength="4" type="text" [(ngModel)]="metodoPago.CCV" placeholder="{{ 'metodoPagoTranslate.ingreseCCV' | translate }}" />
+                        </div>
+                        <div class="col-lg-1" style="display: flex;">
+                            <button style="width: 30px; float: right;"
+                                mat-icon-button
+                                ngbPopover="{{ 'metodoPagoTranslate.numeroTarjetaTitle' | translate }}"
+                                container="body">
+                                <mat-icon class="iconosBookipp" svgIcon="iconInfoCircle"></mat-icon>
+                            </button>
+                        </div>
+
+                        <div class="col-lg-1"></div>
+                         <div id="errorCCV" class="col-lg-6" style="display:none; padding-top: 7px; color: red">
+                            <label>{{ 'metodoPagoTranslate.ccvContener' | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-12" *ngIf="activo == 1">
+                        <div style="display: flex; justify-content: center;">
+                            <div class="col-lg-2" style="margin-top: 4%;">
+                                <button id="btnGuardar" class="buttonEstiloBlanco" (click)="validarForm()">{{ 'metodoPagoTranslate.pagar' | translate }}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                     <div class="row col-lg-12" *ngIf="activo == 1">
+                        <div>
+                            <div style="text-align:center; margin-top: 4%;">
+                                <p>Las transacciones son realizadas por medio de Conekta&copy;. Por favor guarde la información al finalizar la transacción para futuras aclaraciones.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Tarjeta con Stripe -->
+                <div id="tarjetaCredito" [hidden]="activo != 1">
+                    <div id="checkoutStripe" style="margin-top: 40px;">
+                        
+                    </div>
+                </div>
+           
+                <div [hidden]="activo != 2">
+                    <div  class="col-lg-12">
+                        <label>{{ 'metodoPagoTranslate.terminosTres' | translate }}</label><br />
+                        <label>{{ 'metodoPagoTranslate.elegistePaypal' | translate }} <a class="letras" target="_blank" href="https://www.paypal.com/mx/webapps/mpp/home">{{ 'metodoPagoTranslate.QueEsPaypal' | translate }}</a> </label>
+                    </div>
+
+                    <div style="padding-top:15px;" class="col-lg-12">
+                        <form>
+                            <input (click)="validarPayPal(suscripcion)" type="image" src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/silver-rect-paypalcheckout-34px.png" name="submit" alt="{{ 'metodoPagoTranslate.paypalRapidaSegura' | translate }}">
+                        </form>
+                    </div>
+
+                    <div id="idRecurrente" style="padding-top:15px;" class="col-lg-12" style="margin-top: 5px;">                      
+                        <div class="col-lg-1" style="padding: 0; border: 0px solid;">
+                            <div class="onoffswitch">
+                                <input type="checkbox" [(ngModel)]="suscripcion"
+                                     cd-true-value="1" cd-false-value="0" 
+                                     class="onoffswitch-checkbox" id="myonoffswitch1" checked>
+                                <label class="onoffswitch-label" for="myonoffswitch1">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3" style="border: 0px solid; padding-top:7px;">
+                            <label>{{ 'metodoPagoTranslate.pagoRecurrente' | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div id="idRecurrente2" style="padding-top:15px;" class="col-lg-12" [hidden]="suscripcion != 1" >
+                        <label class="infoFiscal" style="font-size: 1.1em;">{{ 'metodoPagoTranslate.recurrenteYaExistente' | translate }}</label>
+                    </div>
+                </div>
+
+                <div *ngIf="activo==3">
+                    <div class="col-lg-12">
+                        <div class="row col-lg-12" style="margin-bottom: 10px; padding-left:0px;">
+                            <label>{{ 'metodoPagoTranslate.terminosTres' | translate }}</label>
+                            <br/>
+                            <label>{{ 'metodoPagoTranslate.datosBancarios' | translate }}</label>
+                        </div>
+
+                        <div class="col-lg-12" style="padding-left:0px;">
+                            <hr style="background-color: #3E77E1; height: 1px;" />
+                        </div>
+
+                        <div class="row col-lg-12" style="padding-left:0px;">
+                            <div class="col-lg-3">
+                                <label class="infoFiscal">{{ 'metodoPagoTranslate.banco' | translate }}</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>
+                                    {{banco[0].valor}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row col-lg-12" style="padding-left:0px;">
+                            <div class="col-lg-3">
+                                <label class="infoFiscal">{{ 'metodoPagoTranslate.nombreBeneficiario' | translate }}</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>
+                                    {{beneficiario[0].valor}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row col-lg-12" style="padding-left:0px;">
+                            <div class="col-lg-3">
+                                <label class="infoFiscal">{{ 'metodoPagoTranslate.referencia' | translate }}</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>
+                                    {{metodoPago.numeroTicket}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row col-lg-12" style="padding-left:0px;">
+                            <div class="col-lg-3">
+                                <label class="infoFiscal">{{ 'metodoPagoTranslate.numeroCuenta' | translate }}</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>
+                                    {{cuenta[0].valor}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row col-lg-12" style="padding-left:0px;">
+                            <div class="col-lg-3">
+                                <label class="infoFiscal">{{ 'metodoPagoTranslate.clabe' | translate }}</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>
+                                    {{metodoPago.clabe}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row col-lg-12" style="padding-left:0px;">
+                            <div class="col-lg-3">
+                                <label class="infoFiscal">{{ 'metodoPagoTranslate.precio' | translate }}</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>
+                                    $ {{precioConIva}} {{tipoMoneda}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row col-lg-12" style="padding-left:0px;" *ngIf="promocion[0].valor != null">
+                            <div class="col-lg-3">
+                                <label class="infoFiscal">
+                                {{ 'metodoPagoTranslate.descuentoPromocion' | translate }}</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>
+                                    {{  promocion[0].idDescuentoTipo == 1 ? '$' : '' }}   {{promocion[0].valor}} {{  promocion[0].idDescuentoTipo == 1 ? tipoMoneda : '%'}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row col-lg-12" style="padding-left:0px;" *ngIf="descuentoCambio > 0">
+                            <div class="col-lg-3">
+                                <label class="infoFiscal">{{ 'metodoPagoTranslate.descuentoCambioPaquete' | translate }}</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>
+                                    $ {{descuentoCambio}} {{tipoMoneda}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12" style="padding-left:0px;">
+                            <hr style="background-color: #3E77E1; height: 1px;" />
+                        </div>
+
+                        <div class="row col-lg-12" style="padding-left:0px;">
+                            <div class="col-lg-3">
+                                <label class="infoFiscal">{{ 'metodoPagoTranslate.precioFinal' | translate }}</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>
+                                      $  {{ precioBanco }} {{tipoMoneda}}
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="row col-lg-12" style="padding-top: 20px;">
+                                <label class="infoFiscal" style="font-size: 1.2em;">{{ 'metodoPagoTranslate.plazoActivacion' | translate }} {{minimoDias[0].valor}} {{ 'metodoPagoTranslate.a' | translate }} {{maximoDias[0].valor}} {{ 'metodoPagoTranslate.diasHabiles' | translate }}. {{ 'metodoPagoTranslate.correoUno' | translate }} {{metodoPago.correoAdmin}} {{ 'metodoPagoTranslate.correoDos' | translate }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</mat-card-content>
+</mat-card>
+
+
+<div id="modal-confirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirm">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 210px;">
+            <div class="modal-header">
+                <span>{{ 'metodoPagoTranslate.confirmacionPago' | translate }}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="cerrarModal('modal-confirm')" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+
+            <div class="modal-body">
+                <div class="row" style="text-align: left !important; width: inherit !important;">
+                    <div class="row col-lg-12" style="margin-left: 0px;">
+                        <div class="col-lg-7">
+                            <label>{{ 'metodoPagoTranslate.precioPaquete' | translate }}</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <label>
+                                + ${{precioSinIva}} {{tipoMoneda}}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-12" style="margin-left: 0px;">
+                        <div class="col-lg-7">
+                            <label>IVA: </label>
+                        </div>
+                        <div class="col-lg-5">
+                            <label>
+                                + ${{IVA}} {{tipoMoneda}}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-12" style="border-top:1px solid #ccc; margin-top:10px; margin-left: 0px;">
+                        <div class="col-lg-7">
+                            <label>{{ 'metodoPagoTranslate.subtotal' | translate }} </label>
+                        </div>
+                        <div class="col-lg-5">
+                            <label>
+                                &nbsp;&nbsp;&nbsp;${{precioConIva}} {{tipoMoneda}}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-12" *ngIf="promocion[0].valor != null" style="margin-top:10px; margin-left: 0px;">
+                        <div class="col-lg-7">
+                            <label>{{ 'metodoPagoTranslate.descuentoPromocion' | translate }}</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <label>
+                                $ {{promocion[0].valor}} {{  promocion[0].idDescuentoTipo == 1 ? tipoMoneda : '%'}}
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="row col-lg-12" style="border-top:1px solid #ccc; margin-top:10px; margin-left: 0px;" *ngIf="descuentoCambio != 0">
+                        <div class="col-lg-7">
+                            <label>{{ 'metodoPagoTranslate.descuentoCambioPaquete' | translate }}</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <label>
+                                - ${{descuentoCambio}} {{tipoMoneda}}
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="row col-lg-12" style="margin-left: 0px;">
+                        <div class="col-lg-7">
+                            <label>{{ 'metodoPagoTranslate.comisiones' | translate }}</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <label>
+                                + ${{Comision}} {{tipoMoneda}}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-12" style="border-top:1px solid #ccc;margin-top:25px;padding-top:10px; margin-left: 0px;"> 
+                        <div class="col-lg-7">
+                            <label>{{ 'metodoPagoTranslate.precioFinal' | translate }}</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <label>
+                                $  {{ precioTotal }} {{tipoMoneda}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="col-6" style="margin: auto;">
+                    <button type="button" (click)="pagoTarjeta()" data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                        {{ 'metodoPagoTranslate.aceptar' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-error" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-error">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 180px;">
+            <div class="modal-header">
+                <span>{{ 'metodoPagoTranslate.loSentimos' | translate }}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="cerrarModal('modal-error')" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+
+            <div class="modal-body">
+                <div class="row" style="text-align: left !important; width: inherit !important;">
+                    <div class="col-lg-12">
+                        <label>
+                            {{ 'metodoPagoTranslate.errorAlRealizarPago' | translate }}
+                        </label>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <label>{{texto}}</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="col-6" style="margin: auto;">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                        {{ 'metodoPagoTranslate.aceptar' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-confirmGratis" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirmGratis">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 180px;">
+            <div class="modal-header">
+                <span>{{ 'metodoPagoTranslate.confirmacionPago' | translate }}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="cerrarModal('modal-confirmGratis')" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+
+            <div class="modal-body">
+                <div class="row" style="text-align: left !important; width: inherit !important;">
+                    <div class="col-lg-12">
+                        <div class="col-lg-8">
+                            <label>{{ 'metodoPagoTranslate.precio' | translate }}</label>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>
+                                $  {{precioTotal}} {{tipoMoneda}}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12" *ngIf="descuentoCambio != 0">
+                        <div class="col-lg-8">
+                            <label>{{ 'metodoPagoTranslate.descuentoCambioPaquete' | translate }}</label>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>
+                                $ {{precioTotal}} {{tipoMoneda}}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12" style="border-top:1px solid #ccc;margin-top:25px;padding-top:10px">
+                        <div class="col-lg-8">
+                            <label>{{ 'metodoPagoTranslate.precioFinal' | translate }}</label>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>
+                                $ 0 {{tipoMoneda}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" (click)="cambioSuscripcion()" data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                    {{ 'metodoPagoTranslate.aceptar' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalFiscal" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalFiscal">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 180px;">
+            <div class="modal-header">
+                <span>{{ 'metodoPagoTranslate.atencion' | translate }}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="text-align: left !important; width: inherit !important;">
+                    <div class="col-lg-12">
+                        <label>
+                            {{ 'metodoPagoTranslate.msgFiscal' | translate }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" (click)="cerrarModalFiscal()" class="buttonEstiloBlanco">
+                    {{ 'metodoPagoTranslate.aceptar' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-alert" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade" style="z-index: 500000">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 550px; min-height: 115px;">
+            <div class="modal-body">
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                    {{'clienteTranslate.aceptar' | translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-alertError" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-alertError" style="z-index: 500000">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 600px; min-height: 300px;">
+            <div class="modal-body">
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                    {{'clienteTranslate.aceptar' | translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-succes" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-succes" style="z-index: 500000">
+    <div class="modal-dialog" style="max-width:545px">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 600px; min-height: 150px;">
+            <div class="modal-header" style="border-bottom:none;">
+                <span>{{'clienteTranslate.transaccionExitosa'| translate}}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+
+            <div class="modal-body">
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" data-bs-dismiss="modal" (click)="pagoExitoso()">
+                    {{'clienteTranslate.aceptar' | translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

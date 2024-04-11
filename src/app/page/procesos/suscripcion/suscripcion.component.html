@@ -1,0 +1,90 @@
+<mat-card class="mat-elevation-z8" id="mainMatCard" style="height: 850px;">
+    <mat-card-header>
+        <div style="width: 100%;">
+            <mat-card-title> {{ 'suscripcionTranslate.suscripcion' | translate }} </mat-card-title>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="irAAgenda()" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="irAAgenda()">{{'suscripcionTranslate.inicio' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a style="color: #20c4e6; top: -6px; position: relative;">{{'suscripcionTranslate.suscripcion' | translate}}</a>&nbsp;
+        </div>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+	<mat-card-content class="pb-5 pt-3" style="margin-left: 30px;">
+		<div id="cuerpo" style="display: none;">
+            <div style="width: 100%; position: relative; padding-bottom: 0px;">
+                <div class="row mb-2">
+                    <div class="col-lg-7 my-2" style="display: flex;">
+                        <div class="col-lg-6 mx-2">
+                            <label style="font-size: 14px;">{{'estadoCuentaTranslate.empresa' | translate}}</label>
+                        </div>
+                        <div class="col-lg-6 mx-2">
+                            <label style="font-size: 14px;">{{cuenta.empresa}}</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 my-2" style="display: flex;">
+                        <div class="col-lg-6 mx-2">
+                            <label style="font-size: 14px;">{{'estadoCuentaTranslate.numSucursales' | translate}}</label>
+                        </div>
+                        <div class="col-lg-6 mx-2">
+                            <label style="font-size: 14px;">{{cuenta.numSucursales}}</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 my-2" style="display: flex;">
+                        <div class="col-lg-6 mx-2">
+                            <label style="font-size: 14px;">{{'estadoCuentaTranslate.creacion' | translate}}</label>
+                        </div>
+                        <div class="col-lg-6 mx-2">
+                            <label style="font-size: 14px;">{{cuenta.creacion | date}}</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 my-2" style="display: flex;">
+                        <div class="col-lg-6 mx-2">
+                            <label style="font-size: 14px;">{{'estadoCuentaTranslate.paquete' | translate}}</label>
+                        </div>
+                        <div class="col-lg-6 mx-2">
+                            <label style="font-size: 14px;">{{cuenta.paquete}}</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 my-2" style="display: flex;">
+                        <div class="col-lg-6 mx-2">
+                            <label style="font-size: 14px;">{{'estadoCuentaTranslate.vigencia' | translate}}</label>
+                        </div>
+                        <div class="col-lg-6 mx-2">
+                            <label style="font-size: 14px;">{{cuenta.fechaSuscripcion | date}} - {{cuenta.fechaVigencia | date}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="width: 100%; height: auto; position: relative;"  *ngIf="dataGrid.length > 0">
+                    <div style="width: 100%;">
+                        <div style="display: table; margin: 0 auto;">
+                            <div class="paquete" (click)="changeClass(paquete.idPaquete)" [ngClass]="{'selected': class == paquete.idPaquete}" *ngFor="let paquete of dataGrid">
+                                <img id="img{{paquete.idPaquete}}" alt="{{paquete.nombre}}" width="259px" height="344px" style="cursor:pointer;"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; text-align:center; font-size:20px;" *ngIf="!paqueteVigente">
+                        Una vez realizado el pago, inicie sesión nuevamente para que se vea reflejado su paquete.
+                    </div>
+                </div>
+
+                <div *ngIf="dataGrid.length == 0" class="col-lg-12" style="font-size: 1.4em; text-align: center; font-style: italic; padding-top: 250px;">
+                    <label>{{ 'suscripcionTranslate.porElMomento' | translate }}</label>
+                </div>
+
+                <div class="row" *ngIf="dataGrid.length > 0">
+                    <div>
+                        <div style="text-align:center; margin-top: 4%;">
+                            <button id="botonSiguiente" (click)="metodoPago(class)" [disabled]="class == 0" class="buttonEstiloBlanco" style="margin-right: 25px; display:none;">{{ 'suscripcionTranslate.siguiente' | translate }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</mat-card-content>
+</mat-card>  

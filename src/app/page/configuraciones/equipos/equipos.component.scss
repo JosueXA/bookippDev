@@ -1,0 +1,52 @@
+.mat-column-acciones {
+  min-width: 200px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.mat-column-nombre {
+  min-width: 280px !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.mat-column-cantidad {
+  min-width: 100px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  text-align: center;
+}
+
+.mat-column-servicio {
+  min-width: 180px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  text-align: left;
+  // text-overflow: ellipsis;
+  // white-space: nowrap;
+  // overflow: hidden;
+}
+
+.mat-column-descripcion {
+  min-width: 346px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  text-align: center;
+}
+
+
+
+.fillAzulBookipp{
+  fill:#20c4e6;
+}
+
+input, textarea{
+  outline: 1px solid #20c4e6 !important;
+  outline-offset: 0 !important;
+  border: none !important;
+}

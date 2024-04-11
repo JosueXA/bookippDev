@@ -1,0 +1,45 @@
+// ----- SPINNER -----
+.custom-spinner circle {
+    stroke: #20c4e6;
+}
+
+.spinnerCentro {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.spinnerOverlay {
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.286);
+    z-index: 1057;
+    top: 0;
+    left: 0;
+    position: fixed;
+}
+
+.fc .fc-col-header-cell-cushion {
+    width: 100% !important;
+}
+
+.subtitleModal{
+	margin: 0px 0px 5px 0px; 
+	display: block;
+}
+
+.tableCustomFactura{
+    min-width: 950px;
+    margin: 20px 0px;
+
+	thead {
+        tr {
+            th{
+                font-size: 13px;
+            }
+        }
+    }
+}

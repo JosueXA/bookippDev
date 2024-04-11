@@ -1,0 +1,326 @@
+// -------------------- PAGES --------------------
+
+// ----- MENÚ -----
+mat-sidenav {
+    width: 18% !important;
+    min-width: 94px;
+}
+
+.menu-open {
+    width: 280px !important;
+    // background-color: #20c4e6 !important;
+    background-color: white; /* For browsers that do not support gradients */
+    // background-image: -webkit-linear-gradient(#20c4e6 -200px,#57b477)!important;
+    background-image: white;
+}
+
+.menu-close {
+    width: 80px !important;
+    //background-color: #20c4e6 !important;
+    background-color: white; /* For browsers that do not support gradients */
+    // background-image: -webkit-linear-gradient(#20c4e6 -200px,#57b477)!important;
+    background-image: white;
+}
+
+
+// ----- MAT DIVIDER -----
+// .mat-divider {
+//     border-top-color: #20c4e6;
+//     border-right-color: #20c4e6;
+// }
+
+
+// ----- MAT CARD -----
+.page_mat-card {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.page_mat-card-header {
+    height: 40px !important;
+    width: 100%;
+    background-color: white; /* For browsers that do not support gradients */
+    // background-image: -webkit-linear-gradient(#20c4e6 -200px,#57b477)!important;
+    background-image: white;
+    color: black;
+    display: flex !important;
+}
+
+.page_mat-card-content {
+    height: 100% !important;
+    padding: 20px !important;
+}
+
+
+// ----- SECCIONES -----
+.page_seccion {
+    padding: 0px !important;
+    margin-top: 15px !important;
+}
+
+.page_seccion_titulo {
+    color: #000 !important;
+    font-weight: bold !important;
+    margin-top: 10px !important;
+	margin-bottom: 15px;
+}
+
+.page_seccion_titulo_barra {
+    margin-top: 0% !important;
+    margin-bottom: 0% !important;
+}
+
+.page_seccion_titulo_barra_contenido {
+    background-color: #dce6ea; /* For browsers that do not support gradients */
+    //background-image: -webkit-linear-gradient(#20c4e6 -200px,#57b477)!important;
+    height: 1px !important;
+    margin-top: 0% !important;
+    //opacity: 1;
+}
+
+.page_seccion_campo {
+    margin-top: 20px !important;
+}
+
+.page_seccion_campo_label {
+    display: flex !important;
+    height: 34px !important;
+}
+
+.page_seccion_campo_label_contenido {
+    margin: auto 0 !important;
+}
+
+.page_seccion_campo_contenido {
+    min-height: 34px !important;
+}
+
+.page_seccion_campo_contenido_valor {
+    padding: 0 !important;
+    height: 34px !important;
+}
+
+.page_seccion_campo_contenido_error {
+    padding: 0 !important;
+    height: 34px !important;
+    color: red !important;
+}
+
+.borderAzul {
+    outline: 1px solid #dce6ea !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}
+
+.ls-link-b {
+    color: #20c4e6 !important;
+    cursor: pointer;
+}
+
+.puntosSuspensivos {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.modal-header {
+    border-bottom: var(--bs-modal-header-border-width) solid #dce6ea !important;
+}
+
+.modal-footer {
+    border-top: var(--bs-modal-footer-border-width) solid #dce6ea !important;
+}
+
+.colorPrimario {
+    color: #20c4e6 !important;
+}
+
+.colorBackgroundPrimario {
+    background-color: #20c4e6 !important;
+}
+
+.colorBorderPrimario {
+    border: #20c4e6 !important;
+}
+
+.buttonEstiloBlanco {
+    height: 50px;
+    width: 100%;
+    border-radius: 25px;
+    color: #20c4e6 !important;
+    background: #ffffff;
+    border: 3px solid #20c4e6 !important;
+
+    display: inline-block;
+    text-transform: capitalize;
+    text-decoration: none;
+    transition: all 0.4s ease 0s;
+    font-weight: bold;
+}
+
+.buttonEstiloBlanco:hover {
+    color: #ffffff !important;
+    background: #20c4e6;
+    border-color: #20c4e6 !important;
+    transition: all 0.4s ease 0s;
+}
+
+
+// ----- ERROR CAMPO -----
+.errorCampo {
+    outline: red solid 1px !important;
+    outline-offset: 0 !important;
+}
+
+.errorCampo:focus {
+    outline: #ff9191 solid 1px !important;
+    outline-offset: 0 !important;
+}
+
+.errorCampo2 {
+    outline: red solid 2px !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}
+
+.errorCampo2:focus {
+    outline: #ff9191 solid 2px !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}
+
+
+
+// ----- COLORES SERVICIOS -----
+.color0 {
+    background-color: #5A5A5A;
+}
+
+.color1 {
+    background-color: #0A2A38;
+}
+
+.color2 {
+    background-color: #58b578;
+}
+
+.color3 {
+    background-color: #357EC1;
+}
+
+.color4 {
+    background-color: #B32032;
+}
+
+.color5 {
+    background-color: #054353;
+}
+
+.color6 {
+    background-color: #FCDD1A;
+}
+
+.color7 {
+    background-color: #24557D;
+}
+
+.color8 {
+    background-color: #4B296B;
+}
+
+.color9 {
+    background-color: #99244A;
+}
+
+.color10 {
+    background-color: #EC6351;
+}
+
+.color11 {
+    background-color: #377D7B;
+}
+
+.breadcrumbCustom{
+	display: inline-flex;
+	align-items: center;
+	height: 27px;
+	margin: 0px 0px 0px auto;
+
+	a {
+		display: inline-flex;
+		align-items: center;
+		text-decoration: none;
+		color: #20c4e6;
+	}
+}
+
+// ----- DATEPICKER -----
+::ng-deep {
+    ngx-daterangepicker-material {
+        & {
+            .md-drppicker {
+                min-width: 650px;
+                @media screen and (max-width: 1075px){
+                    min-width: unset;
+                    max-width: 300px;
+                    display: inline-grid;
+                }
+                .btn {
+                    background-color: #20c4e6 !important;
+                }
+				.btn.btn-default{
+					color: #fff;
+				}
+                .ranges > ul > li > button.active{
+                    background-color: #20c4e6 !important;
+                }
+                td.active {
+                    background-color: #20c4e6 !important;
+                }
+            }
+        }
+    }
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+	background-color: #20c4e6 !important;   /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+	border-color:#20c4e6 !important; /*outer ring color change*/
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #20c4e6 !important;
+    }
+
+    .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+        background-color: #20c4e6;
+     }
+}
+
+::ng-deep .mat-checkbox.mat-accent {
+    .mat-checkbox-ripple .mat-ripple-element {
+        background-color: #20c4e6 !important;
+    }
+}
+
+.matTableCustom{
+    width: 100%; 
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+$breakpoint-tablet: 600px;
+@media (max-width: $breakpoint-tablet) {
+	.breadcrumbCustom{
+		display: flex;
+		width: 100%;
+		margin-bottom: 15px;
+		margin-left: 10px;
+        justify-content: end;
+	}	
+	.cardHeaderMaterial{
+		flex-wrap: wrap;
+	}
+}

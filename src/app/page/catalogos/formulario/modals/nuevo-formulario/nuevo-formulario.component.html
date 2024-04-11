@@ -1,0 +1,966 @@
+<mat-card *ngIf="this.data.formulario?.idFormulario" class="mat-elevation-z8">
+
+  <mat-card-header class="cardHeaderMaterial">
+    <div style="width: 100%; display: flex;">
+      <mat-card-title style="margin-right: 10px;"> {{data.formulario.nombre.length > 0 ? data.formulario.nombre : 'Nuevo
+        Formulario'}}
+      </mat-card-title>
+      <mat-icon id="btnNuevo" class="iconosBookipp" svgIcon="iconEditar" (click)="editarFormulario();" matListIcon
+        style="cursor: pointer; width: 25px; height: 30px; position: relative; left: 5px;">
+      </mat-icon>
+    </div>
+    <div style="text-align: right; width: 100%;">
+      <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="''"
+        style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+      <a (click)="''" style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">Inicio</a>
+      <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+      <a (click)="redirec('formulario');"
+        style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">Formularios</a>
+      <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+      <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">Nuevo</a>
+    </div>
+  </mat-card-header>
+
+  <mat-divider></mat-divider>
+
+  <mat-card-content>
+    <div cdkDropList [cdkDropListData]="this.data.formularioSeccion"  (cdkDropListDropped)="dropSeccion($event)">
+      <div cdkDrag [cdkDragDisabled]="indexSeccion === 0" class="row" *ngFor="let seccion of this.data.formularioSeccion; let indexSeccion = index;">
+        <!-- [ngClass]="indexSeccion == 0 ? 'formularioSeccionBorder1' : 'formularioSeccionBorder2'" -->
+        <div  *ngIf="seccion.seccionDefault == 0;" class="col-xl-12 my-2">
+          <div class="row" style="position: relative;">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 my-2" style="display: inline;">
+              <div style="width: 60px;float: left;">
+              </div>
+              <div style="float: left;margin-left: -5px;" style="display: flex; align-items: center;">
+                <mat-icon svgIcon="iconEditar" class="iconosBookipp" (click)="editarSeccion(seccion);"
+                  style="cursor: pointer; position: relative; left: -8px;">
+                </mat-icon>
+                <mat-icon svgIcon="iconBasura" class="iconosBookipp"
+                  style="cursor: pointer; position: relative;left: -8px;" (click)="eliminarSeccion(seccion)">
+                </mat-icon>
+
+                <label *ngIf="seccion.nombre != ''" class="control-label"> <b> {{seccion.nombre}}: </b> </label>
+
+              </div>
+              <div style="width: 35px; position: absolute; top: 0px; right: 12px; padding: 0;">
+                <div class="arrow-handle" cdkDragHandle>
+                  <svg width="24px" fill="gray" fill-opacity="50%" viewBox="0 0 24 24" style="margin: auto auto;">
+                    <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div cdkDropList [cdkDropListData]="seccion.formularioElemento" class="col-12 col-xl-12 my-2"
+        (cdkDropListDropped)="drop($event, seccion)">
+          <div class="row" *ngFor="let campo of seccion.formularioElemento; let indexElemento = index;" [ngClass]="indexElemento == 0 ? 'formularioElementoBorder1' : 'formularioElementoBorder2'">
+
+            <!-- Opción Multiple - Respuesta Multiple -->
+            <div   cdkDrag class="col-xl-12 my-2"
+              *ngIf="campo.idTipoElementoFormulario == 1 && seccion.idFormularioSeccion === campo.idFormularioSeccion"
+              style="position: relative;padding-left: 20px;">
+              <div class="row" style="position: relative;">
+                <div class="col-12 col-ms-3 col-md-3 col-xl-3" style="display: flex;align-items: center;">
+                  <mat-icon svgIcon="iconEditar" (click)="editarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <mat-icon svgIcon="iconBasura" class="iconosBookipp" (click)="eliminarElemento(campo);"
+                    style="cursor: pointer;">
+                  </mat-icon>
+
+                  <label *ngIf="campo.descripcion != ''" class="control-label" id="pregunta{{campo.idFormularioElemento}}"
+                    style="margin-top: 3px;">{{campo.descripcion}}:</label>
+                </div>
+                <div class="col-12 col-ms-9 col-md-9 col-xl-9" style="text-align: left;">
+                  <div class="col-12 col-ms-12 col-md-12 col-xl-12" style="text-align: left; padding-left: 12px;">
+                    <div class="form-check form-check-inline" style="padding: 12px;"
+                      *ngFor="let detalle_check of campo.formularioOpcion">
+                      <input class="form-check-input" type="checkbox" id="check{{detalle_check.descripcion}}"
+                        value="{{detalle_check.descripcion}}" name="OM-{{detalle_check.idFormularioOpcion}}"
+                        id="OM-{{detalle_check.idFormularioOpcion}}">
+                      <label class="form-check-label"
+                        for="inline{{detalle_check.descripcion}}">{{detalle_check.descripcion}}</label>
+                    </div>
+                  </div>
+                </div>
+                <div style="width: 35px; position: absolute; top: 0px; right: 10px; padding: 0;">
+                  <div class="arrow-handle" cdkDragHandle>
+                    <svg width="24px" fill="gray" fill-opacity="50%" viewBox="0 0 24 24" style="margin: auto auto;">
+                      <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <div style="width: 65%;text-align: center;">
+                  <label id="error{{campo.idFormularioElemento}}" class="control-label text-left"
+                    style="color: red;"></label>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Opción Multiple - Respuesta Sencilla -->
+            <div  cdkDrag class="col-xl-12 my-2"
+              *ngIf="campo.idTipoElementoFormulario == 2 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+              style="position: relative;padding-left: 20px;">
+              <div class="row" style="position: relative;">
+                <div class="col-12 col-ms-3 col-md-3 col-xl-3" style="display: flex; align-items: center;">
+                  <mat-icon svgIcon="iconEditar" (click)="editarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <mat-icon svgIcon="iconBasura" (click)="eliminarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <label *ngIf="campo.descripcion != ''" class="control-label" id="{{campo.idFormularioElemento}}"
+                    style="margin-top: 3px;">{{campo.descripcion}}:</label>
+                </div>
+                <div class="col-12 col-ms-9 col-md-9 col-xl-9" style="text-align: left;">
+
+                  <!-- Opciones -->
+                  <div class="form-check form-check-inline" *ngFor="let detalle_opcion of campo.formularioOpcion">
+                    <input class="form-check-input" type="radio" [value]="detalle_opcion.idFormularioElemento"
+                      name="OP-{{campo.idFormularioElemento}}" id="OP-{{detalle_opcion.idFormularioOpcion}}">
+                    <label class="form-check-label"
+                      for="inline{{detalle_opcion.descripcion}}">{{detalle_opcion.descripcion}}</label>
+                  </div>
+                </div>
+                <div style="width: 35px; position: absolute; top: 0px; right: 10px; padding: 0;">
+                  <div class="arrow-handle" cdkDragHandle>
+                    <svg width="24px" fill="gray" fill-opacity="50%" viewBox="0 0 24 24" style="margin: auto auto;">
+                      <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div style="width: 65%;text-align: center;">
+                  <label id="error{{campo.idFormularioElemento}}" class="control-label text-left"
+                    style="color: red;"></label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Texto -->
+            <div  cdkDrag class="col-xl-12 my-2"
+              *ngIf="campo.idTipoElementoFormulario == 3 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+              style="position: relative;padding-left: 20px;">
+              <div class="row" style="position: relative;">
+
+                <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                  <mat-icon svgIcon="iconEditar" (click)="editarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <mat-icon svgIcon="iconBasura" (click)="eliminarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  {{campo.descripcion}}:
+                </div>
+                <div class="col-12 col-ms-9 col-md-9 col-lg-9 col-xl-9 pe-3">
+                  <textarea name="{{campo.idFormularioElemento}}" id="TEXT-{{campo.idFormularioElemento}}"
+                    class="form-control borderAzul" aria-label="With textarea"
+                    style="width: calc(100% - 45px); resize: none; overflow-y: scroll;"></textarea>
+
+                </div>
+                <div style="width: 35px; position: absolute; top: 0px; right: 10px; padding: 0;">
+                  <div class="arrow-handle" cdkDragHandle>
+                    <svg width="24px" fill="gray" fill-opacity="50%" viewBox="0 0 24 24" style="margin: auto auto;">
+                      <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lista Desplegable -->
+            <div   cdkDrag class="col-xl-12 my-2"
+              *ngIf="campo.idTipoElementoFormulario == 4 && seccion.idFormularioSeccion== campo.idFormularioSeccion"
+              style="position: relative;padding-left: 20px;">
+              <div class="row" style="position: relative;">
+
+                <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                  <mat-icon svgIcon="iconEditar" (click)="editarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <mat-icon svgIcon="iconBasura" (click)="eliminarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  {{campo.descripcion}}:
+                </div>
+                <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4">
+                  <select class="form-select" aria-label="Default select example"
+                    id="LIST-{{campo.idFormularioElemento}}">
+                    <option value="-1" selected></option>
+                    <option *ngFor="let lista of campo.formularioOpcion" value="{{lista.idFormularioOpcion}}">
+                      {{lista.descripcion}}</option>
+                  </select>
+                </div>
+                <div style="width: 35px; position: absolute; top: 0px; right: 10px; padding: 0;">
+                  <div class="arrow-handle" cdkDragHandle>
+                    <svg width="24px" fill="gray" fill-opacity="50%" viewBox="0 0 24 24" style="margin: auto auto;">
+                      <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div  cdkDrag class="col-xl-12 my-2"
+              *ngIf="campo.idTipoElementoFormulario == 5 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+              style="position: relative;padding-left: 20px;">
+              <div class="row" style="position: relative;">
+                <div class="col-12 col-ms-12 col-md-12 col-lg-12 col-xl-12 pe-3"
+                  style="display: flex; align-items: center;">
+                  <mat-icon svgIcon="iconEditar" (click)="editarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <mat-icon svgIcon="iconBasura" (click)="eliminarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <label id="LABEL-{{campo.idFormularioElemento}}"
+                    style="width: 90%;text-align: justify">{{campo.descripcion}}</label>
+                </div>
+                <div style="width: 35px; position: absolute; top: 0px; right: 10px; padding: 0;">
+                  <div class="arrow-handle" cdkDragHandle>
+                    <svg width="24px" fill="gray" fill-opacity="50%" viewBox="0 0 24 24" style="margin: auto auto;">
+                      <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Texto Completo -->
+            <div   cdkDrag class="col-xl-12 my-2"
+              *ngIf="campo.idTipoElementoFormulario == 6 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+              style="position: relative;padding-left: 20px;">
+              <div class="row" style="position: relative;">
+
+                <div class="col-12 col-ms-12 col-md-12 col-lg-12 col-xl-12 pe-3"
+                  style="display: flex; align-items: center;">
+                  <mat-icon svgIcon="iconEditar" (click)="editarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <mat-icon svgIcon="iconBasura" (click)="eliminarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <textarea name="{{campo.idFormularioElemento}}" id="BOOK-{{campo.idFormularioElemento}}"
+                    class="form-control borderAzul" aria-label="With textarea"
+                    style="width: calc(100% - 90px); resize: none; overflow-y: scroll;"></textarea>
+
+                </div>
+                <div style="width: 35px; position: absolute; top: 0px; right: 10px; padding: 0;">
+                  <div class="arrow-handle" cdkDragHandle>
+                    <svg width="24px" fill="gray" fill-opacity="50%" viewBox="0 0 24 24" style="margin: auto auto;">
+                      <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Imagen -->
+            <div  cdkDrag class="col-xl-12 my-2" style="position: relative;padding-left: 20px;"
+              *ngIf="campo.idTipoElementoFormulario === 7 && seccion.idFormularioSeccion === campo.idFormularioSeccion">
+              <div class="row" style="position: relative;">
+                <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                  <mat-icon svgIcon="iconEditar" (click)="editarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <mat-icon svgIcon="iconBasura" (click)="eliminarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  {{campo.descripcion}}:
+                </div>
+                <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4">
+                  <div id="botonImagenPromocion"
+                    style="width: 100%; height: 300px; max-width: 300px; margin: 10px auto; padding: 0; display: flex; border: 2px solid #20c4e6">
+                    <label for="archivoImagenPromocion" class="buttonNewImagen"
+                      style="margin: auto auto; display: flex; cursor: pointer !important;">
+                      <i class="fa fa-camera" style="margin: auto auto; font-size: 50px;"></i>
+                    </label>
+                  </div>
+                </div>
+                <div style="width: 35px; position: absolute; top: 0px; right: 10px; padding: 0;">
+                  <div class="arrow-handle" cdkDragHandle>
+                    <svg width="24px" fill="gray" fill-opacity="50%" viewBox="0 0 24 24" style="margin: auto auto;">
+                      <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dibujo -->
+            <div  cdkDrag class="col-xl-12 my-2" style="position: relative;padding-left: 20px;"
+              *ngIf="campo.idTipoElementoFormulario === 8 &&  seccion.idFormularioSeccion === campo.idFormularioSeccion">
+              <div class="row" style="position: relative;">
+                <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                  <mat-icon svgIcon="iconEditar" (click)="editarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                  <mat-icon svgIcon="iconBasura" (click)="eliminarElemento(campo);" class="iconosBookipp"
+                    style="cursor: pointer;">
+                  </mat-icon>
+                </div>
+                <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4" style="text-align: center;">
+                  <signature-pad class="form-control" #signature [options]="signaturePadOptions" (drawStart)="''"
+                    (drawEnd)="''">
+                  </signature-pad>
+                  <p>{{campo.descripcion}}</p>
+                </div>
+                <div style="width: 35px; position: absolute; top: 0px; right: 10px; padding: 0;">
+                  <div class="arrow-handle" cdkDragHandle>
+                    <svg width="24px" fill="gray" fill-opacity="50%" viewBox="0 0 24 24" style="margin: auto auto;">
+                      <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="col-12 col-xl-12 my-2">
+      <div class="row justify-content-center">
+        <div class="col-lg-7">
+          <mat-icon svgIcon="iconAgregar" class="iconosBookipp" (click)="agregarSeccion();"
+            style="cursor: pointer; position: relative; left: -8px;">
+          </mat-icon>
+          <label class="control-label">Nueva Sección</label>
+        </div>
+
+        <div class="col-lg-7">
+          <mat-icon svgIcon="iconAgregar" class="iconosBookipp" (click)="agregarElementoNuevoElemento();"
+            style="cursor: pointer; position: relative; left: -8px;">
+          </mat-icon>
+          <label class="control-label">Nuevo Elemento</label>
+        </div>
+
+      </div>
+    </div>
+
+
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions>
+    <div class="row justify-content-center" style="margin-top: 35px; width: 100%;">
+      <div class="col-lg-3">
+        <button id="botonGuardarEdicionFormulario" type="button" style="width: 100%;" class="btn btn-primary"
+          (click)="redirec('formulario');">
+          Regresar
+        </button>
+      </div>
+
+
+
+      <div class="col-lg-3">
+        <button id="botonGuardarEdicionFormulario" type="button" data-bs-dismiss="modal" style="width: 100%;"
+          class="btn btn-primary" (click)="guardarFormulario();">
+          Guardar
+        </button>
+      </div>
+
+
+    </div>
+  </mat-card-actions>
+
+</mat-card>
+
+
+<!-- Editar formulario -->
+<div id="modal-formulario" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirmEliminar">
+  <div class="modal-dialog" style="max-width: 600px;" role="document">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+      <div class="modal-header">
+        <h5 class="modal-title">{{msg_modalConfirmEliminar}}</h5>
+        <mat-icon (click)="resetFormulario();" data-bs-dismiss="modal" svgIcon="iconCerrarModal" class="iconosBookipp"
+          style="cursor: pointer;">
+        </mat-icon>
+      </div>
+      <div class="modal-body" style="min-height: 50px;" id="Div2">
+        <div class="row justify-content-center">
+          <div class="col-12 col-xl-12 my-2">
+            <input id="inputNombres"
+              [ngClass]="this.formuLarioElemento.idTipoElementoFormulario !== 5 && this.formulario.nombre.length === 0 && this.CLICK_BTN_OK_MODAL === true ? 'form-control errorCampo' : 'form-control borderAzul'"
+              style="height: 100%;" type="text" placeholder="Nombre" [(ngModel)]="this.formulario.nombre" />
+
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-center">
+        <div class="col-lg-3">
+          <button id="botonCancelar-editar-formulario" type="button" (click)="resetFormulario();"
+            data-bs-dismiss="modal" class="btn btn-primary btn-modal-action">
+            Cancelar
+          </button>
+        </div>
+        <div class="col-lg-3">
+          <button id="botonGuardar-editar-formulario" type="button" class="btn btn-primary btn-modal-action"
+            (click)="confirmarAcccion('FORMULARIO');">
+            Aceptar
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- agregar seccion -->
+<div id="modal-agregar-seccion" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirmEliminar">
+  <div class="modal-dialog" style="max-width: 600px;" role="document">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+      <div class="modal-header">
+        <h5 class="modal-title">{{msg_modalConfirmEliminar}}</h5>
+        <mat-icon data-bs-dismiss="modal" svgIcon="iconCerrarModal" class="iconosBookipp" style="cursor: pointer;">
+        </mat-icon>
+      </div>
+
+      <div class="modal-body" style="min-height: 50px;" id="Div2">
+        <div class="row justify-content-center">
+          <div>Nombre</div>
+          <div class="col-12 col-xl-12 my-2">
+            <input id="inputNombres"
+              [ngClass]="!this.formularioSeccion.nombre && this.CLICK_BTN_OK_MODAL === true ? 'form-control errorCampo' : 'form-control borderAzul'"
+              style="height: 100%;" type="text" placeholder="Nombre" [(ngModel)]="this.formularioSeccion.nombre" />
+
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-center">
+        <div class="col-lg-3">
+          <button id="botonCancelar-agregar-seccion" type="button" data-bs-dismiss="modal" style="width: 100%;"
+            class="btn btn-primary">
+            Cancelar
+          </button>
+        </div>
+        <div class="col-lg-3">
+          <button id="botonGuardar-agregar-seccion" type="button" style="width: 100%;" class="btn btn-primary"
+            (click)="confirmarAcccion('AGREGAR-SECCION');">
+            Aceptar
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ediitar seccion -->
+<div id="modal-editar-seccion" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirmEliminar">
+  <div class="modal-dialog" style="max-width: 600px;" role="document">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+      <div class="modal-header">
+        <h5 class="modal-title">{{msg_modalConfirmEliminar}}</h5>
+        <mat-icon data-bs-dismiss="modal" svgIcon="iconCerrarModal" class="iconosBookipp" style="cursor: pointer;">
+        </mat-icon>
+      </div>
+      <div class="modal-body" style="min-height: 50px;" id="Div2">
+        <div class="row justify-content-center">
+          <div>Nombre</div>
+          <div class="col-12 col-xl-12 my-2">
+            <input id="inputNombres" class="form-control borderAzul" style="height: 100%;" type="text"
+              placeholder="Nombre" [(ngModel)]="this.formularioSeccion.nombre" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <div class="col-lg-3">
+          <button id="botonCancelar-editar-seccion" type="button" data-bs-dismiss="modal"
+            class="btn btn-primary btn-modal-action">
+            Cancelar
+          </button>
+        </div>
+        <div class="col-lg-3">
+          <button id="botonGuardar-editar-seccion" class="btn btn-primary btn-modal-action"
+            (click)="confirmarAcccion('EDITAR-SECCION');">
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Editar elemento -->
+<div id="modal-editar-elemento" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirmEliminar">
+  <div class="modal-dialog" role="document" style="max-width: 600px;">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+      <div class="modal-header">
+        <h5 class="modal-title">{{msg_modalConfirmEliminar}}</h5>
+        <mat-icon data-bs-dismiss="modal" svgIcon="iconCerrarModal" class="iconosBookipp" style="cursor: pointer;">
+        </mat-icon>
+      </div>
+      <div class="modal-body" style="min-height: 50px; margin-bottom: -20;" id="Div2">
+        <div class="row justify-content-center">
+          <div>Sección</div>
+          <div class="col-12 col-xl-12 my-2">
+            <select class="form-select" [(ngModel)]="this.formuLarioElemento.idFormularioSeccion"
+              aria-label="Default select example" id="formularios" (change)="changeSeccionElement($event, false)">
+              <option *ngFor="let seccion of this.formularioSeccionOpciones" [value]="seccion.idFormularioSeccion">
+                {{seccion.nombre}}</option>
+            </select>
+          </div>
+
+
+
+
+          <div>Tipo Elemento</div>
+          <div class="col-12 col-xl-12 my-2">
+            <select
+              [ngClass]="this.formuLarioElemento.idTipoElementoFormulario === -1 && this.CLICK_BTN_OK_MODAL === true ? 'form-select errorCampo' : 'form-select borderAzul'"
+              [(ngModel)]="this.formuLarioElemento.idTipoElementoFormulario" aria-label="Default select example"
+              id="formularios" (change)="selectTipoELemento($event)">
+              <option *ngFor="let elemento of tipoElementos" [value]="elemento.idTipoElementoFormulario">
+                {{elemento.nombre}}</option>
+            </select>
+          </div>
+
+
+
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario !== 6">
+            Descripción</div>
+
+          <div class="col-12 col-xl-12 my-2" *ngIf="this.formuLarioElemento.idTipoElementoFormulario !== 6 && this.formuLarioElemento.idTipoElementoFormulario !== 5">
+            <input id="inputNombres" [(ngModel)]="this.formuLarioElemento.descripcion"
+              [ngClass]="(
+            this.formuLarioElemento.idTipoElementoFormulario === 1 ||
+            this.formuLarioElemento.idTipoElementoFormulario === 2 ||
+            this.formuLarioElemento.idTipoElementoFormulario === 3 ||
+            this.formuLarioElemento.idTipoElementoFormulario === 4 ) &&
+            this.formuLarioElemento.descripcion.length <= 0 && this.CLICK_BTN_OK_MODAL === true ? 'form-control errorCampo' : 'form-control borderAzul'" type="text"
+              placeholder="Descripción" />
+          </div>
+
+
+          <div class="col-12 col-xl-12 my-2" *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 5">
+            <textarea  [(ngModel)]="this.formuLarioElemento.descripcion"
+            [ngClass]="
+            this.formuLarioElemento.idTipoElementoFormulario === 5 &&
+            this.formuLarioElemento.descripcion.length <= 0 && this.CLICK_BTN_OK_MODAL === true ? 'form-control errorCampo' : 'form-control borderAzul'"
+            id="descripcion" rows="5" class="form-control ng-pristine ng-valid borderAzul"
+              style="width: 100%; resize: none; overflow-y: scroll;">
+              </textarea>
+          </div>
+
+
+
+
+
+
+
+          <!-- <div class="col-12 col-xl-12 my-2" *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 5">
+              <textarea id="descripcion" rows="5" class="form-control ng-pristine ng-valid borderAzul"
+                style="width: 100%; resize: none; overflow-y: scroll;"
+                [(ngModel)]="this.formuLarioElemento.descripcion">
+              </textarea>
+          </div>
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario !== 8 && this.formuLarioElemento.idTipoElementoFormulario !== 7 && this.formuLarioElemento.idTipoElementoFormulario !== 6">Descripción</div>
+
+          <div class="col-12 col-xl-12 my-2"  *ngIf="this.formuLarioElemento.idTipoElementoFormulario !== 8 && this.formuLarioElemento.idTipoElementoFormulario !== 7 && this.formuLarioElemento.idTipoElementoFormulario !== 6">
+
+              <input id="inputNombres"
+                [ngClass]="this.formuLarioElemento.idTipoElementoFormulario !== 5 && !this.formuLarioElemento.descripcion && this.CLICK_BTN_OK_MODAL === true ? 'form-control errorCampo' : 'form-control borderAzul'"
+                type="text" placeholder="Descripción" [(ngModel)]="this.formuLarioElemento.descripcion" />
+
+          </div> -->
+
+
+
+
+
+
+          <!-- <div>Tipo Elemento</div>
+          <div class="col-12 col-xl-12 my-2">
+              <select
+                [ngClass]="this.formuLarioElemento.idTipoElementoFormulario === -1 && this.CLICK_BTN_OK_MODAL === true ? 'form-select errorCampo' : 'form-select borderAzul'"
+                [(ngModel)]="this.formuLarioElemento.idTipoElementoFormulario" aria-label="Default select example"
+                id="formularios" (change)="selectTipoELemento($event)">
+                <option *ngFor="let elemento of tipoElementos" [value]="elemento.idTipoElementoFormulario">
+                  {{elemento.nombre}}</option>
+              </select>
+          </div> -->
+
+          <div class="col-12 col-xl-12 my-2" *ngIf="this.formuLarioElemento.idTipoElementoFormulario !== 5">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" [(ngModel)]="this.formuLarioElemento.esRequerido">
+              <label class="form-check-label"><b>Es Requerido </b></label>
+            </div>
+          </div>
+
+          <!-- opciones multiple RS -->
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 1" style="margin-bottom: 10px;"
+            class="col-12 col-xl-12 my-2">
+            <label class="control-label" style="margin-top: 3px;">Opciones:</label>
+            <mat-icon *ngIf="this.formuLarioElemento.formularioOpcion?.length === 0" svgIcon="iconAgregar"
+              (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+            </mat-icon>
+            <div class="row" style="margin-bottom: 10px;"
+              *ngFor="let opcion of this.formuLarioElemento.formularioOpcion; let i=index">
+              <div class="col-9">
+                <input
+                  [ngClass]="opcion.descripcion.length === 0 ? 'form-control errorCampo' : 'form-control borderAzul'"
+                  type="text" placeholder="Opción" [(ngModel)]="opcion.descripcion" />
+              </div>
+              <div class="col-3">
+                <mat-icon svgIcon="iconAgregar" *ngIf="this.formuLarioElemento.formularioOpcion.length === i + 1"
+                  (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+                <mat-icon svgIcon="iconBasura" *ngIf="this.formuLarioElemento.formularioOpcion.length > 1"
+                  (click)="borrarOpcion(i);" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- opcion multiple RM -->
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 2" style="margin-bottom: 10px;"
+            class="col-12 col-xl-12 my-2">
+
+            <label class="control-label" style="margin-top: 3px;">Opciones:</label>
+            <mat-icon *ngIf="this.formuLarioElemento.formularioOpcion?.length === 0" svgIcon="iconAgregar"
+              (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+            </mat-icon>
+            <div class="row" style="margin-bottom: 10px;"
+              *ngFor="let opcion of this.formuLarioElemento.formularioOpcion; let i=index">
+              <div class="col-9">
+                <input
+                  [ngClass]="this.opcion.descripcion.length === 0 ? 'form-control errorCampo' : 'form-control borderAzul'"
+                  type="text" placeholder="Opción" [(ngModel)]="opcion.descripcion" />
+              </div>
+              <div class="col-3">
+                <mat-icon svgIcon="iconAgregar" *ngIf="this.formuLarioElemento.formularioOpcion.length === i + 1"
+                  (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+                <mat-icon svgIcon="iconBasura" *ngIf="this.formuLarioElemento.formularioOpcion.length > 1"
+                  (click)="borrarOpcion(i);" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- opciones desplegable -->
+
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 4" style="margin-bottom: 10px;"
+            class="col-12 col-xl-12 my-2">
+
+            <label class="control-label" style="margin-top: 3px;">Opciones: </label>
+            <mat-icon *ngIf="this.formuLarioElemento.formularioOpcion?.length === 0" svgIcon="iconAgregar"
+              (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+            </mat-icon>
+            <div class="row" style="margin-bottom: 10px;"
+              *ngFor="let opcion of this.formuLarioElemento.formularioOpcion; let i=index">
+              <div class="col-9">
+                <input
+                  [ngClass]="opcion.descripcion.length === 0 ? 'form-control errorCampo' : 'form-control borderAzul'"
+                  type="text" placeholder="Opción" [(ngModel)]="opcion.descripcion" />
+              </div>
+              <div class="col-3">
+                <mat-icon svgIcon="iconAgregar" *ngIf="this.formuLarioElemento.formularioOpcion.length === i + 1"
+                  (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+                <mat-icon svgIcon="iconBasura" *ngIf="this.formuLarioElemento.formularioOpcion.length > 1"
+                  (click)="borrarOpcion(i);" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- subida archivo -->
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 7" style="margin-bottom: 10px;"
+            class="col-lg-8">
+            <!-- <img style="cursor: pointer; margin-top: 3px; border-radius: 45px; height: 300px; width: 300px;"
+              [src]="this.formuLarioElemento.imagenPath.length === 0 ? 'assets/images/system/importar.svg' : this.formuLarioElemento.imagenPath"
+              alt="Image no content">
+            <input type="file" accept="image/*" (change)="null" #profilePictureInput type="file" hidden />
+            <div class="row justify-content-center">
+              <div class="col-lg-8">
+                <button type="button" class="buttonEstiloBlanco" (click)="''"
+                  style="width:151px; font-size: 14px; height: auto;">
+                  Selecciona Archivo
+                </button>
+              </div>
+
+
+            </div> -->
+
+          </div>
+
+          <!-- Dibujo -->
+          <div class="col-lg-8" *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 8"
+            style="margin-bottom: 10px;">
+
+            <!-- <div>
+              <signature-pad #signature [options]="signaturePadOptions" (drawStart)="drawStart($event)"
+                (drawEnd)="drawComplete($event)"></signature-pad>
+            </div> -->
+
+
+
+
+
+          </div>
+
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 5">
+
+          </div>
+
+        </div>
+
+
+      </div>
+      <div class="modal-footer justify-content-center">
+        <div class="col-lg-3">
+          <button id="botonCancelar-confirmAgregarElemento" type="button" data-bs-dismiss="modal"
+            class="btn btn-primary btn-block ml-1 btn-modal-action">
+            Cancelar
+          </button>
+        </div>
+        <div class="col-lg-3">
+          <button id="botonGuardar-confirmAgregarElemento" type="button"
+            class="btn btn-primary btn-block mr-1 btn-modal-action" (click)="confirmarAcccion('EDITAR-ELEMENTO');">
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!--Modal Agregar elemento-->
+<div id="modal-confirmAgregarElemento" tabindex="-1" role="dialog" aria-hidden="true"
+  class="modal fade modal-confirmEliminar">
+  <div class="modal-dialog" role="document" style="max-width: 600px;">
+    <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+      <div class="modal-header">
+        <h5 class="modal-title">{{msg_modalConfirmEliminar}}</h5>
+        <mat-icon data-bs-dismiss="modal" svgIcon="iconCerrarModal" class="iconosBookipp" style="cursor: pointer;">
+        </mat-icon>
+      </div>
+      <div class="modal-body" style="min-height: 50px; margin-bottom: -20;" id="Div2">
+        <div class="row justify-content-center">
+          <div>Sección</div>
+          <div class="col-12 col-xl-12 my-2">
+            <select class="form-select" [(ngModel)]="this.formuLarioElemento.idFormularioSeccion"
+              aria-label="Default select example" id="formularios" (change)="changeSeccionElement($event, true)">
+              <option *ngFor="let seccion of this.formularioSeccionOpciones" [value]="seccion.idFormularioSeccion">
+                {{seccion.nombre}}</option>
+            </select>
+          </div>
+
+
+          <div>Tipo Elemento</div>
+          <div class="col-12 col-xl-12 my-2">
+            <select
+              [ngClass]="this.formuLarioElemento.idTipoElementoFormulario === -1 && this.CLICK_BTN_OK_MODAL === true ? 'form-select errorCampo' : 'form-select borderAzul'"
+              [(ngModel)]="this.formuLarioElemento.idTipoElementoFormulario" aria-label="Default select example"
+              id="formularios" (change)="selectTipoELemento($event)">
+              <!-- <option [value]="-1" selected>----</option> -->
+              <option *ngFor="let elemento of tipoElementos" [value]="elemento.idTipoElementoFormulario">
+                {{elemento.nombre}}</option>
+            </select>
+          </div>
+
+
+
+
+
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario !== 6">
+            Descripción</div>
+
+          <div class="col-12 col-xl-12 my-2" *ngIf="this.formuLarioElemento.idTipoElementoFormulario !== 6 && this.formuLarioElemento.idTipoElementoFormulario !== 5">
+            <input id="inputNombres" [(ngModel)]="this.formuLarioElemento.descripcion"
+              [ngClass]="(
+            this.formuLarioElemento.idTipoElementoFormulario === 1 ||
+            this.formuLarioElemento.idTipoElementoFormulario === 2 ||
+            this.formuLarioElemento.idTipoElementoFormulario === 3 ||
+            this.formuLarioElemento.idTipoElementoFormulario === 4 ) &&
+            this.formuLarioElemento.descripcion.length <= 0 && this.CLICK_BTN_OK_MODAL === true ? 'form-control errorCampo' : 'form-control borderAzul'" type="text"
+              placeholder="Descripción" />
+          </div>
+
+
+          <div class="col-12 col-xl-12 my-2" *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 5">
+            <textarea  [(ngModel)]="this.formuLarioElemento.descripcion"
+            [ngClass]="
+            this.formuLarioElemento.idTipoElementoFormulario === 5 &&
+            this.formuLarioElemento.descripcion.length <= 0 && this.CLICK_BTN_OK_MODAL === true ? 'form-control errorCampo' : 'form-control borderAzul'"
+            id="descripcion" rows="5" class="form-control ng-pristine ng-valid borderAzul"
+              style="width: 100%; resize: none; overflow-y: scroll;">
+              </textarea>
+          </div>
+
+
+
+
+
+          <div class="col-12 col-xl-12 my-2" *ngIf="this.formuLarioElemento.idTipoElementoFormulario !== 5">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" [(ngModel)]="this.formuLarioElemento.esRequerido">
+              <label class="form-check-label"><b>Es Requerido </b></label>
+            </div>
+          </div>
+
+          <!-- opciones multiple RS -->
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 1" style="margin-bottom: 10px;"
+            class="col-12 col-xl-12 my-2">
+            <label class="control-label" style="margin-top: 3px;">Opciones:</label>
+            <mat-icon *ngIf="this.formuLarioElemento.formularioOpcion?.length === 0" svgIcon="iconAgregar"
+              (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+            </mat-icon>
+            <div class="row" style="margin-bottom: 10px;"
+              *ngFor="let opcion of this.formuLarioElemento.formularioOpcion; let i=index">
+              <div class="col-9">
+                <input
+                  [ngClass]="opcion.descripcion.length === 0 ? 'form-control errorCampo' : 'form-control borderAzul'"
+                  type="text" placeholder="Opción" [(ngModel)]="opcion.descripcion" />
+              </div>
+              <div class="col-3">
+                <mat-icon svgIcon="iconAgregar" *ngIf="this.formuLarioElemento.formularioOpcion.length === i + 1"
+                  (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+                <mat-icon svgIcon="iconBasura" *ngIf="this.formuLarioElemento.formularioOpcion.length > 1"
+                  (click)="borrarOpcion(i);" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- opcion multiple RM -->
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 2" style="margin-bottom: 10px;"
+            class="col-12 col-xl-12 my-2">
+
+            <label class="control-label" style="margin-top: 3px;">Opciones:</label>
+            <mat-icon *ngIf="this.formuLarioElemento.formularioOpcion?.length === 0" svgIcon="iconAgregar"
+              (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+            </mat-icon>
+            <div class="row" style="margin-bottom: 10px;"
+              *ngFor="let opcion of this.formuLarioElemento.formularioOpcion; let i=index">
+              <div class="col-9">
+                <input
+                  [ngClass]="this.opcion.descripcion.length === 0 ? 'form-control errorCampo' : 'form-control borderAzul'"
+                  type="text" placeholder="Opción" [(ngModel)]="opcion.descripcion" />
+              </div>
+              <div class="col-3">
+                <mat-icon svgIcon="iconAgregar" *ngIf="this.formuLarioElemento.formularioOpcion.length === i + 1"
+                  (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+                <mat-icon svgIcon="iconBasura" *ngIf="this.formuLarioElemento.formularioOpcion.length > 1"
+                  (click)="borrarOpcion(i);" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- opciones desplegable -->
+
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 4" style="margin-bottom: 10px;"
+            class="col-12 col-xl-12 my-2">
+
+            <label class="control-label" style="margin-top: 3px;">Opciones: </label>
+            <mat-icon *ngIf="this.formuLarioElemento.formularioOpcion?.length === 0" svgIcon="iconAgregar"
+              (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+            </mat-icon>
+            <div class="row" style="margin-bottom: 10px;"
+              *ngFor="let opcion of this.formuLarioElemento.formularioOpcion; let i=index">
+              <div class="col-9">
+                <input
+                  [ngClass]="opcion.descripcion.length === 0 ? 'form-control errorCampo' : 'form-control borderAzul'"
+                  type="text" placeholder="Opción" [(ngModel)]="opcion.descripcion" />
+              </div>
+              <div class="col-3">
+                <mat-icon svgIcon="iconAgregar" *ngIf="this.formuLarioElemento.formularioOpcion.length === i + 1"
+                  (click)="agregarOpciones()" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+                <mat-icon svgIcon="iconBasura" *ngIf="this.formuLarioElemento.formularioOpcion.length > 1"
+                  (click)="borrarOpcion(i);" class="iconosBookipp" style="cursor: pointer;">
+                </mat-icon>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- subida archivo -->
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 7" style="margin-bottom: 10px;"
+            class="col-lg-8">
+            <!-- <img style="cursor: pointer; margin-top: 3px; border-radius: 45px; height: 300px; width: 300px;"
+              [src]="this.formuLarioElemento.imagenPath.length === 0 ? 'assets/images/system/importar.svg' : this.formuLarioElemento.imagenPath"
+              alt="Image no content">
+            <input type="file" accept="image/*" (change)="null" #profilePictureInput type="file" hidden />
+            <div class="row justify-content-center">
+              <div class="col-lg-8">
+                <button type="button" class="buttonEstiloBlanco" (click)="''"
+                  style="width:151px; font-size: 14px; height: auto;">
+                  Selecciona Archivo
+                </button>
+              </div>
+
+
+            </div> -->
+
+          </div>
+
+          <!-- Dibujo -->
+          <div class="col-lg-8" *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 8"
+            style="margin-bottom: 10px;">
+
+            <!-- <div>
+              <signature-pad #signature [options]="signaturePadOptions" (drawStart)="drawStart($event)"
+                (drawEnd)="drawComplete($event)"></signature-pad>
+            </div> -->
+
+
+
+
+
+          </div>
+
+          <div *ngIf="this.formuLarioElemento.idTipoElementoFormulario === 5">
+
+          </div>
+
+        </div>
+
+
+      </div>
+      <div class="modal-footer justify-content-center">
+        <div class="col-lg-3">
+          <button id="botonCancelar-confirmAgregarElemento" type="button" data-bs-dismiss="modal"
+            class="btn btn-primary btn-block ml-1 btn-modal-action">
+            Cancelar
+          </button>
+        </div>
+        <div class="col-lg-3">
+          <button id="botonGuardar-confirmAgregarElemento" type="button"
+            class="btn btn-primary btn-block mr-1 btn-modal-action" (click)="confirmarAcccion('AGREGAR-ELEMENTO');">
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+.mat-column-acciones {
+    width: 100px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-nombre {
+    width: 300px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-fecha {
+    width: 264px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.fillAzulBookipp{
+    fill:#20c4e6;
+}
+
+input, textarea{
+    //outline: 1px solid #20c4e6 !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}

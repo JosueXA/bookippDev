@@ -1,0 +1,59 @@
+.form-check-input:checked {
+  background-color: #20c4e6 ;
+  border-color: #20c4e6;
+}
+
+.btn-modal-action {
+  width: 100%;
+  margin-top: 20px;
+}
+
+
+.errorCampo {
+  outline: 1px solid red !important;
+  outline-offset: 0 !important;
+  border: none !important;
+}
+.buttonNewImagen {
+  height: 100px;
+  width: 100px;
+  color: #20c4e6 !important;
+  background: #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.buttonNewImagen:hover {
+  color: #ffffff !important;
+  background: #20c4e6;
+  border-color: #20c4e6 !important;
+  transition: all 0.4s ease 0s;
+}
+
+
+.formularioSeccionBorder1{ 
+  border-style: double;
+}
+
+.formularioSeccionBorder2{ 
+  border-style: none double double double;
+}
+
+.formularioElementoBorder1{ 
+  border-style: dashed;
+  border-color: #bcc8cd;
+}
+
+.formularioElementoBorder2{ 
+  border-style: none dashed dashed dashed;
+  border-color: #bcc8cd;
+}
+
+
+.arrow-handle {
+  color: #ccc;
+  cursor: move;
+  width: 35px;
+  height: 35px;
+  display: flex;
+}

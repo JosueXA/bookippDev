@@ -1,0 +1,286 @@
+<mat-card class="mat-elevation-z8">
+	<mat-card-header class="cardHeaderMaterial">
+		<mat-card-title style="min-width: 205px;">
+			{{ "agregarOrdenCompraTranslate.ordenCompra" | translate }}
+		</mat-card-title>
+
+		<div class="breadcrumbCustom">
+			<a href="/procesos/agenda">
+				<mat-icon matListIcon class="iconosBookipp iconoSize" style="margin: 0px 0px 3px 0px;"
+					svgIcon="iconCasita"></mat-icon>
+				<span>Inicio</span>
+			</a>
+			<a href="#">
+				<mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;"
+					svgIcon="iconFlechaDerecha"></mat-icon>
+			</a>
+			<a href="#" class="active">
+				<span>{{ "agregarOrdenCompraTranslate.ordenCompra" | translate }}</span>
+			</a>
+		</div>
+	</mat-card-header>
+	<mat-divider></mat-divider>
+
+	<mat-card-content style="margin-top: 10px">
+		<!-- Panel superior -->
+		<div class="row mx-auto">
+			<!-- Panel izquierdo -->
+			<div class="col-lg-6">
+				<div class="row mx-auto my-3">
+					<div class="col-lg-3">
+						{{ "agregarOrdenCompraTranslate.sucursal" | translate }}
+					</div>
+					<div class="col-lg-9">
+						<ng-select id="idSucursalSelect" style="width: 100%" (click)="txtfocus('#idSucursalSelect')"
+							(change)="cargar()" placeholder="{{
+                'agregarOrdenCompraTranslate.sucursal' | translate
+              }}" appendTo="body" [searchable]="false" [clearable]="false" [items]="orden.listaSucursales"
+							bindLabel="nombre" bindValue="idSucursal" [(ngModel)]="orden.sucursalSeleccionada">
+						</ng-select>
+					</div>
+				</div>
+				<div class="row mx-auto my-3">
+					<div class="col-lg-3">
+						{{ "agregarOrdenCompraTranslate.proveedor" | translate }}
+					</div>
+					<div class="col-lg-9">
+						<ng-select id="idProveedorSelect" style="width: 100%" (click)="txtfocus('#idProveedorSelect')"
+							placeholder="{{
+                'agregarOrdenCompraTranslate.proveedor' | translate
+              }}" appendTo="body" [searchable]="false" [clearable]="false" [items]="orden.listaProveedores"
+							bindLabel="nombre" bindValue="idInventarioProveedor"
+							[(ngModel)]="orden.proveedorSeleccionado">
+						</ng-select>
+					</div>
+				</div>
+				<div class="row mx-auto my-3">
+					<div class="col-lg-3">
+						{{ "agregarOrdenCompraTranslate.factura" | translate }}
+					</div>
+					<div class="col-lg-9">
+						<input id="idFactura" style="width: 100%" type="text" class="form-control borderAzul"
+							[(ngModel)]="modelFactura" (readonly)="(!ventanaOrdenNueva)" maxlength="225" />
+					</div>
+				</div>
+			</div>
+
+			<!-- Panel derecho -->
+			<div class="col-lg-6">
+				<div class="row mx-auto my-3">
+					<div class="col-lg-3">
+						{{ "agregarOrdenCompraTranslate.fechaOrden" | translate }}
+					</div>
+					<div class="col-lg-9">
+                        <input id="idFechaOrden" type="date" class="form-control borderAzul" 
+                            (readonly)="(!ventanaOrdenNueva)" placeholder="dd/mm/yyyy" [(ngModel)]="modelFechaOrden" />
+					</div>
+				</div>
+				<div class="row mx-auto my-3">
+					<div class="col-lg-3">
+						{{ "agregarOrdenCompraTranslate.fechaRecibido" | translate }}
+					</div>
+					<div class="col-lg-9">
+                        <input id="idFechaRecibido" type="date" class="form-control borderAzul" 
+                            (readonly)="(!ventanaOrdenNueva)" placeholder="dd/mm/yyyy" [(ngModel)]="modelFechaRecibido" />
+					</div>
+				</div>
+				<div class="row mx-auto my-3">
+					<div class="col-lg-3">
+						{{ "agregarOrdenCompraTranslate.observaciones" | translate }}
+					</div>
+					<div class="col-lg-9">
+						<textarea id="idObservacionesOrden" (readonly)="(!ventanaOrdenNueva)"
+							[(ngModel)]="modelObservacionesOrden" class="form-control borderAzul" maxlength="1000"
+							style="resize: none"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Tabla de detalle -->
+		<div class="row mx-auto">
+			<!-- Barra para agregar y tabla detalle -->
+			<div class="col-lg-12 mt-3">
+				<div class="overflow-auto">
+					<div class="tableCustom">
+						<section>
+							<div>
+								<p class="labelTopTable">Acciones</p>
+								<div style="
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						height: 35px;
+						width: 100%;
+					">
+									<mat-icon matListIcon class="iconosBookipp iconoSize"
+										(click)="agregarElementoOrden()" svgIcon="iconAgregar"></mat-icon>
+								</div>
+							</div>
+							<div>
+								<p class="labelTopTable">Producto</p>
+								<ng-select id="idProducto" style="width: 100%" (disabled)="(!ventanaOrdenNueva)"
+									appendTo="body" [searchable]="true" [clearable]="false"
+									[items]="orden.listaProductosBuffer" bindLabel="nombre"
+									bindValue="idInventarioPresentacion" [(ngModel)]="orden.productoSeleccionado"
+									
+									(click)="resetInfScroll('RecepcionProductoAgregarProducto')"
+									(blur)="resetDdl()"
+									[virtualScroll]="true"
+									(keyup)="buscarEnScroll('RecepcionProductoAgregarProducto', 'idProducto')"
+									(scroll)="onScroll('RecepcionProductoAgregarProducto', $event)">
+								</ng-select>
+							</div>
+							<div>
+								<p class="labelTopTable">Cantidad</p>
+								<input id="idCantidad" (keypress)="validarNum($event)" class="form-control borderAzul"
+									type="text" />
+							</div>
+							<div>
+								<p class="labelTopTable">Costo</p>
+								<div style="display: block; position: relative">
+									<input id="idCosto" class="form-control borderAzul" currencyMask [options]="{
+								allowNegative: false,
+								prefix: '',
+								nullable: true,
+								inputMode: 1
+								}" type="text" />
+									<span style="position: absolute; left: 15px; top: 8px">$</span>
+								</div>
+							</div>
+							<div>
+								<p class="labelTopTable">Total</p>
+							</div>
+							<div>
+								<p class="labelTopTable">Observaciones</p>
+								<input id="idObservaciones" class="form-control borderAzul" type="text" />
+							</div>
+						</section>
+
+						<div class="bodyTable">
+							<section *ngFor="let item of dataGridAgregarOC; let i = index">
+								<div>
+									<mat-icon matListIcon id="btnEditarProd" *ngIf="item.editar === 0"
+										(click)="editarElementoOrden(i)" class="iconosBookipp iconoSize"
+										svgIcon="iconEditar"></mat-icon>
+
+									<mat-icon matListIcon class="iconosBookipp iconoSize" id="btnEliminarProd"
+										*ngIf="item.editar === 0" (click)="quitarElementoOrden(item, i)"
+										svgIcon="iconEliminar"></mat-icon>
+
+									<mat-icon matListIcon class="iconosBookipp iconoSize" id="btnGuardarProd"
+										*ngIf="item.editar === 1" (click)="aceptarEdicionElementoOrden(i)"
+										svgIcon="iconGuardar"></mat-icon>
+								</div>
+								<div>
+									{{ item.editar === 0 ? item.nombreProducto : "" }}
+									<ng-select style="width: 100%" *ngIf="item.editar === 1" appendTo="body"
+										[searchable]="true" [clearable]="false" [items]="orden.listaProductos"
+										bindLabel="nombre" bindValue="idInventarioPresentacion"
+										[(ngModel)]="orden.productoSeleccionadoEdicion">
+									</ng-select>
+								</div>
+								<div>
+									{{ item.editar === 0 ? item.cantidad : "" }}
+									<input id="idCantidadEdicion" [(ngModel)]="modelCantidadEdicion"
+										(keypress)="validarNum($event)" *ngIf="item.editar === 1"
+										class="form-control borderAzul" type="text" />
+								</div>
+								<div>
+									{{ item.editar === 0 ? (item.costo | currency) : "" }}
+									<div id="idCostoEdicion" *ngIf="item.editar === 1"
+										style="display: block; position: relative">
+										<input [(ngModel)]="modelCostoEdicion" currencyMask
+											[options]="{allowNegative: false, prefix: '', nullable: true, inputMode: 1}"
+											class="form-control borderAzul" type="text" />
+										<span style="position: absolute; left: 15px; top: 8px">$</span>
+									</div>
+								</div>
+								<div>
+									{{ item.total | currency }}
+								</div>
+								<div>
+									{{ item.editar === 0 ? item.observaciones : "" }}
+									<input [(ngModel)]="modelObservacionesEdicion" *ngIf="item.editar === 1"
+										class="form-control borderAzul" type="text" />
+								</div>
+							</section>
+						</div>
+
+						<section>
+							<div>
+								<b>
+									{{ "agregarOrdenCompraTranslate.total" | translate }}:
+								</b>
+							</div>
+							<div></div>
+							<div>
+								{{ cantidadDebajoGrid }}
+							</div>
+							<div></div>
+							<div>
+								{{ totalDebajoGrid | currency }}
+							</div>
+							<div></div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Boton de guardardo y cancelado -->
+		<div class="row mx-auto" style="text-align: center; margin-top: 40px; margin-bottom: 30px">
+			<div class="col-lg-3"></div>
+			<div class="col-lg-3 my-2">
+				<button class="buttonEstiloBlanco" (click)="guardarOrdenCompra()">
+					{{ "agregarOrdenCompraTranslate.guardar" | translate }}
+				</button>
+			</div>
+			<div class="col-lg-3 my-2">
+				<button class="buttonEstiloBlanco" (click)="alertReturn()">
+					{{ "agregarOrdenCompraTranslate.regresar" | translate }}
+				</button>
+			</div>
+			<div class="col-lg-3"></div>
+		</div>
+	</mat-card-content>
+</mat-card>
+
+<!-- Modal de confirmacion -->
+<div id="confirmacionCancelacion" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade confirmacionCancelacion">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px">
+				{{ "agregarOrdenCompraTranslate.validacionSalir" | translate }}
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+					style="width: 140px; height: 40px;">
+					{{ "agregarOrdenCompraTranslate.cancelar" | translate }}
+				</button>
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+					style="width: 140px; height: 40px;" (click)="htmlRegresar()">
+					{{ "agregarOrdenCompraTranslate.si" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal de alerta -->
+<div id="confirmacionProductos" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade confirmacionProductos">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px">
+				{{ messageModalProductos }}
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+					style="width: 140px; height: 40px;">
+					{{ "agregarOrdenCompraTranslate.regresar" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

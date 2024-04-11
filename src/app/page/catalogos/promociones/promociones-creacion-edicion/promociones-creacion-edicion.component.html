@@ -1,0 +1,1153 @@
+<mat-card class="mat-elevation-z8" id="mainMatCard">
+    <mat-card-header>
+        <div style="width: 100%;">
+            <mat-card-title> {{'promocionTranslate.promocion' | translate}} </mat-card-title>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="irAAgenda()" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="irAAgenda()">Inicio</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a (click)="irAListadoPromociones()" style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">Promociones</a>
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="pb-5 pt-3 mx-4">
+        <!-- Apartado Datos Generales -->
+        <div id="apartadoDatosGenerales" class="row page_seccion_campo" style="margin-top:15px">
+            <!-- Titulo del Apartado -->
+            <div id="tituloDatosGenerales" class="col-lg-12" (click)="funciones_generales_mostrarOcultarCampos(1)" style="cursor: pointer; padding: 0px;">
+                <div class="col-lg-12" style="color:black; font-weight: bold;">
+                    Datos Generales
+                    <mat-icon class="iconosBookipp" [hidden]="!promocion.verCampos" svgIcon="iconFlecha1DerechaPeque" style="position: relative; top: 8px; left: -5px;"></mat-icon>
+                    <mat-icon class="iconosBookipp" [hidden]="promocion.verCampos" svgIcon="iconFlechaAbajoPeque" style="position: relative; top: 8px; left: -5px;"></mat-icon>
+                </div>
+                <div class="col-lg-12">
+                    <hr style="background-color: #dce6ea; height: 2px;"/>
+                </div>
+            </div>
+
+            <!-- Campos de Datos Generales -->
+            <div id="camposDatosGenerales" class="col-lg-12 px-4" [hidden]="!promocion.verCampos" style="padding: 0px;">
+                <!-- Nombre de la Promoción -->
+                <div class="row col-lg-8" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> Nombre de la Promoción </label>
+                    </div>
+                    <div class="col-lg-7">
+                        <input id="inputNombrePromocion" class="form-control borderAzul" type="text" required maxlength="500"
+                            [(ngModel)]="promocion.nombre" placeholder="Ej: Promoción Navidad"
+                            (ngModelChange)="funciones_generales_quitarValidacionEstilo('inputNombrePromocion')"/>
+                    </div>
+                </div>
+
+                <!-- Tipo de Promoción -->
+                <div class="row col-lg-8" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> Tipo de Promoción </label>
+                    </div>
+                    <div class="col-lg-7">
+                        <ng-select id="ddlTipoPromocion" style="width: 100%;" [multiple]="false" appendTo="#ddlTipoPromocion" [searchable]="true"
+                            [(ngModel)]="promocion.idPromocionSucursalNuevaTipo" [clearable]="false"
+                            (ngModelChange)="funciones_datosGenerales_cambiarTipoPromocion(); funciones_generales_quitarValidacionEstilo('ddlTipoPromocion');"
+                            [items]="listadoPromocionSucursalNuevaTipos" bindLabel="descripcion" bindValue="idPromocionSucursalNuevaTipo">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <!-- Aplicación por Código -->
+                <div class="row col-lg-8" *ngIf="promocion.idPromocionSucursalNuevaTipo != 3" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> Aplicación por Código </label>
+                    </div>
+                    <div class="col-lg-7" style="display: flex; height: 36px;">
+                        <div class="col-3" style="display: flex; align-items: center;">
+                            <mat-slide-toggle id="switchAplicacionCodigoPromocion"
+                                [(ngModel)]="promocion.aplicacionPorCodigo"
+                                (ngModelChange)="funciones_datosGenerales_limpiarCodigoPromocion()">
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="col-9" *ngIf="promocion.aplicacionPorCodigo">
+                            <input id="inputCodigoPromocion" class="form-control borderAzul" type="text" required maxlength="20"
+                                [(ngModel)]="promocion.codigo" placeholder="Ej: Navidad2019"
+                                (ngModelChange)="funciones_generales_quitarValidacionEstilo('inputCodigoPromocion')"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Uso limitado -->
+                <div class="row col-lg-8" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> Uso limitado </label>
+                    </div>
+                    <div class="col-lg-7" style="display: flex; height: 36px;">
+                        <div class="col-3" style="display: flex; align-items: center;">
+                            <mat-slide-toggle id="switchUsoLimitadoPromocion"
+                                [(ngModel)]="promocion.usoLimitado"
+                                (ngModelChange)="funciones_datosGenerales_limpiarCantidadUsosPromocion()">
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="col-9" *ngIf="promocion.usoLimitado">
+                            <input id="inputCantidadUsosPromocion" class="form-control borderAzul" type="number" min="1" max="100000"
+                                [(ngModel)]="promocion.cantidadUsos" placeholder="Ej: 5"
+                                (ngModelChange)="funciones_datosGenerales_validarCantidadUsosPromocion('change'); funciones_generales_quitarValidacionEstilo('inputCantidadUsosPromocion');"
+                                (blur)="funciones_datosGenerales_validarCantidadUsosPromocion('blur')"
+                                (keypress)="validarEntradaSoloNumeros($event)"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promoción Activa -->
+                <div class="row col-lg-8" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> Promoción Activa </label>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="col-lg-3">
+                            <mat-slide-toggle id="switchActivaPromocion"
+                                [(ngModel)]="promocion.activa"
+                                (ngModelChange)="funciones_datosGenerales_cambiarEstatusPromocion()">
+                            </mat-slide-toggle>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Apartado Cliente Objetivo -->
+        <div id="apartadoClienteObjetivo" class="row page_seccion_campo" style="margin-top:30px">
+            <!-- Titulo del Apartado -->
+            <div id="tituloClienteObjetivo" class="col-lg-12" (click)="funciones_generales_mostrarOcultarCampos(2)" style="cursor: pointer; padding: 0px;">
+                <div class="col-lg-12" style="color:black; font-weight: bold;">
+                    Segmentación de Clientes
+                    <mat-icon class="iconosBookipp" [hidden]="!promocion.clienteObjetivo.verCampos" svgIcon="iconFlecha1DerechaPeque" style="position: relative; top: 8px; left: -5px;"></mat-icon>
+                    <mat-icon class="iconosBookipp" [hidden]="promocion.clienteObjetivo.verCampos" svgIcon="iconFlechaAbajoPeque" style="position: relative; top: 8px; left: -5px;"></mat-icon>
+                </div>
+                <div class="col-lg-12">
+                    <hr style="background-color: #dce6ea; height: 2px;"/>
+                </div>
+            </div>
+
+            <!-- Campos de Cliente Objetivo -->
+            <div id="camposClienteObjetivo" class="col-lg-12 px-4" [hidden]="!promocion.clienteObjetivo.verCampos" style="padding: 0px;">
+                <!-- Todos los Clientes -->
+                <div class="row col-lg-8" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> Todos los Clientes </label>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="col-lg-3">
+                            <mat-slide-toggle id="switchTodosClientes" checked
+                                [(ngModel)]="promocion.clienteObjetivo.todosClientes"
+                                (ngModelChange)="funciones_clientesObjetivo_cambiarEstatusTodosClientesObjetivo()">
+                            </mat-slide-toggle>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clientes Objetivo -->
+                <div id="configuracionNoTodosClientes" *ngIf="!promocion.clienteObjetivo.todosClientes">
+                    <!-- Estado de Actividad del Cliente -->
+                    <div class="row col-lg-8" style="margin-top: 20px;" *ngIf="promocion.idPromocionSucursalNuevaTipo != 3">
+                        <div class="col-lg-5">
+                            <label> Estado de Actividad del Cliente </label>
+                        </div>
+                        <div class="col-lg-7">
+                            <ng-select id="ddlClienteEstadoActividad" style="width: 100%;" [multiple]="false" appendTo="#ddlClienteEstadoActividad" [searchable]="true"
+                                [(ngModel)]="promocion.clienteObjetivo.idClienteEstadoActividad" [clearable]="true"
+                                [items]="listadoClienteEstadoActividades" bindLabel="descripcion" bindValue="idClienteEstadoActividad">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <!-- Sexo del Cliente -->
+                    <div class="row col-lg-8" style="margin-top: 20px;">
+                        <div class="col-lg-5">
+                            <label> Sexo del Cliente </label>
+                        </div>
+                        <div class="col-lg-7">
+                            <ng-select id="ddlClienteSexo" style="width: 100%;" [multiple]="false" appendTo="#ddlClienteSexo" [searchable]="true"
+                                [(ngModel)]="promocion.clienteObjetivo.idClienteSexo" [clearable]="true"
+                                [items]="listadoClienteSexos" bindLabel="descripcion" bindValue="idClienteSexo">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <!-- Edad de los Clientes -->
+                    <div class="row col-lg-8" style="margin-top: 20px;">
+                        <div class="col-lg-5">
+                            <label> Edad de los Clientes </label>
+                        </div>
+                        <div class="col-lg-7">
+                            <ng-select id="ddlClienteEdad" style="width: 100%;" [multiple]="false" appendTo="#ddlClienteEdad" [searchable]="true"
+                                [(ngModel)]="promocion.clienteObjetivo.idClienteEdadRango" [clearable]="true"
+                                [items]="listadoClienteEdadRangos" bindLabel="descripcion" bindValue="idClienteEdadRango">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <!-- Clientes Vip -->
+                    <div class="row col-lg-8" style="margin-top: 20px;">
+                        <div class="col-lg-5">
+                            <label> Clientes Vip </label>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="col-lg-3">
+                                <mat-slide-toggle id="switchClienteVip"
+                                    [(ngModel)]="promocion.clienteObjetivo.esVip">
+                                </mat-slide-toggle>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Apartado Vigencia -->
+        <div id="apartadoVigencia" class="row page_seccion_campo" style="margin-top:30px">
+            <!-- Titulo del Apartado -->
+            <div id="tituloVigencia" class="col-lg-12" (click)="funciones_generales_mostrarOcultarCampos(3)" style="cursor: pointer; padding: 0px;">
+                <div class="col-lg-12" style="color:black; font-weight: bold;">
+                    Vigencia
+                    <mat-icon class="iconosBookipp" [hidden]="!promocion.vigencia.verCampos" svgIcon="iconFlecha1DerechaPeque" style="position: relative; top: 8px; left: -5px;"></mat-icon>
+                    <mat-icon class="iconosBookipp" [hidden]="promocion.vigencia.verCampos" svgIcon="iconFlechaAbajoPeque" style="position: relative; top: 8px; left: -5px;"></mat-icon>
+                </div>
+                <div class="col-lg-12">
+                    <hr style="background-color: #dce6ea; height: 2px;"/>
+                </div>
+            </div>
+
+            <!-- Campos de Vigencia -->
+            <div id="camposVigencia" class="col-lg-12 px-4" [hidden]="!promocion.vigencia.verCampos" style="padding: 0px;">
+                <!-- Tipo de Vigencia -->
+                <div class="row col-lg-8" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> 
+                            Tipo de Vigencia 
+                        </label>
+                        <button style="width: 30px; float: right;"
+                            mat-icon-button
+                            ngbPopover="Al seleccionar cumpleaños esta promoción aplica según la fecha de nacimiento de los clientes"
+                            container="body">
+                            <mat-icon class="iconosBookipp" svgIcon="iconInfoCirculo"></mat-icon>
+                        </button>
+                    </div>
+                    <div class="col-lg-7">
+                        <ng-select id="ddlTipoVigencia" style="width: 100%;" [multiple]="false" appendTo="#ddlTipoVigencia" [searchable]="true"
+                            [(ngModel)]="promocion.vigencia.idPromocionSucursalNuevaVigenciaTipo" [clearable]="false"
+                            [items]="listadoPromocionSucursalNuevaVigenciaTipos" bindLabel="descripcion" bindValue="idPromocionSucursalNuevaVigenciaTipo">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <!-- Fecha de Vigencia -->
+                <div class="row col-lg-8" *ngIf="promocion.vigencia.idPromocionSucursalNuevaVigenciaTipo == 1" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> 
+                            Fecha de Vigencia
+                        </label>
+                        <button style="width: 30px; float: right;"
+                            mat-icon-button
+                            ngbPopover="Días en los que la promoción estará vigente"
+                            container="body">
+                            <mat-icon class="iconosBookipp" svgIcon="iconInfoCirculo"></mat-icon>
+                        </button>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="col-lg-12 pt-2" style="margin-bottom:1%;">
+                            <div class="col-lg-12">
+                                <mat-icon svgIcon="iconCalendarioEditar" class="iconosBookipp" style="position: absolute; margin: 8px 0px 0px 30px;"></mat-icon>
+                                <input type="text"
+                                    ngxDaterangepickerMd
+                                    class="form-control borderAzul"
+                                    style="cursor: pointer; height: 40px; text-align: center;"                        
+                                    [(ngModel)]="promocion.vigencia.fechaVigencia"
+                                    (ngModelChange)="actualizarBandera()"
+                                    [showCustomRangeLabel]="true"
+                                    [alwaysShowCalendars]="false"
+                                    [ranges]="this.ranges"
+                                    [linkedCalendars]="true"
+                                    [showClearButton] = "false"
+                                    [locale] = "this.locale"
+                                    [showDropdowns]="true"
+                                    placeholder="DD/MM/YYYY - DD/MM/YYYY"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rango de Vigencia -->
+                <div class="row col-lg-8" *ngIf="promocion.vigencia.idPromocionSucursalNuevaVigenciaTipo == 2" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> Rango de Vigencia </label>
+                    </div>
+                    <div class="col-lg-7">
+                        <ng-select id="ddlRangoVigenciaCumpleanios" style="width: 100%;" [multiple]="false" appendTo="#ddlRangoVigenciaCumpleanios" [searchable]="true"
+                            [(ngModel)]="promocion.vigencia.idPromocionSucursalNuevaVigenciaTipoCumpleaniosRango" [clearable]="false"
+                            (ngModelChange)="funciones_generales_quitarValidacionEstilo('ddlRangoVigenciaCumpleanios')"
+                            [items]="listadoPromocionSucursalNuevaVigenciaTipoCumpleaniosRangos" bindLabel="descripcion" bindValue="idPromocionSucursalNuevaVigenciaTipoCumpleaniosRango">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <!-- Horario de Vigencia -->
+                <div class="row col-lg-8" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> 
+                            Horario de Vigencia
+                        </label>
+                        <button style="width: 30px; float: right;"
+                            mat-icon-button
+                            ngbPopover="Horas en la que la promoción estará vigente o aplicaría"
+                            container="body">
+                            <mat-icon class="iconosBookipp" svgIcon="iconInfoCirculo"></mat-icon>
+                        </button>
+                    </div>
+                    <div class="col-lg-7" style="display: flex;">
+                        <div class="col-3" style="display: flex; align-items: center;">
+                            <mat-slide-toggle id="switchVigenciaRestriccionHoras" checked
+                                [(ngModel)]="promocion.vigencia.restriccionHorario"
+                                (ngModelChange)="funciones_vigencia_cambiarRestriccionHorasVigencia()">
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="col-9" *ngIf="promocion.vigencia.restriccionHorario" style="display: flex;">
+                            <input id="inputVigenciaHoraInicioRestriccion" class="form-control borderAzul" type="time" style="width: 49%;"
+                                [(ngModel)]="promocion.vigencia.restriccionHorarioInicio"
+                                (ngModelChange)="funciones_vigencia_validarRestriccionHoraInicio('change')"
+                                (blur)="funciones_vigencia_validarRestriccionHoraInicio('blur')"/>
+                            <input id="inputVigenciaHoraFinRestriccion" class="form-control borderAzul" type="time" style="width: 49%; margin-left: 2%;"
+                                [(ngModel)]="promocion.vigencia.restriccionHorarioFin"
+                                (ngModelChange)="funciones_vigencia_validarRestriccionHoraFin('change')"
+                                (blur)="funciones_vigencia_validarRestriccionHoraFin('blur')"/>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Días Vigencia -->
+                <div class="row col-lg-8" style="margin-top: 20px;">
+                    <div class="col-lg-5">
+                        <label> 
+                            Días de la Semana Vigente
+                        </label>
+                        <button style="width: 30px; float: right; margin-top: 2.5px;"
+                            mat-icon-button
+                            ngbPopover="Día(s) de la semana en la que la promoción estará vigente o aplicaría"
+                            container="body">
+                            <mat-icon class="iconosBookipp" svgIcon="iconInfoCirculo"></mat-icon>
+                        </button>
+                    </div>
+                    <div class="col-lg-7" style="display: flex;">
+                        <div class="col-3" style="display: flex; align-items: center;">
+                            <mat-slide-toggle id="switchVigenciaRestriccionDias" checked
+                                [(ngModel)]="promocion.vigencia.restriccionDiasSemana"
+                                (ngModelChange)="funciones_vigencia_cambiarRestriccionDiasSemana()">
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="col-9" *ngIf="promocion.vigencia.restriccionDiasSemana">
+                            <div id="vigenciaDiasRestriccion" class="col-lg-12" style="height: 34px; padding: 0px; display: flex;">
+                                <div id="vigenciaRestriccionDiasSemana" style="margin: 0 auto;">
+                                    <div id="restriccionPromocion-lun" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_vigencia_marcarRestriccionDiasSemana(1)"> {{'agendaTranslate.l'| translate}} </a></div></div>
+		                            <div id="restriccionPromocion-mar" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_vigencia_marcarRestriccionDiasSemana(2)"> {{'agendaTranslate.m'| translate}} </a></div></div>
+		                            <div id="restriccionPromocion-mie" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_vigencia_marcarRestriccionDiasSemana(3)"> {{'agendaTranslate.mi'| translate}}</a></div></div>
+		                            <div id="restriccionPromocion-jue" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_vigencia_marcarRestriccionDiasSemana(4)"> {{'agendaTranslate.j'| translate}} </a></div></div>
+		                            <div id="restriccionPromocion-vie" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_vigencia_marcarRestriccionDiasSemana(5)"> {{'agendaTranslate.v'| translate}} </a></div></div>
+		                            <div id="restriccionPromocion-sab" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_vigencia_marcarRestriccionDiasSemana(6)"> {{'agendaTranslate.s'| translate}} </a></div></div>
+		                            <div id="restriccionPromocion-dom" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_vigencia_marcarRestriccionDiasSemana(7)"> {{'agendaTranslate.d'| translate}} </a></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Apartado Aplicación de la Promoción -->
+        <div id="apartadoAplicacionPromocion" class="row page_seccion_campo" style="margin-top:30px">
+            <!-- Titulo del Apartado -->
+            <div id="tituloAplicacionPromocion" class="col-lg-12" (click)="funciones_generales_mostrarOcultarCampos(4)" style="cursor: pointer; padding: 0px;">
+                <div class="col-lg-12" style="color:black; font-weight: bold;">
+                    Aplicación de la Promoción
+                    <mat-icon class="iconosBookipp" [hidden]="!promocion.aplicacion.verCampos" svgIcon="iconFlecha1DerechaPeque" style="position: relative; top: 8px; left: -5px;"></mat-icon>
+                    <mat-icon class="iconosBookipp" [hidden]="promocion.aplicacion.verCampos" svgIcon="iconFlechaAbajoPeque" style="position: relative; top: 8px; left: -5px;"></mat-icon>
+                </div>
+                <div class="col-lg-12">
+                    <hr style="background-color: #dce6ea; height: 2px;"/>
+                </div>
+            </div>
+
+            <!-- Campos de Aplicación de la Promoción -->
+            <div id="camposAplicacionPromocion" class="col-lg-8 px-4" [hidden]="!promocion.aplicacion.verCampos" style="padding: 0px;">
+                <!-- Contenedor Promoción General -->
+                <div id="aplicacionPromocionGeneral" class="col-lg-12" style="padding: 0; margin-top: 10px;" *ngIf="promocion.idPromocionSucursalNuevaTipo == 1">
+                    <!-- Requisitos -->
+                    <div id="aplicacionPromocionGeneralRequisitos" class="col-lg-12" style="padding: 0;">
+                        <!-- Titulo Requisitos y Todos --> 
+                        <div class="col-lg-12" style="margin-top: 10px; display: flex;">
+                            <div class="col-5" style="color: black; font-weight: bold;">
+                                <label style="font-weight: bold;"> Requisitos: </label>
+                            </div>
+                            <div class="col-7" style="display: flex;">
+                                <div class="col-sm-10" style="padding: 0px; text-align: center;"></div>
+                                <div class="col-sm-2" style="padding: 0px; text-align: center;">
+                                    <b> Todos </b>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Servicios -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Servicios </label>
+                            </div>
+                            <div class="col-lg-7" style="display: flex;">
+                                <div class="col-10" style="padding: 0;">
+                                    <ng-select id="ddlAplicacionPromocionGeneralRequisitosServicios" style="width: 100%;" [multiple]="true" appendTo="#ddlAplicacionPromocionGeneralRequisitosServicios" [searchable]="false"
+                                        [(ngModel)]="promocion.aplicacion.promocionGeneral.requisitos.servicios.servicios" [clearable]="true"
+                                        (ngModelChange)="funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionGeneralRequisitosServicios'); funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionGeneralRequisitosProductos')"
+                                        [disabled]="promocion.aplicacion.promocionGeneral.requisitos.servicios.todosServicios"
+                                        [items]="listadoServicios" bindLabel="nombre" bindValue="idServicio">
+                                    </ng-select>
+                                </div>
+                                <div class="col-2" style="padding: 0; display: flex; height: 34px; margin-left: 20px;">
+                                    <input id="inputAplicacionPromocionGeneralRequisitosTodosServicios" type="checkbox" 
+                                        [(ngModel)]="promocion.aplicacion.promocionGeneral.requisitos.servicios.todosServicios"
+                                        cd-true-value="1" cd-false-value="0" 
+                                        (ngModelChange)="funciones_aplicacionPromocion_promocionGeneral_limpiarRequisitosServicios()"
+                                        style="margin: auto auto;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Productos -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Productos </label>
+                            </div>
+                            <div class="col-lg-7" style="display: flex;">
+                                <div class="col-10" style="padding: 0;">
+                                    <ng-select id="ddlAplicacionPromocionGeneralRequisitosProductos" style="width: 100%;" [multiple]="true" appendTo="#ddlAplicacionPromocionGeneralRequisitosProductos" [searchable]="false"
+                                        [(ngModel)]="promocion.aplicacion.promocionGeneral.requisitos.productos.productos" [clearable]="true"
+                                        (ngModelChange)="funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionGeneralRequisitosProductos'); funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionGeneralRequisitosServicios');"
+                                        [disabled]="promocion.aplicacion.promocionGeneral.requisitos.productos.todosProductos"
+                                        [items]="listadoProductos" bindLabel="nombre" bindValue="idInventarioPresentacion">
+                                    </ng-select>
+                                </div>
+                                <div class="col-2" style="padding: 0; display: flex; height: 34px; margin-left: 20px;">
+                                    <input id="inputAplicacionPromocionGeneralRequisitosTodosProductos" type="checkbox" 
+                                        [(ngModel)]="promocion.aplicacion.promocionGeneral.requisitos.productos.todosProductos"
+                                        cd-true-value="1" cd-false-value="0" 
+                                        (ngModelChange)="funciones_aplicacionPromocion_promocionGeneral_limpiarRequisitosProductos()"
+                                        style="margin: auto auto;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Valor -->
+                    <div id="aplicacionPromocionGeneralValor" class="col-lg-12" style="padding: 0; margin-top: 10px;">
+                        <!-- Titulo Valor --> 
+                        <div class="col-lg-12" style="margin-top: 10px;">
+                            <div class="col-lg-5" style="color: black; font-weight: bold;">
+                                <label style="font-weight: bold;"> Descuento: </label>
+                            </div>
+                        </div>
+
+                        <!-- Servicios -->
+                        <div class="row col-lg-12" style="margin-top: 10px; display: flex;">
+                            <div class="col-3" style="height: 34px; display: flex;">
+                                <div style="margin: auto auto; text-align: center; ">
+                                    <label> Servicios con </label>
+                                </div> 
+                            </div>
+                            <div class="col-sm-9" style="display: flex;">
+                                <div class="col-6" style="display: flex; padding: 0px;">
+                                    <ng-select id="ddlAplicacionPromocionGeneralValorServiciosTipoDescuento" style="width: 100%;" [multiple]="false" appendTo="#ddlAplicacionPromocionGeneralValorServiciosTipoDescuento" [searchable]="true"
+                                        [(ngModel)]="promocion.aplicacion.promocionGeneral.valor.servicios.tipoDescuento" [clearable]="false"
+                                        (ngModelChange)="funciones_aplicacionPromocion_promocionGeneral_cambiarValorServiciosTipoDescuento(); funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionGeneralValorServiciosTipoDescuento')"
+                                        [disabled]="promocion.aplicacion.promocionGeneral.requisitos.servicios.servicios.length == 0 && !promocion.aplicacion.promocionGeneral.requisitos.servicios.todosServicios"
+                                        [items]="listadoPromocionSucursalNuevaAplicacionValorTipo" bindLabel="descripcion" bindValue="idPromocionSucursalNuevaAplicacionValorTipo">
+                                    </ng-select>
+                                </div>
+                                <div class="col-6" style="display: flex; padding: 0px;">
+                                    <div style="width: 20px; display: flex;"> 
+                                        <div style="margin: auto auto;" [hidden]="promocion.aplicacion.promocionGeneral.valor.servicios.tipoDescuento != 1">
+                                            $
+                                        </div> 
+                                    </div>
+                                    <input id="ddlAplicacionPromocionGeneralValorServiciosDescuento" class="form-control borderAzul" type="text" maxlength="500"
+                                        [(ngModel)]="promocion.aplicacion.promocionGeneral.valor.servicios.descuento"
+                                        (ngModelChange)="funciones_aplicacionPromocion_promocionGeneral_validarValorServiciosDescuento('change'); funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionGeneralValorServiciosDescuento');"
+                                        (blur)="funciones_aplicacionPromocion_promocionGeneral_validarValorServiciosDescuento('blur')"
+                                        [disabled]="promocion.aplicacion.promocionGeneral.requisitos.servicios.servicios.length == 0 && !promocion.aplicacion.promocionGeneral.requisitos.servicios.todosServicios"
+                                        (keypress)="validarEntradaNumeroFlotante($event)" />
+                                    <div style="width: 20px; display: flex;"> 
+                                        <div style="margin: auto auto;" [hidden]="promocion.aplicacion.promocionGeneral.valor.servicios.tipoDescuento != 2">
+                                            %
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Productos -->
+                        <div class="row col-lg-12" style="margin-top: 10px; display: flex;">
+                            <div class="col-3" style="height: 34px; display: flex;">
+                                <div style="margin: auto auto; text-align: center; ">
+                                    <label> Productos con </label>
+                                </div> 
+                            </div>
+                            <div class="col-sm-9" style="display: flex;">
+                                <div class="col-6" style="display: flex; padding: 0px;">
+                                    <ng-select id="ddlAplicacionPromocionGeneralValorProductosTipoDescuento" style="width: 100%;" [multiple]="false" appendTo="#ddlAplicacionPromocionGeneralValorProductosTipoDescuento" [searchable]="true"
+                                        [(ngModel)]="promocion.aplicacion.promocionGeneral.valor.productos.tipoDescuento" [clearable]="false"
+                                        (ngModelChange)="funciones_aplicacionPromocion_promocionGeneral_cambiarValorProductosTipoDescuento(); funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionGeneralValorProductosTipoDescuento');"
+                                        [disabled]="promocion.aplicacion.promocionGeneral.requisitos.productos.productos.length == 0 && !promocion.aplicacion.promocionGeneral.requisitos.productos.todosProductos"
+                                        [items]="listadoPromocionSucursalNuevaAplicacionValorTipo" bindLabel="descripcion" bindValue="idPromocionSucursalNuevaAplicacionValorTipo">
+                                    </ng-select>
+                                </div>
+                                <div class="col-6" style="display: flex; padding: 0px;">
+                                    <div style="width: 20px; display: flex;"> 
+                                        <div style="margin: auto auto;" [hidden]="promocion.aplicacion.promocionGeneral.valor.productos.tipoDescuento != 1">
+                                            $
+                                        </div> 
+                                    </div>
+                                    <input id="ddlAplicacionPromocionGeneralValorProductosDescuento" class="form-control borderAzul" type="text" maxlength="500"
+                                        [(ngModel)]="promocion.aplicacion.promocionGeneral.valor.productos.descuento"
+                                        (ngModelChange)="funciones_aplicacionPromocion_promocionGeneral_validarValorProductosDescuento('change'); funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionGeneralValorProductosDescuento');"
+                                        (blur)="funciones_aplicacionPromocion_promocionGeneral_validarValorProductosDescuento('blur')"
+                                        [disabled]="promocion.aplicacion.promocionGeneral.requisitos.productos.productos.length == 0 && !promocion.aplicacion.promocionGeneral.requisitos.productos.todosProductos"
+                                        (keypress)="validarEntradaNumeroFlotante($event)" />
+                                    <div style="width: 20px; display: flex;"> 
+                                        <div style="margin: auto auto;" [hidden]="promocion.aplicacion.promocionGeneral.valor.productos.tipoDescuento != 2">
+                                            %
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor Promoción Combos -->
+                <div id="aplicacionPromocionCombos" class="col-lg-12" style="padding: 0; margin-top: 10px;" *ngIf="promocion.idPromocionSucursalNuevaTipo == 2">
+                    <!-- Requisitos -->
+                    <div id="aplicacionPromocionRequisitos" class="col-lg-12" style="padding: 0;">
+                        <!-- Titulo Requisitos --> 
+                        <div class="col-lg-12" style="margin-top: 10px;">
+                            <div class="col-lg-5" style="color: black; font-weight: bold;">
+                                <label style="font-weight: bold;"> Requisitos: </label>
+                            </div>
+                        </div>
+
+                        <!-- Titulo Servicios -->
+                        <div class="col-lg-12" style="margin-top: 10px;">
+                            <div class="col-lg-5" style="color:#20c4e6; font-weight: bold; text-align: center;">
+                                <label style="font-weight: bold; "> Servicios </label>
+                            </div>
+                        </div>
+
+                        <!-- Servicios -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Servicios </label>
+                            </div>
+                            <div class="col-lg-7">
+                                <ng-select id="ddlAplicacionPromocionCombosRequisitosServicios" style="width: 100%;" [multiple]="true" appendTo="#ddlAplicacionPromocionCombosRequisitosServicios" [searchable]="false"
+                                    [(ngModel)]="promocion.aplicacion.combos.requisitos.servicios.servicios" [clearable]="true"
+                                    (ngModelChange)="funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionCombosRequisitosServicios'); 
+                                                     funciones_generales_quitarValidacionEstilo('inputAplicacionPromocionCombosRequisitosServiciosCantidades'); 
+                                                     funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionCombosRequisitosProductos');
+                                                     funciones_generales_quitarValidacionEstilo('inputAplicacionPromocionCombosRequisitosProductosCantidades');"
+                                    [items]="listadoServicios" bindLabel="nombre" bindValue="idServicio">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <!-- Cantidad de los Servicios -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Cantidad </label>
+                            </div>
+                            <div class="col-lg-7">
+                                <div id="inputAplicacionPromocionCombosRequisitosServiciosCantidades" class="form-control borderAzul">
+                                    <mat-chip-list #chipListServicios aria-label="serviciosCanti selection">
+                                        <mat-chip *ngFor="let item of promocion.aplicacion.combos.requisitos.servicios.cantidades;" (removed)="remove(item, 'serviciosCantidades')">
+                                            {{item.text == undefined ? item : item.text}}
+                                            <button matChipRemove>
+                                                <mat-icon fontSet="fa" fontIcon="fa-circle-xmark" matListIcon class="iconMenu"></mat-icon>
+                                            </button>
+                                        </mat-chip>
+                                        <input class="colorBordeChipList"
+                                            (keypress)="validarEntradaSoloNumeros($event)"
+                                            [matChipInputFor]="chipListServicios"
+                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                            [matChipInputAddOnBlur]="true"
+                                            (matChipInputTokenEnd)="add($event, 'serviciosCantidades')">
+                                    </mat-chip-list>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Titulo Productos -->
+                        <div class="col-lg-12" style="margin-top: 10px;">
+                            <div class="col-lg-5" style="color:#20c4e6; font-weight: bold; text-align: center;">
+                                <label style="font-weight: bold; "> Productos </label>
+                            </div>
+                        </div>
+
+                        <!-- Productos -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Productos </label>
+                            </div>
+                            <div class="col-lg-7">
+                                <ng-select id="ddlAplicacionPromocionCombosRequisitosProductos" style="width: 100%;" [multiple]="true" appendTo="#ddlAplicacionPromocionCombosRequisitosProductos" [searchable]="false"
+                                    [(ngModel)]="promocion.aplicacion.combos.requisitos.productos.productos" [clearable]="true"
+                                    (ngModelChange)="funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionCombosRequisitosProductos'); 
+                                                     funciones_generales_quitarValidacionEstilo('inputAplicacionPromocionCombosRequisitosProductosCantidades'); 
+                                                     funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionCombosRequisitosServicios');
+                                                     funciones_generales_quitarValidacionEstilo('inputAplicacionPromocionCombosRequisitosServiciosCantidades');"
+                                    [items]="listadoProductos" bindLabel="nombre" bindValue="idInventarioPresentacion">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <!-- Cantidad de los Productos -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Cantidad </label>
+                            </div>
+                            <div class="col-lg-7">
+                                <div id="inputAplicacionPromocionCombosRequisitosProductosCantidades" class="form-control borderAzul">
+                                    <mat-chip-list #chipListProductos aria-label="productosCanti selection">
+                                        <mat-chip *ngFor="let item of promocion.aplicacion.combos.requisitos.productos.cantidades" (removed)="remove(item, 'productosCantidades')">
+                                            {{item.text == undefined ? item : item.text}}
+                                            <button matChipRemove>
+                                                <mat-icon fontSet="fa" fontIcon="fa-circle-xmark" matListIcon class="iconMenu"></mat-icon>
+                                            </button>
+                                        </mat-chip>
+                                        <input class="colorBordeChipList"
+                                            (keypress)="validarEntradaSoloNumeros($event)"
+                                            [matChipInputFor]="chipListProductos"
+                                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                            [matChipInputAddOnBlur]="true"
+                                            (matChipInputTokenEnd)="add($event, 'productosCantidades')">
+                                    </mat-chip-list>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Valor -->
+                    <div id="aplicacionPromocionValor" class="col-lg-12" style="padding: 0; margin-top: 10px;">
+                        <!-- Titulo Valor --> 
+                        <div class="col-lg-12" style="margin-top: 10px;">
+                            <div class="col-lg-5" style="color: black; font-weight: bold;">
+                                <label style="font-weight: bold;"> Valor: </label>
+                            </div>
+                        </div>
+
+                        <!-- Valor Combo -->
+                        <div class="row col-lg-12" style="margin-top: 10px; display: flex;">
+                            <div class="col-lg-5" style="height: 34px; display: flex;">
+                                <label> Valor Combo </label>
+                            </div>
+                            <div class="col-lg-7" style="display: flex;">
+                                <div class="col-1" style="height: 34px; width: 20px; padding: 0; display: flex;">
+                                    <div style="margin: auto auto;"> $ </div>
+                                </div>
+                                <div class="col-6" style="height: 34px; padding: 0; display: flex;">
+                                    <input id="inputAplicacionPromocionCombosValorValorCombo" class="form-control borderAzul" type="text" maxlength="20"
+                                        [(ngModel)]="promocion.aplicacion.combos.valor.valorCombo"
+                                        (ngModelChange)="funciones_aplicacionPromocion_promocionCombos_validarValorCombo('change'); funciones_generales_quitarValidacionEstilo('inputAplicacionPromocionCombosValorValorCombo')"
+                                        (blur)="funciones_aplicacionPromocion_promocionCombos_validarValorCombo('blur')"
+                                        (keypress)="validarEntradaNumeroFlotante($event)" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor Promoción Visita/Consumo -->
+                <div id="aplicacionPromocionVisitaConsumo" class="col-lg-12" style="padding: 0; margin-top: 10px;" *ngIf="promocion.idPromocionSucursalNuevaTipo == 3">
+                    <!-- Requisitos -->
+                    <div id="aplicacionPromocionVisitaConsumoRequisitos" class="col-lg-12" style="padding: 0;">
+                        <!-- Titulo Requisitos --> 
+                        <div class="col-lg-12" style="margin-top: 10px;">
+                            <div class="col-lg-5" style="color: black; font-weight: bold;">
+                                <label style="font-weight: bold;"> Requisitos: </label>
+                            </div>
+                        </div>
+
+                        <!-- Aplicación de Requisito -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Aplicación de Requisito </label>
+                            </div>
+                            <div class="col-lg-7">
+                                <ng-select id="ddlAplicacionPromocionVisitaConsumoRequisitosTipoAplicación" style="width: 100%;" [multiple]="false" appendTo="#ddlAplicacionPromocionVisitaConsumoRequisitosTipoAplicación" [searchable]="false"
+                                    [(ngModel)]="promocion.aplicacion.numeroVisitaConsumo.requisitos.tipo" [clearable]="false"
+                                    (ngModelChange)="funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionVisitaConsumoRequisitosTipoAplicación')"
+                                    [items]="listadoPromocionSucursalNuevaAplicacionTipo" bindLabel="descripcion" bindValue="idPromocionSucursalNuevaAplicacionTipo">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <!-- Numero de visita o consumo -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label *ngIf="promocion.aplicacion.numeroVisitaConsumo.requisitos.tipo == 1"> Número de Visitas </label>
+                                <label *ngIf="promocion.aplicacion.numeroVisitaConsumo.requisitos.tipo == 2"> Número de servicios realizados y productos comprados </label>
+                            </div>
+                            <div class="col-lg-4">
+                                <input id="inputAplicacionPromocionVisitaConsumoRequisitosCantidadVisitaConsumo" class="form-control borderAzul" type="number"  min="1" max="1000"
+                                    [(ngModel)]="promocion.aplicacion.numeroVisitaConsumo.requisitos.numeroVisitaConsumo"
+                                    (ngModelChange)="funciones_aplicacionPromocion_promocionVisitaConsumo_validarRequisitosCantidadVisitaConsumo('change'); funciones_generales_quitarValidacionEstilo('inputAplicacionPromocionVisitaConsumoRequisitosCantidadVisitaConsumo');"
+                                    (blur)="funciones_aplicacionPromocion_promocionVisitaConsumo_validarRequisitosCantidadVisitaConsumo('blur'); funciones_generales_quitarValidacionEstilo('inputAplicacionPromocionVisitaConsumoRequisitosCantidadVisitaConsumo');"
+                                    (keypress)="validarEntradaNumeroFlotante($event)"/>
+                            </div>
+                        </div>
+
+                        <!-- Servicios -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Servicios </label>
+                            </div>
+                            <div class="col-lg-7">
+                                <ng-select id="ddlAplicacionPromocionVisitaConsumoRequisitosServicios" style="width: 100%;" [multiple]="true" appendTo="#ddlAplicacionPromocionVisitaConsumoRequisitosServicios" [searchable]="false"
+                                    [(ngModel)]="promocion.aplicacion.numeroVisitaConsumo.requisitos.servicios" [clearable]="true"
+                                    (ngModelChange)="funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionVisitaConsumoRequisitosServicios'); funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionVisitaConsumoRequisitosProductos');"
+                                    [disabled]="promocion.aplicacion.promocionGeneral.requisitos.servicios.todosServicios"
+                                    [items]="listadoServicios" bindLabel="nombre" bindValue="idServicio">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <!-- Productos -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Productos </label>
+                            </div>
+                            <div class="col-lg-7">
+                                <ng-select id="ddlAplicacionPromocionVisitaConsumoRequisitosProductos" style="width: 100%;" [multiple]="true" appendTo="#ddlAplicacionPromocionVisitaConsumoRequisitosProductos" [searchable]="false"
+                                    [(ngModel)]="promocion.aplicacion.numeroVisitaConsumo.requisitos.productos" [clearable]="true"
+                                    (ngModelChange)="funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionVisitaConsumoRequisitosProductos'); funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionVisitaConsumoRequisitosServicios');"
+                                    [items]="listadoProductos" bindLabel="nombre" bindValue="idInventarioPresentacion">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Valor -->
+                    <div id="aplicacionPromocionVisitaConsumoValor" class="col-lg-12" style="padding: 0; margin-top: 25px;">
+                        <!-- Titulo Valor --> 
+                        <div class="col-lg-12" style="margin-top: 10px;">
+                            <div class="col-lg-5" style="color: black; font-weight: bold;">
+                                <label style="font-weight: bold;"> Valor: </label>
+                            </div>
+                        </div>
+
+                        <!-- Servicios Promoción Visita Consumo -->
+                        <div id="aplicacionPromocionVisitaConsumoValorServicios" class="col-lg-12" style="margin-top: 10px; padding: 0;">
+                            <!-- Titulo Servicios -->
+                            <div class="col-lg-12" style="margin-top: 10px;">
+                                <div class="col-lg-12" style="color:black; font-weight: bold;">
+                                    <label style="font-weight: bold; "> Servicios </label>
+                                    <mat-icon class="iconosBookipp" (click)="funciones_aplicacionPromocion_promocionVisitaConsumo_agregarValorServicios()" svgIcon="iconAgregar" style="cursor: pointer; width: 22px; position: relative; top: 6px; left: 2px;"></mat-icon>
+                                </div>
+                            </div>
+
+                            <!-- Servicios --> 
+                            <div class="col-lg-12" *ngFor="let s of promocion.aplicacion.numeroVisitaConsumo.valor.servicios; index as i" style="margin-top: 10px; display: flex;">
+                                <div class="col-sm-6">
+                                    <ng-select id="ddlAplicacionPromocionVisitaConsumoValorServicio{{i}}" style="width: 100%;" [multiple]="false" appendTo="#ddlAplicacionPromocionVisitaConsumoValorServicio{{i}}" [searchable]="false"
+                                        [(ngModel)]="s.servicio" [clearable]="false"
+                                        (ngModelChange)="funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionVisitaConsumoValorServicio' + i)"
+                                        [items]="listadoServicios" bindLabel="nombre" bindValue="idServicio">
+                                    </ng-select>
+                                </div>
+                                <div class="col-sm-1" style="height: 34px; display: flex;">
+                                    <label style="margin: auto auto;">
+                                        Al
+                                    </label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input id="inputAplicacionPromocionVisitaConsumoValorServicioDescuento{{i}}" class="form-control borderAzul" type="text" maxlength="500"
+                                        [(ngModel)]="s.descuento"
+                                        (ngModelChange)="funciones_aplicacionPromocion_promocionVisitaConsumo_validarValorServicioDescuento(s, 'change'); funciones_generales_quitarValidacionEstilo('inputAplicacionPromocionVisitaConsumoValorServicioDescuento' + i);"
+                                        (blur)="funciones_aplicacionPromocion_promocionVisitaConsumo_validarValorServicioDescuento(s, 'blur')"
+                                        (keypress)="validarEntradaNumeroFlotante($event)" />
+                                </div>
+                                <div class="col-sm-1" style="height: 34px; display: flex; padding: 0;">
+                                    <label style="margin: auto auto;">
+                                        %
+                                    </label>
+                                    <div style="margin: auto auto;">
+                                        <mat-icon class="iconosBookipp" (click)="funciones_aplicacionPromocion_promocionVisitaConsumo_removerValorServicios(i)" svgIcon="iconCruzCuadrado" style="cursor: pointer; width: 22px; position: relative; top: 4px;"></mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Productos Promoción Visita Consumo -->
+                        <div id="aplicacionPromocionVisitaConsumoValorProductos" class="col-lg-12" style="margin-top: 10px; padding: 0;">
+                            <!-- Titulo Productos -->
+                            <div class="col-lg-12" style="margin-top: 10px;">
+                                <div class="col-lg-12" style="color:black; font-weight: bold;">
+                                    <label style="font-weight: bold; "> Productos </label>
+                                    <mat-icon class="iconosBookipp" (click)="funciones_aplicacionPromocion_promocionVisitaConsumo_agregarValorProductos()" svgIcon="iconAgregar" style="cursor: pointer; width: 22px; position: relative; top: 6px; left: 2px;"></mat-icon>
+                                </div>
+                            </div>
+
+                            <!-- Productos --> 
+                            <div class="col-lg-12" *ngFor="let p of promocion.aplicacion.numeroVisitaConsumo.valor.productos; index as i;" style="margin-top: 10px; display: flex;">
+                                <div class="col-sm-6">
+                                    <ng-select id="ddlAplicacionPromocionVisitaConsumoValorProducto{{i}}" style="width: 100%;" [multiple]="false" appendTo="#ddlAplicacionPromocionVisitaConsumoValorProducto{{i}}" [searchable]="false"
+                                        [(ngModel)]="p.producto" [clearable]="false"
+                                        (ngModelChange)="funciones_generales_quitarValidacionEstilo('ddlAplicacionPromocionVisitaConsumoValorProducto' + i)"
+                                        [items]="listadoProductos" bindLabel="nombre" bindValue="idInventarioPresentacion">
+                                    </ng-select>
+                                </div>
+                                <div class="col-sm-1" style="height: 34px; display: flex;">
+                                    <label style="margin: auto auto;">
+                                        Al
+                                    </label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input id="inputAplicacionPromocionVisitaConsumoValorProductoDescuento{{i}}" class="form-control borderAzul" type="text" maxlength="500"
+                                        [(ngModel)]="p.descuento"
+                                        (ngModelChange)="funciones_aplicacionPromocion_promocionVisitaConsumo_validarValorProductoDescuento(p, 'change'); funciones_generales_quitarValidacionEstilo('inputAplicacionPromocionVisitaConsumoValorProductoDescuento' + i);"
+                                        (blur)="funciones_aplicacionPromocion_promocionVisitaConsumo_validarValorProductoDescuento(p, 'blur')"
+                                        (keypress)="validarEntradaNumeroFlotante($event)" />
+                                </div>
+                                <div class="col-sm-1" style="height: 34px; display: flex; padding: 0;">
+                                    <label style="margin: auto auto;">
+                                        %
+                                    </label>
+                                    <div style="margin: auto auto;">
+                                        <mat-icon class="iconosBookipp" (click)="funciones_aplicacionPromocion_promocionVisitaConsumo_removerValorProductos({i})" svgIcon="iconCruzCuadrado" style="cursor: pointer; width: 22px; position: relative; top: 4px;"></mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Envío de Promoción (Difusión) -->
+        <div id="apartadoEnvio" class="row page_seccion_campo" *ngIf="(promocion.activa) || (promocion.esBorrador && promocion.difusion.difusionPromocion)" style="margin-top:15px">
+            <!-- Titulo del Apartado -->
+            <div id="tituloEnvio" class="col-lg-12" (click)="funciones_generales_mostrarOcultarCampos(5)" style="cursor: pointer; padding: 0px;">
+                <div class="col-lg-12" style="color:black; font-weight: bold;">
+                    Envío de Promoción
+                    <mat-icon class="iconosBookipp" [hidden]="!promocion.difusion.verCampos" svgIcon="iconFlecha1DerechaPeque" style="position: relative; top: 8px; left: -5px;"></mat-icon>
+                    <mat-icon class="iconosBookipp" [hidden]="promocion.difusion.verCampos" svgIcon="iconFlechaAbajoPeque" style="position: relative; top: 8px; left: -5px;"></mat-icon>
+                </div>
+                <div class="col-lg-12">
+                    <hr style="background-color: #dce6ea; height: 2px;"/>
+                </div>
+            </div>
+
+            <!-- Campos de Envío de Promoción (Difusión) -->
+            <div id="camposEnvio" class="col-lg-12 px-4" [hidden]="!promocion.difusion.verCampos" style="padding: 0px;">
+                <!-- Envío de Promoción -->
+                <div class="row col-lg-8" style="margin-top: 20px; display: flex;">
+                    <div class="col-lg-5">
+                        <label> Envío de Promoción </label>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="col-lg-3">
+                            <mat-slide-toggle id="switchDifusionPromocion"
+                                [(ngModel)]="promocion.difusion.difusionPromocion"
+                                (ngModelChange)="funciones_difusion_cambiarEstatusDifusion()">
+                            </mat-slide-toggle>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configuración Difusión -->
+                <div id="configuracionDifusion" class="cambiarDisplayConfiguracionDifusion" *ngIf="promocion.difusion.difusionPromocion">
+                    <!-- Configuración Campos de Difusión -->
+                    <div id="configuracionDifusionCampos" class="col-lg-8" style="padding: 0px;">
+                        <!-- Tipo de Envío -->
+                        <div class="row col-lg-12" style="margin-top: 20px; display: flex;">
+                            <div class="col-lg-5">
+                                <label> Tipo de Envío </label>
+                            </div>
+                            <div class="col-lg-7">
+                                <ng-select id="ddlTipoDifusion" style="width: 100%;" [multiple]="false" appendTo="#ddlTipoDifusion" [searchable]="true"
+                                    [(ngModel)]="promocion.difusion.idPromocionSucursalNuevaDifusionTipo" [clearable]="false"
+                                    (ngModelChange)="funciones_difusion_cambiarTipoDifusion(); funciones_generales_quitarValidacionEstilo('ddlTipoDifusion');"
+                                    [items]="listadoPromocionSucursalNuevaDifusionTipos" bindLabel="descripcion" bindValue="idPromocionSucursalNuevaDifusionTipo">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <!-- Configuración de Difusión Posterior (Programación de Envío) -->
+                        <div id="configuracionDifusionPosterior" *ngIf="((promocion.difusion.idPromocionSucursalNuevaDifusionTipo == 2) || (promocion.difusion.idPromocionSucursalNuevaDifusionTipo == 3)) && promocion.vigencia.idPromocionSucursalNuevaVigenciaTipo == 1">
+                            <!-- Fecha Inicio Difusión(Envío) -->
+                            <div class="row col-lg-12" style="margin-top: 20px;">
+                                <div class="col-lg-5">
+                                    <label> Inicio de Envío </label>
+                                </div>
+                                <div class="col-lg-7">
+                                    <input id="txtinputFechaInicioDifusionFechaInicio" class="form-control borderAzul" style="height: 40px;"
+                                        type="date" min="{{hoy}}" max="01-01-2099"
+                                        placeholder="{{'clienteTranslate.formatoFecha' | translate}}"
+                                        [(ngModel)]="promocion.difusion.fechaInicio"
+                                        (ngModelChange)="funciones_generales_quitarValidacionEstilo('inputFechaInicioDifusion');"
+                                        (blur)="funciones_difusion_validarFechaInicio()"/>
+                                </div>
+                            </div>
+
+                            <!-- Período de Difusión Posterior -->
+                            <div class="row col-lg-12" style="margin-top: 20px;">
+                                <div class="col-lg-5">
+                                    <label> Programación de Envío </label>
+                                </div>
+                                <div class="col-lg-7">
+                                    <ng-select id="ddlPeriodoDifusionPosterior" style="width: 100%;" [multiple]="false" appendTo="#ddlPeriodoDifusionPosterior" [searchable]="true"
+                                        [(ngModel)]="promocion.difusion.idPromocionSucursalNuevaDifusionTipoPosteriorPeriodo" [clearable]="false"
+                                        (ngModelChange)="funciones_difusion_cambiarPeriodoDifusionPosterior(); funciones_generales_quitarValidacionEstilo('ddlPeriodoDifusionPosterior');"
+                                        [items]="listadoPromocionSucursalNuevaDifusionTipoPosteriorPeriodos" bindLabel="descripcion" bindValue="idPromocionSucursalNuevaDifusionTipoPosteriorPeriodo">
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <!-- Configuración de Difusión Posterior -->
+                            <div id="configuracionPeriodoDifusionPosterior" *ngIf="promocion.difusion.idPromocionSucursalNuevaDifusionTipoPosteriorPeriodo">
+                                <!-- Periodo diario (Restriccion días mes) -->
+                                <div class="row col-lg-12" style="margin-top: 20px;" *ngIf="promocion.difusion.idPromocionSucursalNuevaDifusionTipoPosteriorPeriodo == 2">
+                                    <div class="col-lg-5"></div>
+                                    <div class="col-lg-7" style="min-width: 320px !important;">
+                                        <div class="col-lg-12" style="padding: 0px; display: flex;">
+                                            <div id="difusionRestriccionDiasMesCalendario" style="margin: auto auto;">
+
+                                                <div id="difusionRestriccionDiaMesSemana1" class="col-lg-12" style="height: 34px; display: flex;">
+                                                    <div style="margin: auto auto;">
+                                                        <div id="restriccionDifusionDiaMesDifusion1" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(1)">1</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion2" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(2)">2</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion3" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(3)">3</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion4" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(4)">4</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion5" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(5)">5</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion6" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(6)">6</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion7" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(7)">7</a></div></div>
+                                                    </div>
+                                                </div>
+    
+                                                <div id="difusionRestriccionDiaMesSemana2" class="col-lg-12" style="height: 34px; display: flex;">
+                                                    <div style="margin: auto auto;">
+                                                        <div id="restriccionDifusionDiaMesDifusion8" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(8)">8</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion9" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(9)">9</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion10" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(10)">10</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion11" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(11)">11</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion12" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(12)">12</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion13" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(13)">13</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion14" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(14)">14</a></div></div>
+                                                    </div>
+                                                </div>
+    
+                                                <div id="difusionRestriccionDiaMesSemana3" class="col-lg-12" style="height: 34px; display: flex;">
+                                                    <div style="margin: auto auto;">
+                                                        <div id="restriccionDifusionDiaMesDifusion15" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(15)">15</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion16" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(16)">16</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion17" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(17)">17</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion18" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(18)">18</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion19" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(19)">19</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion20" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(20)">20</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion21" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(21)">21</a></div></div>
+                                                    </div>
+                                                </div>
+    
+                                                <div id="difusionRestriccionDiaMesSemana4" class="col-lg-12" style="height: 34px; display: flex;">
+                                                    <div style="margin: auto auto;">
+                                                        <div id="restriccionDifusionDiaMesDifusion22" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(22)">22</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion23" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(23)">23</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion24" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(24)">24</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion25" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(25)">25</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion26" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(26)">26</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion27" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(27)">27</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion28" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(28)">28</a></div></div>
+                                                    </div>
+                                                </div>
+    
+                                                <div id="difusionRestriccionDiaMesSemana5"  class="col-lg-12" style="height: 34px; display: flex;">
+                                                    <div style="margin: auto auto;">
+                                                        <div id="restriccionDifusionDiaMesDifusion29" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(29)">29</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion30" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(30)">30</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion31" class="buttonDiasMes"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" (click)="funciones_difusion_marcarRestriccionDiaMes(31)">31</a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion32" class="buttonDiasMes" style="cursor: default;"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" style="cursor: default;"></a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion33" class="buttonDiasMes" style="cursor: default;"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" style="cursor: default;"></a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion34" class="buttonDiasMes" style="cursor: default;"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" style="cursor: default;"></a></div></div>
+                                                        <div id="restriccionDifusionDiaMesDifusion35" class="buttonDiasMes" style="cursor: default;"><div class="buttonDiasMesCuadrado"><a class="buttonDiasMes" style="cursor: default;"></a></div></div>
+                                                    </div>
+                                                </div>
+    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Periodo semanal (Restriccion días semana) -->
+                                <div class="row col-lg-12" style="margin-top: 20px;" *ngIf="promocion.difusion.idPromocionSucursalNuevaDifusionTipoPosteriorPeriodo == 3">
+                                    <div class="col-lg-5"></div>
+                                    <div class="col-lg-7" style="min-width: 320px !important;">
+                                        <div id="difusionRestriccionDiaSemana" class="col-lg-12" style="height: 34px; padding: 0px; display: flex;">
+                                            <div id="difusionRestriccionDiasDeSemana" style="margin: 0 auto;">
+                                                <div id="restriccionDifusionDiaSemanaLunes" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_difusion_marcarRestriccionDiaSemana(1)">{{'agendaTranslate.l'| translate}}</a></div></div>
+                                                <div id="restriccionDifusionDiaSemanaMartes" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_difusion_marcarRestriccionDiaSemana(2)">{{'agendaTranslate.m'| translate}}</a></div></div>
+                                                <div id="restriccionDifusionDiaSemanaMiercoles" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_difusion_marcarRestriccionDiaSemana(3)">{{'agendaTranslate.mi'| translate}}</a></div></div>
+                                                <div id="restriccionDifusionDiaSemanaJueves" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_difusion_marcarRestriccionDiaSemana(4)">{{'agendaTranslate.j'| translate}}</a></div></div>
+                                                <div id="restriccionDifusionDiaSemanaViernes" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_difusion_marcarRestriccionDiaSemana(5)">{{'agendaTranslate.v'| translate}}</a></div></div>
+                                                <div id="restriccionDifusionDiaSemanaSabado" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_difusion_marcarRestriccionDiaSemana(6)">{{'agendaTranslate.s'| translate}}</a></div></div>
+                                                <div id="restriccionDifusionDiaSemanaDomingo" class="round-button"><div class="round-button-circle"><a class="round-button" (click)="funciones_difusion_marcarRestriccionDiaSemana(7)">{{'agendaTranslate.d'| translate}}</a></div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Medio de Envío -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Medio de Envío </label>
+                            </div>
+                            <div class="col-lg-7">
+                                <ng-select id="ddlDifusionMedio" style="width: 100%;" [multiple]="false" appendTo="#ddlDifusionMedio" [searchable]="true"
+                                    [(ngModel)]="promocion.difusion.idPromocionSucursalNuevaDifusionMedio" [clearable]="false"
+                                    [disabled]="true"
+                                    [items]="listadoPromocionSucursalNuevaDifusionMedios" bindLabel="descripcion" bindValue="idPromocionSucursalNuevaDifusionMedio">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <!-- Envíar solo Imagen -->
+                        <div class="row col-lg-12" style="margin-top: 20px;">
+                            <div class="col-lg-5">
+                                <label> Envíar solo Imagen </label>
+                            </div>
+                            <div class="col-lg-7">
+                                <mat-slide-toggle id="switchDifundirSoloImagen" checked
+                                    [(ngModel)]="promocion.difusion.difundirSoloImagen"
+                                    (ngModelChange)="funciones_difusion_cambiarDifundirSoloImagen()">
+                                </mat-slide-toggle>
+                            </div>
+                        </div>
+
+                        <!-- Configuración Difundir NO solo Imagen -->
+                        <div id="configuracionNoSoloImagen" *ngIf="!promocion.difusion.difundirSoloImagen">
+                            <!-- Encabezado de la difusión -->
+                            <div class="row col-lg-12" style="margin-top: 20px; display: flex;">
+                                <div class="col-lg-5">
+                                    <label> Encabezado </label>
+                                </div>
+                                <div class="col-lg-7">
+                                    <textarea id="textAreaEncabezadoDifusion" class="form-control borderAzul" maxlength="1000"
+                                        style="width: 100%; resize:none; height: 90px !important; padding: 6px 12px;" 
+                                        [(ngModel)]="promocion.difusion.encabezado" 
+                                        (ngModelChange)="funciones_generales_quitarValidacionEstilo('textAreaEncabezadoDifusion')"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Pie de Página de la difusión -->
+                            <div class="row col-lg-12" style="margin-top: 20px; display: flex;">
+                                <div class="col-lg-5">
+                                    <label> Pie de Página </label>
+                                </div>
+                                <div class="col-lg-7">
+                                    <textarea id="textAreaPiePaginaDifusion" class="form-control borderAzul" maxlength="1000"
+                                        style="width: 100%; resize:none; height: 90px !important; padding: 6px 12px;" 
+                                        [(ngModel)]="promocion.difusion.piePagina" 
+                                        (ngModelChange)="funciones_generales_quitarValidacionEstilo('textAreaPiePaginaDifusion')"></textarea>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+
+                    <!-- Configuración Imagen de Difusión -->
+                    <div id="configuracionDifusionImagen" class="col-lg-4">
+                        <!-- Contenedor Imágen de Promoción -->
+                        <div id="contenedorImagenPromocion" class="col-lg-12" style="display: none; padding: 0;">
+                            <div class="col-lg-12" style="padding: 0px; margin: 0 auto; max-width: 300px;">
+                                <div class="col-lg-12" style="margin: 10px auto;">
+                                    <img id="imagenPromocion" draggable="false" src="assets/images/system/iconoCamara.png" style="width: 100%; height: 100%;"/>
+                                    <canvas id="Canvas1" style="width: 100%; height: 100%; display: none;"></canvas> 
+                                </div>
+
+                                <div class="col-lg-12" style="margin: 0 auto;  padding: 0; display: flex;">
+                                    <label for="archivoImagenPromocion" class="buttonNewImagen" style="height: 50px; width: 50px; margin: auto auto; display: flex; cursor: pointer !important;">
+                                        <i class="fa fa-camera" style="margin: auto auto; font-size: 20px;"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contenedor Botón de Imágen -->
+                        <div id="contenedorBotonImagenPromocion" class="col-lg-12" style="display: flex; padding: 0;">
+                            <div id="botonImagenPromocion" style="width: 100%; height: 300px; max-width: 300px; margin: 10px auto; padding: 0; display: flex; border: 2px solid #20c4e6">
+                                <label for="archivoImagenPromocion" class="buttonNewImagen" style="margin: auto auto; display: flex; cursor: pointer !important;">
+                                    <i class="fa fa-camera" style="margin: auto auto; font-size: 50px;"></i>
+                                </label>
+                            </div>
+                        </div>
+
+                        <input id="archivoImagenPromocion" (change)="funciones_difusion_declararFuncionCambioImagen($event)" type="file" accept="image/png, image/gif, image/jpeg" style="display: none;"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones -->
+        <div id="apartadoBotones" class="col-lg-12" style="margin-top: 50px;">
+            <div id="botonesPromocionSinDifusion" class="col-lg-12 cambiarDisplayConfiguracionDifusion px-4" style="padding: 0px;">
+                <div class="col-lg-4 py-1">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-10">
+                        <button class="buttonEstiloBlanco" (click)="funciones_acciones_irListadoPromociones()"> Regresar </button>
+                    </div>
+                    <div class="col-lg-1"></div>
+                </div>
+                <div class="col-lg-4 py-1">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-10">
+                        <button class="buttonEstiloBlanco" (click)="funciones_acciones_guardarBorradorPromocion()"> Guardar Borrador </button>
+                    </div>
+                    <div class="col-lg-1"></div>
+                </div>
+                <div class="col-lg-4 py-1">
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-10">
+                        <button class="buttonEstiloBlanco" (click)="funciones_acciones_crearPromocion()" *ngIf="promocion.idPromocionSucursalNueva == 'N'"> Crear Promoción </button>
+                        <button class="buttonEstiloBlanco" (click)="funciones_acciones_editarPromocion()" *ngIf="promocion.idPromocionSucursalNueva != 'N'"> Editar Promoción </button>
+                    </div>
+                    <div class="col-lg-1"></div>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- Modal Envíar Correo -->
+<div id="modalEnviarCorreo" tabindex="2" role="dialog" aria-hidden="true" class="modal fade modalEnviarCorreo">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                ¿Desea mandar el correo de la Promoción?
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="funciones_acciones_redireccionarListado()" style="height: auto;">
+                        No
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" (click)="funciones_acciones_enviarCorreos(promocion.idPromocionSucursalNueva)" style="height: auto;">
+                        Sí
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

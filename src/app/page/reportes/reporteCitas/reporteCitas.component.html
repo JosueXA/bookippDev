@@ -1,0 +1,657 @@
+
+<mat-card class="mat-elevation-z8" id="mainMatCard">
+    <mat-card-header>
+        <div style="width: 100%;">
+            <mat-card-title> {{'reporteVentasTranslate.reporteventas'| translate}} </mat-card-title>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="irAAgenda()" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="irAAgenda()">{{'reporteVentasTranslate.inicio'| translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a style="color: #20c4e6; top: -6px; position: relative;">{{'reporteVentasTranslate.reporteventas'| translate}}</a>&nbsp;        
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="pb-5">
+        <!-- Meta de Ventas -->
+        <div class="row col-lg-12" style="align-items: center;"> 
+            <div class="col-lg-2 col-sm-4 py-1">
+                <label class="control-label" style="padding-left: 15px;"> {{'reporteVentasTranslate.metaDeVentas'| translate}} </label>
+            </div>
+            <div class="col-lg-2 col-sm-7 my-2">
+                <input class="form-control borderAzul" id="txtMetaVentas"  [(ngModel)]="reporte.metaVenta" (ngModelChange)="cargarMetaVenta()" (blur)="guardarMeta()" (keypress)="validarNum($event)" type="text">
+            </div>
+            <div class="col-lg-1"></div>
+            <div class="col-lg-4 py-1 centrarCanvas" style="height: 200px;">
+                <canvas id="gMeta"></canvas>
+            </div>
+        </div>
+
+        <!-- Calendario -->
+        <div class="row page_seccion_campo" style="margin-bottom:3%; margin-top:15px">
+            <div class="col-lg-4" id ="CalendarioReporteCitas">
+                <div style="padding-left: 15px;">
+                    <mat-icon class="iconosBookipp" svgIcon="iconCalendarioEditar" style="position: absolute; margin: 8px 0px 0px 30px;"></mat-icon>
+                    <input type="text" id="reportrange"
+                        ngxDaterangepickerMd
+                        class="form-control borderAzul"
+                        style="cursor: pointer; height: 40px; width: 350px; padding-left: 90px; border-radius: 1.5rem;"
+                        [(ngModel)]="reporte.fechas"
+                        (ngModelChange)="reporte_cambioFecha()"
+                        [showCustomRangeLabel]="true"
+                        [alwaysShowCalendars]="true"
+                        [ranges]="this.ranges"
+                        [linkedCalendars]="true"
+                        [isInvalidDate] = "isInvalidDate"
+                        [showClearButton]="false"
+                        [locale]="this.locale"
+                        [showDropdowns]="true"
+                        placeholder="DD/MM/YYYY - DD/MM/YYYY" 
+                    />
+                    <mat-icon class="iconosBookipp" svgIcon="iconFlechaAbajoPeque" style="position: absolute; margin: -30px 0px 0px 300px;"></mat-icon>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestañas -->
+        <mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true" #tabGroup (selectedTabChange)="actualizarTabActiva($event.index)">
+            <div id="myTabContent" class="tab-content">
+                <!-- Pestaña Sucursal -->
+                <mat-tab id="pestañaSucursal" style="width: 50%;">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="iconosBookipp" svgIcon="iconSucursal" style="cursor: pointer; height: 20px; position: relative; top: -4px; overflow: visible;"></mat-icon>
+                        <label> {{'reporteVentasTranslate.sucursal' | translate}} </label>
+                    </ng-template>
+
+                    <div id="sucursal" class="px-5 pb-5 pt-3 heightPred" style="width: 100%;">
+                        <div class="row col-lg-12" *ngIf="sucursal.dataSucursal.length == 0" style="font-style: italic; font-size: large; justify-content: center;">
+                            {{'reporteVentasTranslate.sinpagos'| translate}}
+                        </div>
+
+                        <div style="min-height: 350px;" [hidden]="sucursal.dataSucursal.length == 0">
+                            <div class="row"> 
+                                <!-- Tabla Sucursal -->
+                                <div class="col-lg-5 pt-2" id="contenedorTablaSucursal">
+                                    <div class="ocultarDivSeparador" style="height: 38px;"></div>
+                                    <mat-card-content class="mat-elevation-z8" style="margin-top: 10px; max-height: 280px; overflow: auto;">
+                                        <table mat-table id="tablaSucursal" [dataSource]="sucursal.dataSucursal" style="width: 100%; border-top: solid 2px #ebebeb;">
+                                            <ng-container matColumnDef="nombre">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeLg">
+                                                    {{'reporteVentasTranslate.sucursal'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; index as i" style="text-align: center;">
+                                                    <!-- PopOver -->
+                                                    <ng-template #popSucursal>
+                                                        <div style="padding-left: 0px; padding-right: 0px; width: 250px; height: 200px;">
+                                                            <canvas id="gPopoverSc{{i}}" style="width: 240px; height: 200px;margin: 0; padding-left: 0px; padding-right: 0px;"></canvas> 
+                                                        </div>
+                                                    </ng-template>
+
+                                                    <label class="labelLink"
+                                                        [ngbPopover]="popSucursal"
+                                                        (click)="mostrarDetalle(element.id, 0, i)"
+                                                        container="body">
+                                                        {{element.nombre}} 
+                                                    </label> 
+                                                </td>
+                                            </ng-container>                      
+                        
+                                            <ng-container matColumnDef="cantidadCitas">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeSm">
+                                                    {{'reporteVentasTranslate.cantidadCitas'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.cantidadCitas}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="propina">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeSm">
+                                                    {{'reporteVentasTranslate.propina'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.propina | currency}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="pago">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeSm">
+                                                    {{'reporteVentasTranslate.total'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.pago | currency}} </td>
+                                            </ng-container>
+                                            
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns_Sucursal"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns_Sucursal;"></tr>                    
+                                        </table>  
+                                    </mat-card-content>
+
+                                    <div style="text-align: right; margin-right: 40px;">{{'reporteVentasTranslate.total'| translate}}: {{sucursal.total}}</div>
+                                </div>
+
+                                <div class="col-lg-1 pt-2"></div>
+
+                                <!-- Gráfico de Sucursal -->
+                                <div class="col-lg-6 pt-2" id="graficoSucursal">
+                                    <!-- Botón PopOver de Descarga y Filtro -->
+                                    <div class="col-lg-12" style="text-align: right;">
+                                        <!-- Botón de Filtrado -->
+                                        <button id="buscarPeronal" type="button" class="btn btn-square mx-1" (click)="modalFiltrar();" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;">
+                                            <mat-icon class="iconosBookipp" class="iconosBookipp" svgIcon="iconFiltro" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+                                        
+                                        <!-- Dentro del PopOver -->
+                                        <ng-template #popOpcionesGra01>
+                                            <button class="btn mt-2 mb-4 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoSc('impresion')">
+                                                {{'reporteVentasTranslate.imprimirGrafica'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoSc('png')">
+                                                {{'reporteVentasTranslate.descargarPNG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoSc('jpg')">
+                                                {{'reporteVentasTranslate.descargarJPG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoSc('pdf')">
+                                                {{'reporteVentasTranslate.descargarPDF'| translate}}
+                                            </button>
+                                        </ng-template>
+                                        
+                                        <!-- PopOver de Descarga -->
+                                        <button type="button" class="btn btn-square mx-2" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;"
+                                            [ngbPopover]="popOpcionesGra01"
+                                            container="body">
+                                            <mat-icon class="iconosBookipp" class="iconosBookipp" svgIcon="iconMenuHamburguesa" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button> 
+                                    </div>
+
+                                    <canvas id="gSucursal" class="canvasStyle"></canvas> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Pestaña Personal -->
+                <mat-tab id="pestañaPersonal" style="width: 50%;">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="iconosBookipp" svgIcon="iconUsuario" style="cursor: pointer; height: 20px; position: relative; top: -4px;"></mat-icon>
+                        <label> {{'reporteVentasTranslate.personal'| translate}} </label>
+                    </ng-template>
+
+                    <div id="personal" class="px-5 pb-5 pt-3 heightPred" style="width: 100%;">
+                        <div class="row col-lg-12" *ngIf="personal.dataPersonal.length == 0" style="font-style: italic; font-size: large; justify-content: center;">
+                            {{'reporteVentasTranslate.sinpagos'| translate}}
+                        </div>
+
+                        <div style="min-height: 350px;" [hidden]="personal.dataPersonal.length == 0">
+                            <div class="row">
+                                <!-- Tabla de Personal -->
+                                <div class="col-lg-5 pb-2" id="contenedorTablaPersonal">
+                                    <div class="ocultarDivSeparador" style="height: 38px;"></div>
+                                    <mat-card-content class="mat-elevation-z8" style="width: calc(100% - 15px); margin-top: 10px; max-height: 280px; overflow: auto;">
+                                        <table mat-table id="tablaPersonal" [dataSource]="personal.dataPersonal" style="width: 100%; border-top: solid 2px #ebebeb;">
+                                            <ng-container matColumnDef="nombre">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeLg">
+                                                    {{'reporteVentasTranslate.personal'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; index as i" style="text-align: center;">
+                                                    <!-- PopOver -->
+                                                    <ng-template #popPersonal>
+                                                        <div style="padding-left: 0px; padding-right: 0px; width: 250px; height: 200px;">
+                                                            <canvas id="gPopoverPs{{i}}" style="width: 240px; height: 200px;margin: 0; padding-left: 0px; padding-right: 0px;"></canvas> 
+                                                        </div>
+                                                    </ng-template>
+
+                                                    <label class="labelLink"
+                                                        [ngbPopover]="popPersonal"
+                                                        (click)="mostrarDetalle(element.id, 0, i)"
+                                                        container="body">
+                                                        {{element.nombre}} 
+                                                    </label> 
+                                                </td>
+                                            </ng-container>                                       
+                        
+                                            <ng-container matColumnDef="cantidadCitas">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeSm">
+                                                    {{'reporteVentasTranslate.cantidadCitas'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.cantidadCitas}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="pago">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeSm">
+                                                    {{'reporteVentasTranslate.total'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.pago | currency}} </td>
+                                            </ng-container>
+                                            
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns_Personal"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns_Personal;"></tr>                    
+                                        </table>  
+                                    </mat-card-content>
+
+                                    <div style="text-align: right; margin-right: 40px;">{{'reporteVentasTranslate.total' | translate}}: {{personal.total}}</div>
+                                </div>
+
+                                <div class="col-lg-1"></div>
+
+                                <!-- Gráfico de Personal -->
+                                <div class="col-lg-6" id="graficoPersonal">
+                                    <!-- Botón PopOver de Descarga y Filtro -->
+                                    <div class="col-lg-12" style="text-align: right;">
+                                        <!-- Botón de Filtrado -->
+                                        <button type="button" class="btn btn-square mx-1" (click)="modalFiltrar();" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconFiltro" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+                                        
+                                        <!-- Dentro del PopOver -->
+                                        <ng-template #popOpcionesGra02>
+                                            <button class="btn mt-2 mb-4 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoPs('impresion')">
+                                                {{'reporteVentasTranslate.imprimirGrafica'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoPs('png')">
+                                                {{'reporteVentasTranslate.descargarPNG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoPs('jpg')">
+                                                {{'reporteVentasTranslate.descargarJPG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoPs('pdf')">
+                                                {{'reporteVentasTranslate.descargarPDF'| translate}}
+                                            </button>
+                                        </ng-template>
+                                        
+                                        <!-- PopOver de Descarga -->
+                                        <button type="button" class="btn btn-square mx-2" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;"
+                                            [ngbPopover]="popOpcionesGra02"
+                                            container="body">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconMenuHamburguesa" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button> 
+                                    </div>
+
+                                    <canvas id="gPersonal" class="canvasStyle"></canvas> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Pestaña Servicio -->
+                <mat-tab id="pestañaServicio" style="width: 50%;">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="iconosBookipp" svgIcon="iconServicios" style="cursor: pointer; height: 20px; position: relative; top: -4px; overflow: visible;"></mat-icon>
+                        <label> {{'reporteVentasTranslate.servicio'| translate}} </label>
+                    </ng-template>
+                    
+                    <div id="servicio" class="px-5 pb-5 pt-3 heightPred" style="width: 100%;">
+                        <div class="row col-lg-12" *ngIf="servicio.dataServicio.length == 0" style="font-style: italic; font-size: large; justify-content: center;">
+                            {{'reporteVentasTranslate.sinpagos'| translate}}
+                        </div>
+
+                        <div style="min-height: 350px;" [hidden]="servicio.dataServicio.length == 0">
+                            <div class="row">
+                                <!-- Tabla de Servicio -->
+                                <div class="col-lg-5  pb-2" id="contenedorTablaServicio">
+                                    <div class="ocultarDivSeparador" style="height: 38px;"></div>
+                                    <mat-card-content class="mat-elevation-z8" style="width: calc(100% - 15px); margin-top: 10px; max-height: 280px; overflow: auto;">
+                                        <table mat-table id="tablaServicio" [dataSource]="servicio.dataServicio" style="width: 100%; border-top: solid 2px #ebebeb;">
+                                            <ng-container matColumnDef="nombre">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeLg">
+                                                    {{'reporteVentasTranslate.servicio'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; index as i" style="text-align: center;">
+                                                    <!-- PopOver -->
+                                                    <ng-template #popServicio>
+                                                        <div style="padding-left: 0px; padding-right: 0px; width: 250px; height: 200px;">
+                                                            <canvas id="gPopoverSv{{i}}" style="width: 240px; height: 200px;margin: 0; padding-left: 0px; padding-right: 0px;"></canvas> 
+                                                        </div>
+                                                    </ng-template>
+
+                                                    <label class="labelLink"
+                                                        [ngbPopover]="popServicio"
+                                                        (click)="mostrarDetalle(element.id, 0, i)"
+                                                        container="body">
+                                                        {{element.nombre}} 
+                                                    </label> 
+                                                </td>
+                                            </ng-container>
+                        
+                                            <ng-container matColumnDef="pago">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeSm">
+                                                    {{'reporteVentasTranslate.total'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.pago | currency}} </td>
+                                            </ng-container>
+                                            
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns_Servicio"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns_Servicio;"></tr>                    
+                                        </table>
+                                    </mat-card-content>
+                                    <div style="text-align: right; margin-right: 40px;"> {{'reporteVentasTranslate.total'| translate}}: {{servicio.total}} </div>
+                                </div>
+
+                                <div class="col-lg-1"></div>
+
+                                <!-- Gráfico de Servicio -->
+                                <div class="col-lg-6" id="graficoServicio">
+                                    <!-- Botón PopOver de Descarga y Filtro -->
+                                    <div class="col-lg-12" style="text-align: right;">
+                                        <!-- Botón de Filtrado -->
+                                        <button type="button" class="btn btn-square mx-1" (click)="modalFiltrar();" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconFiltro" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+
+                                        <!-- Dentro del PopOver -->
+                                        <ng-template #popOpcionesGra03>
+                                            <button class="btn mt-2 mb-4 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoSv('impresion')">
+                                                {{'reporteVentasTranslate.imprimirGrafica'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoSv('png')">
+                                                {{'reporteVentasTranslate.descargarPNG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoSv('jpg')">
+                                                {{'reporteVentasTranslate.descargarJPG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoSv('pdf')">
+                                                {{'reporteVentasTranslate.descargarPDF'| translate}}
+                                            </button>
+                                        </ng-template>
+                                        
+                                        <!-- PopOver de Descarga -->
+                                        <button type="button" class="btn btn-square mx-2" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;"
+                                            [ngbPopover]="popOpcionesGra03"
+                                            container="body">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconMenuHamburguesa" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button> 
+                                    </div>
+
+                                    <canvas id="gServicio" class="canvasStyle"></canvas> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Pestaña Método Pago -->
+                <mat-tab id="pestañaMetodoPago" style="width: 50%;">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="iconosBookipp" svgIcon="iconTiposCambio" style="cursor: pointer; height: 20px; position: relative; top: -4px;"></mat-icon>
+                        <label> {{'reporteVentasTranslate.metodopago'| translate}} </label>
+                    </ng-template>
+                    
+                    <div id="metodoPago" class="px-5 pb-5 pt-3 heightPred" style="width: 100%;">
+                        <div class="row col-lg-12" *ngIf="metodoPago.dataMetodoPago.length == 0" style="font-style: italic; font-size: large; justify-content: center;">
+                            {{'reporteVentasTranslate.sinpagos' | translate}}
+                        </div>
+
+                        <div style="min-height: 350px;" [hidden]="metodoPago.dataMetodoPago.length == 0">
+                            <div class="row">
+                                <!-- Tabla de Método de Pago -->
+                                <div class="col-lg-5 pb-2" id="contenedorTablaMetodoPago">
+                                    <div class="ocultarDivSeparador" style="height: 38px;"></div>
+                                    <mat-card-content class="mat-elevation-z8" style="width: calc(100% - 15px); margin-top: 10px; max-height: 280px; overflow: auto;">
+                                        <table mat-table id="tablaMetodoPago" [dataSource]="metodoPago.dataMetodoPago" style="width: 100%; border-top: solid 2px #ebebeb; ">
+                                            <ng-container matColumnDef="nombre">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeLg">
+                                                    {{'reporteVentasTranslate.metodopago'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; index as i" style="text-align: center;">
+                                                    <!-- PopOver -->
+                                                    <ng-template #popMetodoPago>
+                                                        <div style="padding-left: 0px; padding-right: 0px; width: 250px; height: 200px;">
+                                                            <canvas id="gPopoverMp{{i}}" style="width: 240px; height: 200px;margin: 0; padding-left: 0px; padding-right: 0px;"></canvas> 
+                                                        </div>
+                                                    </ng-template>
+
+                                                    <label class="labelLink"
+                                                        [ngbPopover]="popMetodoPago"
+                                                        (click)="mostrarDetalle(element.id, 0, i)"
+                                                        container="body">
+                                                        {{element.nombre}} 
+                                                    </label> 
+                                                </td>
+                                            </ng-container>
+                        
+                                            <ng-container matColumnDef="pMetodoPago">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeSm">
+                                                    {{'reporteVentasTranslate.cantidadPagos' | translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.pMetodoPago}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="total">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeSm">
+                                                    {{'reporteVentasTranslate.total'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.total | currency}} </td>
+                                            </ng-container>
+                                            
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns_MetodoPago"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns_MetodoPago;"></tr>                    
+                                        </table>  
+                                    </mat-card-content>
+
+                                    <div style="text-align: right; margin-right: 40px;">{{'reporteVentasTranslate.total'| translate}}: {{metodoPago.total}}</div>
+                                </div>
+
+                                <div class="col-lg-1"></div>
+
+                                <!-- Gráfico de Método Pago -->
+                                <div class="col-lg-6" id="graficoMetodoPago">
+                                    <!-- Botón PopOver de Descarga y Filtro -->
+                                    <div class="col-lg-12" style="text-align: right;">
+                                        <!-- Botón de Filtrado -->
+                                        <button type="button" class="btn btn-square mx-1" (click)="modalFiltrar();" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconFiltro" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+
+                                        <!-- Dentro del PopOver -->
+                                        <ng-template #popOpcionesGra04>
+                                            <button class="btn mt-2 mb-4 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoMp('impresion')">
+                                                {{'reporteVentasTranslate.imprimirGrafica'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoMp('png')">
+                                                {{'reporteVentasTranslate.descargarPNG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoMp('jpg')">
+                                                {{'reporteVentasTranslate.descargarJPG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoMp('pdf')">
+                                                {{'reporteVentasTranslate.descargarPDF'| translate}}
+                                            </button>
+                                        </ng-template>
+                                        
+                                        <!-- PopOver de Descarga -->
+                                        <button type="button" class="btn btn-square mx-2" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;"
+                                            [ngbPopover]="popOpcionesGra04"
+                                            container="body">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconMenuHamburguesa" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button> 
+                                    </div>
+
+                                    <canvas id="gpPago" class="canvasStyle"></canvas> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <!-- Pestaña Clientes -->
+                <mat-tab id="pestañaClientes" style="width: 50%;">
+                    <ng-template mat-tab-label>
+                        <mat-icon class="iconosBookipp" svgIcon="iconPersonal" style="cursor: pointer; height: 20px; position: relative; top: -4px;"></mat-icon>
+                        <label> {{'reporteVentasTranslate.clientes'| translate}} </label>
+                    </ng-template>
+
+                    <div id="clientes" class="px-5 pb-5 pt-3 heightPred" style="width: 100%;">
+                        <div class="row col-lg-12" *ngIf="clientes.dataClientes.length == 0" style="font-style: italic; font-size: large; justify-content: center;">
+                            {{'reporteVentasTranslate.sinpagos'| translate}}
+                        </div>
+
+                        <div style="min-height: 350px;" [hidden]="clientes.dataClientes.length == 0">
+                            <div class="row">
+                                <!-- Tabla de Clientes -->
+                                <div class="col-lg-5 pb-2" id="contenedorTablaClientes">
+                                    <div class="ocultarDivSeparador" style="height: 38px;"></div>
+                                    <mat-card-content class="mat-elevation-z8" style="width: calc(100% - 15px); margin-top: 10px; max-height: 280px; overflow: auto;">
+                                        <table mat-table id="tablaClientes" [dataSource]="clientes.dataClientes" style="width: 100%; border-top: solid 2px #ebebeb;">
+                                            <ng-container matColumnDef="nombre">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeLg">
+                                                    {{'reporteVentasTranslate.clientes'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; index as i" style="text-align: center;">
+                                                    <!-- PopOver -->
+                                                    <ng-template #popClientes>
+                                                        <div style="padding-left: 0px; padding-right: 0px; width: 250px; height: 200px;">
+                                                            <canvas id="gPopoverCl{{i}}" style="width: 240px; height: 200px;margin: 0; padding-left: 0px; padding-right: 0px;"></canvas> 
+                                                        </div>
+                                                    </ng-template>
+
+                                                    <label class="labelLink"
+                                                        [ngbPopover]="popClientes"
+                                                        (click)="mostrarDetalle(element.id, 0, i)"
+                                                        container="body">
+                                                        {{element.nombre}} 
+                                                    </label> 
+                                                </td>
+                                            </ng-container>
+                        
+                                            <ng-container matColumnDef="cantidadCitas">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeSm">
+                                                    {{'reporteVentasTranslate.cantidadCitas'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.cantidadCitas}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="total">
+                                                <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="tablesColSizeSm">
+                                                    {{'reporteVentasTranslate.total'| translate}}
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.total | currency}} </td>
+                                            </ng-container>
+                                            
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns_Clientes"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns_Clientes;"></tr>                    
+                                        </table>  
+                                    </mat-card-content>
+
+                                    <div style="text-align: right; margin-right: 40px;">{{'reporteVentasTranslate.total'| translate}}: {{clientes.total}}</div>
+                                </div>
+
+                                <div class="col-lg-1"></div>
+
+                                <!-- Gráfico de Clientes -->
+                                <div class="col-lg-6" id="graficoClientes">
+                                    <!-- Botón PopOver de Descarga y Filtro -->
+                                    <div class="col-lg-12" style="text-align: right;">
+                                        <!-- Botón de Filtrado -->
+                                        <button type="button" class="btn btn-square mx-1" (click)="modalFiltrar();" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconFiltro" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button>
+
+                                        <!-- Dentro del PopOver -->
+                                        <ng-template #popOpcionesGra05>
+                                            <button class="btn mt-2 mb-4 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCl('impresion')">
+                                                {{'reporteVentasTranslate.imprimirGrafica'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCl('png')">
+                                                {{'reporteVentasTranslate.descargarPNG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCl('jpg')">
+                                                {{'reporteVentasTranslate.descargarJPG'| translate}}
+                                            </button>
+                                            <button class="btn my-1 colorBgBtnCharts" style="width: 100%;" (click)="descargarGraficoCl('pdf')">
+                                                {{'reporteVentasTranslate.descargarPDF'| translate}}
+                                            </button>
+                                        </ng-template>
+                                        
+                                        <!-- PopOver de Descarga -->
+                                        <button type="button" class="btn btn-square mx-2" style="border: #b7c4c9 solid 1px; width: 41.75px; height: 38px;"
+                                            [ngbPopover]="popOpcionesGra05"
+                                            container="body">
+                                            <mat-icon class="iconosBookipp" svgIcon="iconMenuHamburguesa" style="height: auto; position: relative; top: -2px; left: -3px;"></mat-icon>
+                                        </button> 
+                                    </div>
+
+                                    <canvas id="gClientes" class="canvasStyle"></canvas> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+            </div>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
+
+<!-- Modal filtrar-->
+<div id="modal-filtrar" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-filtrar">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: auto;">
+            <div class="modal-header">
+                <span>{{nombreTab}}</span>
+                <mat-icon id="btnCerrarModal" class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="resetColorCampoModal()" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body">
+                <div [hidden]="tabActive != 0">
+                    <label class="col-md-5" style="margin-top: 6px; margin-bottom: 6px;">{{'reporteVentasTranslate.sucursal'| translate}}</label>
+                    <div class="col-md-7" style="padding: 0; margin-bottom: 6px; min-height: 36px; width: 100%;">
+                        <ng-select id="ddlSucursal" style="width: 100%;" [multiple]="true" appendTo="#modal-filtrar" [searchable]="true"
+                            [(ngModel)]="dataFiltro.select" [clearable]="true"
+                            placeholder="{{'reporteVentasTranslate.psucursal'| translate}}"
+                            [items]="reporte.tablaSucursal" bindLabel="nombre" bindValue="id">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div [hidden]="tabActive != 1">
+                    <label class="col-md-5" style="margin-top: 6px; margin-bottom: 6px;">{{'reporteVentasTranslate.personal'| translate}}</label>
+                    <div class="col-md-7" style="padding: 0; margin-bottom: 6px; min-height: 36px;  width: 100%;">
+                        <ng-select id="ddlPersonal" style="width: 100%;" [multiple]="true" appendTo="#modal-filtrar" [searchable]="true"
+                            [(ngModel)]="dataFiltro.select" [clearable]="true"
+                            placeholder="{{'reporteVentasTranslate.ppersonal'| translate}}"
+                            [items]="reporte.tablaPersonal" bindLabel="nombre" bindValue="id">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div [hidden]="tabActive != 2">
+                    <label class="col-md-5" style="margin-top: 6px; margin-bottom: 6px;">{{'reporteVentasTranslate.servicios'| translate}}</label>
+                    <div class="col-md-7" style="padding: 0; margin-bottom: 6px; min-height: 36px; width: 100%;">
+                        <ng-select id="ddlServicios" style="width: 100%;" [multiple]="true" appendTo="#modal-filtrar" [searchable]="true"
+                            [(ngModel)]="dataFiltro.select" [clearable]="true"
+                            placeholder="{{'reporteVentasTranslate.pservicio'| translate}}"
+                            [items]="reporte.tablaServicio" bindLabel="nombre" bindValue="id">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div [hidden]="tabActive != 3">
+                    <label class="col-md-5" style="margin-top: 6px; margin-bottom: 6px;">{{'reporteVentasTranslate.metodoPago'| translate}}</label>
+                    <div class="col-md-7" style="padding: 0; margin-bottom: 6px; min-height: 36px; width: 100%;">
+                        <ng-select id="ddlPago" style="width: 100%;" [multiple]="true" appendTo="#modal-filtrar" [searchable]="true"
+                            [(ngModel)]="dataFiltro.select" [clearable]="true"
+                            placeholder="{{'reporteVentasTranslate.pmetodopago'| translate}}"
+                            [items]="reporte.tablaPago" bindLabel="nombre" bindValue="id">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div [hidden]="tabActive != 4">
+                    <label class="col-md-5" style="margin-top: 6px; margin-bottom: 6px;">{{'reporteVentasTranslate.clientes'| translate}}</label>
+                    <div class="col-md-7" style="padding: 0; margin-bottom: 6px; min-height: 36px; width: 100%;">
+                        <ng-select id="ddlClientes" style="width: 100%;" [multiple]="true" appendTo="#modal-filtrar" [searchable]="true"
+                            [(ngModel)]="dataFiltro.select" [clearable]="true"
+                            placeholder="{{'reporteVentasTranslate.pclientes'| translate}}"
+                            [items]="reporte.tablaClientes" bindLabel="nombre" bindValue="id">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button"  class="buttonEstiloBlanco" style="color: white; height: auto;" (click)="filtrar()">
+                        {{'reporteVentasTranslate.filtrar'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

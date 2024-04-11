@@ -1,0 +1,1102 @@
+<!-- PANTALLA -->
+<mat-card class="mat-elevation-z8">
+	<mat-card-header class="cardHeaderMaterial">
+		<mat-card-title>
+			Configuración de Parámetros
+		</mat-card-title>
+
+		<div class="breadcrumbCustom">
+			<a href="/procesos/agenda">
+				<mat-icon matListIcon class="iconosBookipp iconoSize" 
+				style="margin: 0px 0px 3px 0px;" svgIcon="iconCasita"></mat-icon>
+				<span>Inicio</span>
+			</a>
+			<a href="#">
+				<mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;" svgIcon="iconFlechaDerecha"></mat-icon>
+			</a>
+			<a href="#" class="active">
+				<span>Configuración de Parámetros</span>
+			</a>
+		</div>
+	</mat-card-header>
+	<mat-divider></mat-divider>
+
+	<mat-card-content style="margin-top: 10px">
+		<mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true"
+			(selectedTabChange)="onChangeTabs($event)">
+			<!-- CITAS # 1 -->
+			<mat-tab id="citas" label="{{ 'configuracionSucursalTranslate.citas' | translate }}">
+				<!-- CONTENEDOR PRINCIPAL -->
+				<div id="contenedorCitas" class="row mx-auto mt-3">
+					<!-- CONTENEDOR IZQUIERDO -->
+					<div class="col-lg-6">
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">
+								{{ "configuracionSucursalTranslate.periodoMaximo" | translate }}
+								<b>{{"configuracionSucursalTranslate.agendarCitas" | translate}}</b>
+							</label>
+							<div class="col-lg-4" style="min-height: 53px">
+								<input id="tiempoCita" type="text"
+									style="width: 100%; text-align: right; padding-right: 40px"
+									class="form-control borderAzul" maxlength="3" [(ngModel)]="parametro.tiempoCita"
+									(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" />
+								<span style="position: relative; top: -26px; right: 10px; float: right;">
+									{{ "configuracionSucursalTranslate.dias" | translate }}
+								</span>
+								<label style="color: red; font-size: 10px" id="errortiempoCita"></label>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">{{ "configuracionSucursalTranslate.anticipPara" | translate }}
+								<b>{{"configuracionSucursalTranslate.agendarCitas" | translate}}</b>
+							</label>
+							<div class="col-lg-4" style="min-height: 53px">
+								<input id="horasCita" type="text"
+									style="width: 100%; text-align: right; padding-right: 40px"
+									class="form-control borderAzul" maxlength="3" [(ngModel)]="parametro.horasCita"
+									(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" />
+								<span style="position: relative; top: -26px; right: 10px; float: right;">hrs.</span>
+								<label style="color: red; font-size: 10px" id="errorhorasCita"></label>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">
+								{{ "configuracionSucursalTranslate.enviar" | translate }}
+								<b>{{"configuracionSucursalTranslate.recordCitas" | translate}}</b>
+								{{"configuracionSucursalTranslate.porCorreo" | translate}}
+							</label>
+							<div class="onoffswitch col-lg-4">
+								<mat-slide-toggle id="recordatorioId" [(ngModel)]="parametro.recordatorio">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">
+								<b>{{"configuracionSucursalTranslate.activarChat" | translate}}</b>
+								{{"configuracionSucursalTranslate.enLinea" | translate}}
+							</label>
+							<div class="onoffswitch col-lg-4">
+								<mat-slide-toggle id="activarChatId" [(ngModel)]="parametro.activarChat">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">{{"configuracionSucursalTranslate.costosVisibles" |
+								translate}}</label>
+							<div class="onoffswitch col-lg-4">
+								<mat-slide-toggle id="costoVisibleId" [(ngModel)]="parametro.costoVisible">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">{{"configuracionSucursalTranslate.codigoSucursal" |
+								translate}}</label>
+							<div class="col-lg-4" style="min-height: 53px">
+								<input id="codigoSucursal" class="form-control borderAzul" style="width: 100%"
+									content="body" type="text" maxlength="10" [(ngModel)]="parametro.codigoSucursal"
+									(focus)="txtfocus(3, $event, 'f')" (blur)="txtfocus(3, $event, 'b')" />
+								<label style="color: red; font-size: 10px" id="errorcodigoSucursal"></label>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">Fondo de Caja</label>
+							<div class="col-lg-4">
+								<input id="Text1" type="text" maxlength="10" style="width: 100%" content="body"
+									class="form-control borderAzul" [(ngModel)]="parametro.fondoCaja"
+									(focus)="txtfocus(3, $event, 'f')" (blur)="txtfocus(3, $event, 'b')" />
+								<label style="color: red; font-size: 10px" id="errorfondoCaja"></label>
+							</div>
+						</div>
+
+						<!-- Cliente nuevo -->
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">
+								Considerar Cliente Nuevo por fecha creación
+							</label>
+							<div class="col-lg-4">
+								<mat-slide-toggle id="switchClientePorFechaCreacion"
+									[(ngModel)]="estadoActividadClientes.nuevo.clienteNuevoPorDias">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8"> Días Configuración Cliente Nuevo </label>
+							<div class="col-lg-4">
+								<input id="diasClienteNuevo" maxlength="10" class="form-control borderAzul"
+									style="width: 100%" [(ngModel)]="estadoActividadClientes.nuevo.clienteNuevoDias"
+									(keypress)="configurar_sucursal_validarNum($event)" />
+							</div>
+						</div>
+
+						<!-- Cliente activo -->
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">Considerar Cliente Activo por Cita</label>
+							<div class="col-lg-4">
+								<mat-slide-toggle id="switchClienteActivoCita"
+									[(ngModel)]="estadoActividadClientes.activo.clienteActivoPorCita">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">Días Configuración Cliente Activo</label>
+							<div class="col-lg-4">
+								<input id="diasClienteActivo" class="form-control borderAzul" style="width: 100%"
+									maxlength="10" [(ngModel)]="estadoActividadClientes.activo.clienteActivoDias"
+									(keypress)="configurar_sucursal_validarNum($event)" />
+							</div>
+						</div>
+					</div>
+					<!---->
+
+					<!-- CONTENEDOR DERECHO -->
+					<div class="col-lg-6">
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">{{ "configuracionSucursalTranslate.anticipPara" | translate }}
+								<b>{{"configuracionSucursalTranslate.recordatorio" | translate}}</b>
+								{{"configuracionSucursalTranslate.deCitas" | translate}}
+							</label>
+							<div class="col-lg-4">
+								<input id="horasRecordatorio" type="text"
+									style="width: 100%; text-align: right; padding-right: 40px"
+									class="form-control borderAzul" maxlength="3"
+									[(ngModel)]="parametro.horasRecordatorio" (focus)="txtfocus(1, $event, 'f')"
+									(blur)="txtfocus(1, $event, 'b')" />
+								<span style="position: relative; top: -26px; right: 10px; float: right;">hrs.</span>
+								<label style="color: red; font-size: 10px" id="errorhorasRecordatorio"></label>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">{{ "configuracionSucursalTranslate.anticipPara" | translate }}
+								<b>{{"configuracionSucursalTranslate.cancelarCitas" | translate}}</b>
+							</label>
+							<div class="col-lg-4">
+								<input id="cancelarCita" type="text"
+									style="width: 100%; text-align: right; padding-right: 40px"
+									class="form-control borderAzul" maxlength="3" [(ngModel)]="parametro.cancelarCita"
+									(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" />
+								<span style="position: relative; top: -26px; right: 10px; float: right;">hrs.</span>
+								<label style="color: red; font-size: 10px" id="errorcancelarCita"></label>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">{{"configuracionSucursalTranslate.clientePuedeEscoger" |
+								translate}}</label>
+							<div id="asd" class="col-lg-4">
+								<mat-slide-toggle id="personalId" [(ngModel)]="parametro.personal">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">{{"configuracionSucursalTranslate.confirmacionCitas" |
+								translate}}</label>
+							<div class="col-lg-4">
+								<mat-slide-toggle id="confirmacionId" [(ngModel)]="parametro.confirmacion">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">El cliente puede escoger cabina al agendar
+							</label>
+							<div class="col-lg-4">
+								<mat-slide-toggle id="swcabina" [(ngModel)]="parametro.cabina">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px; margin-top: 20px">
+							<label class="col-lg-8">{{"configuracionSucursalTranslate.impuesto" | translate}}</label>
+							<div class="col-lg-4">
+								<input id="impuesto" type="text"
+									style="width: 100%; text-align: right; padding-right: 40px"
+									class="form-control borderAzul" maxlength="3" [(ngModel)]="parametro.impuesto"
+									(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" />
+								<span style="position: relative; top: -26px; right: 10px; float: right;">%</span>
+								<label style="color: red; font-size: 10px" id="errorimpuesto"></label>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8"> Zona Horaria </label>
+							<div class="col-lg-4">
+								<ng-select id="ddlZonaHoraria" style="height: 100%; width: 100%"
+									placeholder="Zona Horaria" appendTo="#ddlZonaHoraria" [searchable]="true"
+									[clearable]="false" [items]="listadoZonasHorarias" bindLabel="descripcion"
+									bindValue="valor2" [(ngModel)]="parametro.zonaHoraria">
+								</ng-select>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8"> Enviar SMS al crear Cita </label>
+							<div class="col-lg-4">
+								<mat-slide-toggle id="switchEnviarSMSCreacionCita"
+									[(ngModel)]="parametro.enviarSMSCreacionCita">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">
+								Enviar SMS en el recordatorio de Cita
+							</label>
+							<div class="col-lg-4">
+								<mat-slide-toggle id="switchEnviarSMSRecordatorioCita"
+									[(ngModel)]="parametro.enviarSMSRecordatorioCita">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8"> Enviar WPP al crear Cita </label>
+							<div class="col-lg-4">
+								<mat-slide-toggle id="switchEnviarWPPCreacionCita"
+									[(ngModel)]="parametro.enviarWPPCreacionCita">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">
+								Enviar WPP en el recordatorio de Cita
+							</label>
+							<div class="col-lg-4">
+								<mat-slide-toggle id="switchEnviarWPPRecordatorioCita"
+									[(ngModel)]="parametro.enviarWPPRecordatorioCita">
+								</mat-slide-toggle>
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 15px">
+							<label class="col-lg-8">Enviar correo Citas Online </label>
+							<div class="col-lg-4">
+								<mat-slide-toggle id="swcitaonline" [(ngModel)]="parametro.citaonline">
+								</mat-slide-toggle>
+							</div>
+						</div>
+					</div>
+					<!---->
+
+					<!-- Botón de guardar Citas -->
+					<div class="col-lg-12" style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+						<div class="row">
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4">
+								<button id="btnGuardar" (click)="accionBoton()" class="buttonEstiloBlanco" *ngIf="permiso_guardar">
+									{{ "configuracionSucursalTranslate.guardar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-4"></div>
+						</div>
+					</div>
+					<!---->
+				</div>
+			</mat-tab>
+			<!---->
+
+			<!-- FACEBOOK # 2 -->
+			<mat-tab id="Facebook" label="Facebook">
+				<!-- CONTENEDOR PRINCIPAL -->
+				<div id="contenedorFacebook" class="row mx-auto mt-3">
+					<div class="col-lg-12" [style.display]="listas.facebookdisplay" style="margin-bottom: 15px"
+						id="facebook">
+						<div class="row">
+							<label class="col-lg-5">{{"configuracionSucursalTranslate.paginasFacebook" |
+								translate}}</label>
+							<div class="col-lg-7" style="text-align: left">
+								<button type="button" data-dismiss="modal" class="buttonEstiloBlanco"
+									style="width: 140px; height: 40px; display: flex; justify-content: center; align-items: center;"
+									(click)="modalPaginaFb()">
+									{{ "configuracionSucursalTranslate.eliminar" | translate }}
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="row" style="margin-bottom: 15px" id="Div1">
+							<label class="col-lg-12">{{"configuracionSucursalTranslate.linkFacebook" |
+								translate}}</label>
+							<div class="col-lg-6">
+								<div style="padding: 0">
+									<textarea style="width: 100%; resize: none;" name="tumble" rows="2" cols="50"
+										[(ngModel)]="facebookButtonLink" readonly>
+                  </textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="row" style="margin-bottom: 15px" id="Div2">
+							<label class="col-lg-12">{{"configuracionSucursalTranslate.codigoFacebook" |
+								translate}}</label>
+							<div class="col-lg-6">
+								<div style="padding: 0">
+									<textarea style="width: 100%; resize: none;" name="tumble" rows="4" cols="50"
+										[(ngModel)]="facebookIFrameLink" readonly>
+                  </textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="row" style="margin-bottom: 15px" id="Div3">
+							<label class="col-lg-12">{{"configuracionSucursalTranslate.integracion" |
+								translate}}</label>
+							<div class="col-lg-6">
+								<div style="padding: 0">
+									<textarea style="width: 100%; resize: none;" name="tumble" rows="2" cols="50"
+										[(ngModel)]="integracion" readonly>
+                  </textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Botón de guardar facebook -->
+					<div class="col-lg-12" style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+						<div class="row">
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4">
+								<button id="btnGuardar2" (click)="accionBoton()" class="buttonEstiloBlanco" *ngIf="permiso_guardar">
+									{{ "configuracionSucursalTranslate.guardar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-4"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+			<!---->
+
+			<!-- FACTURACION # 4 -->
+			<mat-tab id="infoFacturacion" label="{{'configuracionSucursalTranslate.infoFacturacion' | translate}}">
+				<!-- CONTENEDOR PRINCIPAL -->
+				<div id="contenedorFacturacion" class="row mx-auto mt-3">
+					<div class="col-lg-12" style="margin-bottom: 10px; margin-top: 5px">
+						Los campos marcados con un asterisco (*) son obligatorios.
+					</div>
+
+					<!-- SELECCION DE TIPO DE PERSONA FISICA O MORAL -->
+					<div class="col-lg-12">
+						<div class="row" style="margin-bottom: 27px">
+							<div class="col-lg-3">
+								<label class="control-label">{{"configuracionSucursalTranslate.tipoPersona" |
+									translate}}*</label>
+							</div>
+							<div class="col-lg-7">
+								<mat-radio-group [(ngModel)]="informacionFiscalSucursal.radioTipo"
+									aria-label="Select an option">
+									<mat-radio-button (change)="informacionFiscalSucursal_checkRadio('0')" value="0"
+										style="margin: 0px 10px">
+										{{"configuracionSucursalTranslate.fisica" | translate}}
+									</mat-radio-button>
+									<mat-radio-button (change)="informacionFiscalSucursal_checkRadio('1')" value="1"
+										style="margin: 0px 10px">
+										{{"configuracionSucursalTranslate.moral" | translate}}
+									</mat-radio-button>
+								</mat-radio-group>
+							</div>
+						</div>
+					</div>
+
+					<!-- GRID IZQUIERDO -->
+					<div class="col-lg-6">
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.rfc" | translate }}*
+								</label>
+							</div>
+							<div class="col-lg-7" id="divRFC">
+								<input id="rfcInput" type="text" maxlength="13" style="width: 100%"
+									class="form-control borderAzul" content="body"
+									[(ngModel)]="informacionFiscalSucursal.RFC" (focus)="txtfocus(3, $event, 'f')"
+									(blur)="txtfocus(3, $event, 'b')" />
+								<label id="errorrfcInput" class="control-label text-left"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div *ngIf="informacionFiscalSucursal.radioTipo === '0'" class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label"> CURP* </label>
+							</div>
+							<div class="col-lg-7" id="divCURP">
+								<input id="txtCURP" type="text" maxlength="18" class="form-control borderAzul"
+									style="width: 100%" content="body" (focus)="txtfocus(3, $event, 'f')"
+									(blur)="txtfocus(3, $event, 'b')" [(ngModel)]="informacionFiscalSucursal.curp" />
+								<label id="errortxtCURP" class="control-label text-left"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.nombre" | translate }}*
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="nombreInput" type="text" maxlength="250" style="width: 100%" content="body"
+									class="form-control borderAzul" [(ngModel)]="informacionFiscalSucursal.nombre"
+									(blur)="txtfocus(3, $event, 'b')" (focus)="txtfocus(3, $event, 'f')" />
+								<label id="errornombreInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.pais" | translate }}*
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<div class="col-lg-12 page_seccion_campo_contenido_valor">
+									<ng-select id="paisInput" style="height: 100%; width: 100%"
+										placeholder="{{'configuracionSucursalTranslate.selectPais' | translate}}"
+										appendTo="#paisInput" [searchable]="true" [clearable]="false"
+										[items]="informacionFiscalSucursal.dataPaises" bindLabel="nombre"
+										bindValue="idPais" [(ngModel)]="informacionFiscalSucursal.pais"
+										(change)="informacionFiscalSucursal_cargarEstados('cambio')">
+									</ng-select>
+								</div>
+								<label style="height: 20px"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.estado" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<div class="col-lg-12 page_seccion_campo_contenido_valor">
+									<ng-select id="estadoInput" style="height: 100%; width: 100%"
+										placeholder="Selecciona el estado" appendTo="#estadoInput" [searchable]="true"
+										[items]="informacionFiscalSucursal.dataEstados" [clearable]="false"
+										bindLabel="nombre" bindValue="idEstado"
+										[(ngModel)]="informacionFiscalSucursal.estado" (change)="onChangeDdlEstado()">
+									</ng-select>
+								</div>
+								<label style="height: 20px"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.ciudad" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<div class="col-lg-12 page_seccion_campo_contenido_valor">
+									<ng-select id="ciudadInput" style="height: 100%; width: 100%"
+										placeholder="{{'sucursalTranslate.placeholderCiudad' | translate}}"
+										appendTo="#ciudadInput" [searchable]="true" [clearable]="false"
+										[items]="informacionFiscalSucursal.dataCiudad" bindLabel="nombre"
+										bindValue="nombre" [(ngModel)]="informacionFiscalSucursal.ciudad">
+									</ng-select>
+								</div>
+								<label style="height: 20px"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.email" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="emailInput" type="text" maxlength="100" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="informacionFiscalSucursal.email"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="erroremailInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{"configuracionSucursalTranslate.nombreContacto" | translate}}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="nombreContactoInput" type="text" maxlength="100" style="width: 100%"
+									content="body" class="form-control borderAzul"
+									[(ngModel)]="informacionFiscalSucursal.nombreContacto"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="errornombreContactoInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.telefono" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="telefonoInput" type="text" maxlength="40" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="informacionFiscalSucursal.telefono"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="errortelefonoInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.telefonoOficina" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="telefonoOficinaInput" type="text" maxlength="50"
+									class="form-control borderAzul" style="width: 100%" content="body"
+									[(ngModel)]="informacionFiscalSucursal.telefonoOficina" />
+								<label id="errortelefonoOficinaInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row" style="height: 59px">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.formasDePago" | translate }}*
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<div class="col-lg-12 page_seccion_campo_contenido_valor">
+									<ng-select id="formasDePagoSelect" style="height: 100%; width: 100%"
+										placeholder="Selecciona la forma de pago" appendTo="#formasDePagoSelect"
+										[searchable]="false" [clearable]="false"
+										[items]="informacionFiscalSucursal.formasDePago" bindLabel="descripcion"
+										bindValue="idDatosFiscalesFormaPago"
+										[(ngModel)]="informacionFiscalSucursal.modelFormasDePago">
+									</ng-select>
+								</div>
+								<label style="height: 20px"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.cuenta" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="cuentaInput" type="text" maxlength="50" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="informacionFiscalSucursal.cuenta"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="errorCuenta" class="control-label" style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.clabeInterbancaria" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="clabeInterbancariaInput" type="text" maxlength="50"
+									class="form-control borderAzul" style="width: 100%" content="body"
+									[(ngModel)]="informacionFiscalSucursal.clabeInterbancaria"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="errorClabeInterbancaria" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label"> Razón Social </label>
+							</div>
+							<div class="col-lg-7">
+								<input id="txtRazonSocial" type="text" class="form-control borderAzul"
+									[(ngModel)]="informacionFiscalSucursal.razonSocial" style="width: 100%"
+									content="body" placeholder="Empresa S.A. de C.V." required />
+							</div>
+						</div>
+					</div>
+
+					<!-- GRID DERECHO -->
+					<div class="col-lg-6">
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.colonia" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="coloniaInput" type="text" maxlength="50" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="informacionFiscalSucursal.colonia"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="errorcoloniaInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.codigoPostal" | translate }}*
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="codigoPostalInput" type="text" maxlength="5" class="form-control borderAzul"
+									style="width: 100%" content="body"
+									[(ngModel)]="informacionFiscalSucursal.codigoPostal"
+									(focus)="txtfocus(3, $event, 'f')" (blur)="txtfocus(3, $event, 'b')" />
+								<label id="errorcodigoPostalInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.calle" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="calleInput" type="text" maxlength="100" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="informacionFiscalSucursal.calle"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="errorcalleInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.numero" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="numeroInput" type="text" maxlength="10" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="informacionFiscalSucursal.numero"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="errornumeroInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.numeroInterior" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="numeroInteriorInput" type="text" maxlength="15"
+									class="form-control borderAzul" style="width: 100%" content="body"
+									[(ngModel)]="informacionFiscalSucursal.numeroInterior" />
+								<label id="errornumeroInteriorInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.metodosDePago" | translate }}*
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<div class="col-lg-12 page_seccion_campo_contenido_valor">
+									<ng-select id="metodosDePagoSelect" style="height: 100%; width: 100%"
+										placeholder="Selecciona el metodo de pago" [searchable]="false"
+										[clearable]="false" [items]="informacionFiscalSucursal.metodosDePago"
+										bindLabel="descripcion" bindValue="idDatosFiscalesMetodoPago"
+										[(ngModel)]="informacionFiscalSucursal.modelMetodosDePago">
+									</ng-select>
+								</div>
+								<label style="height: 20px"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.digitosCuenta" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="digitosCuentaInput" type="text" maxlength="10"
+									class="form-control borderAzul" style="width: 100%" content="body"
+									[(ngModel)]="informacionFiscalSucursal.digitosCuenta" />
+								<label class="control-label" style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.alias" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="aliasInput" type="text" maxlength="100" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="informacionFiscalSucursal.alias"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="erroraliasInput" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.usoCFDI" | translate }}*
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<div class="col-lg-12 page_seccion_campo_contenido_valor">
+									<ng-select id="usoCFDISelect" style="height: 100%; width: 100%"
+										placeholder="Selecciona el uso cfdi" appendTo="#usoCFDISelect"
+										[searchable]="true" [clearable]="false"
+										[items]="informacionFiscalSucursal.usosCFDI" bindLabel="descripcion"
+										bindValue="idDatosFiscalesUsoCFDI"
+										[(ngModel)]="informacionFiscalSucursal.modelUsosCFDI">
+									</ng-select>
+								</div>
+								<label style="height: 20px"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.banco" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="bancoInput" type="text" maxlength="50" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="informacionFiscalSucursal.banco"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="errorBanco" class="control-label" style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.direccionBanco" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="direccionBancoInput" type="text" maxlength="50"
+									class="form-control borderAzul" style="width: 100%" content="body"
+									[(ngModel)]="informacionFiscalSucursal.direccionBanco"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="errorDireccionBanco" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.sucursalBanco" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-7">
+								<input id="sucursalBancoInput" type="text" maxlength="50"
+									class="form-control borderAzul" style="width: 100%" content="body"
+									[(ngModel)]="informacionFiscalSucursal.sucursalBanco"
+									(focus)="txtfocus(3, $event, 'f')" />
+								<label id="errorSucursalBanco" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label"> Regimen FIscal* </label>
+							</div>
+							<div class="col-lg-7">
+								<div class="col-lg-12 page_seccion_campo_contenido_valor">
+									<ng-select id="regimenFiscalList" appendTo="#regimenFiscalList"
+										style="height: 100%; width: 100%" placeholder="Selecciona una opción"
+										[searchable]="true" [clearable]="false" [items]="dataRegimen"
+										bindLabel="descripcion" bindValue="idRegimenFiscal"
+										[(ngModel)]="informacionFiscalSucursal.regimenFiscal">
+									</ng-select>
+								</div>
+								<label style="height: 20px"></label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-12" style="margin-top: 8px">
+								<mat-checkbox [(ngModel)]="informacionFiscalSucursal.infoEmpresa">
+									{{ "configuracionSucursalTranslate.usarInfoFiscal" | translate }}
+								</mat-checkbox>
+							</div>
+						</div>
+					</div>
+
+					<!-- Botón de guardar facturacion -->
+					<div class="col-lg-12" style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+						<div class="row">
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4">
+								<button id="btnGuardar2" (click)="accionBoton()" class="buttonEstiloBlanco" *ngIf="permiso_guardar">
+									{{ "configuracionSucursalTranslate.guardar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-4"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+			<!---->
+
+			<!-- CORREO # 5 -->
+			<mat-tab id="correoTab" label="{{ 'configuracionSucursalTranslate.correoTab' | translate }}">
+				<!-- CONTENEDOR PRINCIPAL -->
+				<div id="contenedorCorreo" class="row mx-auto mt-3">
+					<div class="col-lg-12">
+						<div class="row" style="margin-bottom: 15px" id="Div6">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.correoCuenta" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-4">
+								<input id="correoCuenta" type="text" maxlength="100" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="correo.cuenta" />
+								<label id="errorcorreoCuenta" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="row" style="margin-bottom: 15px" id="Div4">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.correoPassword" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-4">
+								<input id="correoPassword" type="text" maxlength="100" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="correo.password" />
+								<label id="errorcorreoPassword" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="row" style="margin-bottom: 15px" id="Div5">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.correoServidor" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-4">
+								<input id="correoServidor" type="text" maxlength="100" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="correo.servidor" />
+								<label id="errorcorreoServidor" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="row" style="margin-bottom: 15px" id="Div7">
+							<div class="col-lg-3" style="margin-top: 8px">
+								<label class="control-label">
+									{{ "configuracionSucursalTranslate.correoPuerto" | translate }}
+								</label>
+							</div>
+							<div class="col-lg-4">
+								<input id="correoPuerto" type="text" maxlength="100" class="form-control borderAzul"
+									style="width: 100%" content="body" [(ngModel)]="correo.puerto" />
+								<label id="errorcorreoPuerto" class="control-label"
+									style="height: 20px; color: red"></label>
+							</div>
+						</div>
+					</div>
+
+					<!-- Botón de guardar Correo -->
+					<div class="col-lg-12" style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+						<div class="row">
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4">
+								<button id="btnGuardar4" (click)="accionBoton()" class="buttonEstiloBlanco" *ngIf="permiso_guardar">
+									{{ "configuracionSucursalTranslate.guardar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-4"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+			<!---->
+
+			<!-- PAYPAL # 6 -->
+			<mat-tab id="Paypal" label="Paypal">
+				<!-- CONTENEDOR PRINCIPAL -->
+				<div id="contenedorPaypal" class="row mx-auto mt-3">
+					<div class="col-lg-12">
+						<div class="row">
+							<div class="col-lg-4">Pago en Ligas con Paypal</div>
+							<div class="col-lg-4">
+								<mat-slide-toggle id="switchPagoPaypal" [(ngModel)]="paypalConfiguracion.pagoConPaypal"
+									(change)="cambioEstatusPagoPaypal()">
+								</mat-slide-toggle>
+							</div>
+						</div>
+					</div>
+
+					<div *ngIf="paypalConfiguracion.pagoConPaypal">
+						<div class="col-lg-12" style="margin-top: 10px">
+							<div class="row">
+								<div class="col-lg-4">Client ID de Paypal</div>
+								<div class="col-lg-8">
+									<input id="inputClientIDPaypal" type="text" style="width: 100%"
+										class="form-control borderAzul" [(ngModel)]="paypalConfiguracion.idPaypal"
+										(change)="cambioIdPaypal()" />
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-12" style="margin-top: 10px">
+							<div class="row">
+								<div class="col-lg-4">Comisión Paypal pagada por Cliente</div>
+								<div class="col-lg-4">
+									<mat-slide-toggle id="switchComisionPagoCliente"
+										[(ngModel)]="paypalConfiguracion.paypalComisionCliente">
+									</mat-slide-toggle>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Botón de guardar Paypal -->
+					<div class="col-lg-12" style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+						<div class="row">
+							<div class="col-lg-4"></div>
+							<div class="col-lg-4">
+								<button id="btnGuardar2" (click)="accionBoton()" class="buttonEstiloBlanco" *ngIf="permiso_guardar">
+									{{ "configuracionSucursalTranslate.guardar" | translate }}
+								</button>
+							</div>
+							<div class="col-lg-4"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+			<!---->
+		</mat-tab-group>
+	</mat-card-content>
+</mat-card>
+
+<!-- MODALES -->
+
+<!-- Modal Alert-->
+<div id="modal-alert" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-alert">
+	<div class="modal-dialog" style="max-width: 600px;" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+			<div class="modal-body" id="mensaje1" style="min-height: 50px;">
+				{{ modalAlert_mensaje }}
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex;">
+				<button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;" data-bs-dismiss="modal">
+					{{'configuracionSucursalTranslate.aceptar'| translate}}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Modal Confirm-->
+<div id="modal-confirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirm">
+	<div class="modal-dialog" style="max-width: 600px;" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+			<div class="modal-body" id="mensaje1" style="min-height: 50px;">
+				{{ modalConfirm_mensaje }}
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex;">
+				<button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;" data-bs-dismiss="modal">
+					{{'configuracionSucursalTranslate.cancelar'| translate}}
+				</button>
+				<button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;" data-bs-dismiss="modal" (click)="cancelarParametros()">
+					{{'configuracionSucursalTranslate.si'| translate}}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Modal Reprogramar-->
+<div id="modalFacebook" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalFacebook">
+	<div class="modal-dialog" style="max-width: 600px;" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+			<div class="modal-header">
+				<span>Facebook</span>
+				<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconCerrarModal"
+					data-bs-dismiss="modal"></mat-icon>
+			</div>
+			<div class="modal-body" id="mensaje1" style="min-height: 625px;">
+				<div class="mat-elevation-z8">
+					<table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+						style="width: 100%;">
+						<ng-container matColumnDef="idEmpresaFbSucursal">
+							<th mat-header-cell *matHeaderCellDef style="text-align: center;"> {{
+								this.configuracionSucursalTranslate_eliminar }} </th>
+							<td mat-cell *matCellDef="let element" style="text-align: center;">
+								<i class="fa-solid fa-trash-can"
+									style="font-size: 1.2em; cursor:pointer; width:29px;color:#337dc0;"
+									(click)="borrarFacebook(element)"></i>
+							</td>
+						</ng-container>
+
+						<ng-container matColumnDef="nombre">
+							<th mat-header-cell *matHeaderCellDef mat-sort-header
+								sortActionDescription="Sort by nombre">
+								{{ this.configuracionSucursalTranslate_nombrePaginaWeb }}
+							</th>
+							<td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+						</ng-container>
+
+						<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+						<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+					</table>
+					<mat-paginator [pageSizeOptions]="[10, 25, 50, 100, 200]" showFirstLastButtons
+						aria-label="Facebook">
+					</mat-paginator>
+				</div>
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex;">
+				<button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;" data-bs-dismiss="modal" (click)="guardarPaginasFb()">
+					{{'configuracionSucursalTranslate.guardar'| translate}}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

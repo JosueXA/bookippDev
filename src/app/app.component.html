@@ -1,0 +1,801 @@
+<script>
+    if ( self === top ) {
+        document.documentElement.style.display = 'block';
+    }
+    else {
+        top.location = self.location;
+    }
+</script>
+<router-outlet ></router-outlet>
+
+<div class="spinnerOverlay" *ngIf="_pantallaService.spinnerVisible">
+    <div class="center">
+        <mat-spinner mode="indeterminate" diameter="100" strokeWidth="15" class="spinnerCentro" style="margin: 0 auto;"></mat-spinner>
+    </div>
+</div>
+
+
+<!-------------------------------------------------------------- MODALES -------------------------------------------------------------->
+
+<!------------------------------------------------ MENSAJES WPP/SMS ------------------------------------------------>
+<div id="modalWPP" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalWPP">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-header">
+                <span> WPP DISPONIBLES </span>
+				<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconCloseModal" 
+				data-bs-dismiss="modal"></mat-icon>
+            </div>
+            <div class="modal-body" id="mensaje1" style="min-height: 50px;">
+                {{ _pantallaService.dataTempWppMinimos.mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="buttonEstiloBlanco" style="max-width: 120px; height: 40px;" data-bs-dismiss="modal">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalSMS" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalSMS">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-header">
+                <span> SMS DISPONIBLES </span>
+				<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconCloseModal" 
+				data-bs-dismiss="modal"></mat-icon>
+            </div>
+            <div class="modal-body" id="mensaje1" style="min-height: 50px;">
+                {{ _pantallaService.dataTempSmsMinimos.mensaje }}
+            </div>
+            <div class="modal-footer" style="height:62px; display: flex;">
+                <button type="button" class="buttonEstiloBlanco" style="max-width: 120px; height: 40px;" data-bs-dismiss="modal">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!------------------------------------------------ TICKETS ------------------------------------------------>
+
+<!--------------------------- TICKET DE PAGO ------------------------------>
+<div id="modalGlobalTicketPago" style="z-index: 1056; overflow: auto;" role="dialog" aria-hidden="true" class="modal fade modalGlobalTicketPago">
+    <div class="modal-dialog" style="min-width: 800px !important;">
+        <div class="modal-content md-modal" style="margin: 0 auto; font-weight: 400;">
+            <div class="modal-header">
+                <span>{{'agendaTranslate.reciboCitaMayus'| translate}}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body">
+                <div class="recibo-pago" style="border: 1px solid #bcbcbc; margin: 10px 20px 20px 20px; padding: 15px 20px 20px 20px;">
+                    <p style="font-size: 16px; font-weight: 500; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">{{'agendaTranslate.reciboPago'| translate}}</p>
+
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;">{{'agendaTranslate.cliente'| translate}}</label>
+                            <span style="width: 75%">{{_ticketService.caja.venta.ticket.cliente}}</span>
+                        </div>
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;"> Folio Pago </label>
+                            <span style="width: 75%">{{_ticketService.caja.venta.ticket.folio}}</span>
+                        </div>
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;">{{'agendaTranslate.fecha'| translate}}</label>
+                            <span style="width: 75%">{{_ticketService.caja.venta.ticket.fecha}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.paquetes.length == 0">
+                            <label style="width: 25%;">Paquete</label>
+                            <span *ngFor="let c of _ticketService.caja.venta.ticket.paquetes" style="overflow: hidden; word-break: keep-all; text-overflow: ellipsis; width: 75%; float: right; margin-bottom: 5px">{{c.pago | currency}} - {{c.descripcion}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.cargos.length == 0">
+                            <label style="width: 25%;">{{'agendaTranslate.cargos'| translate}}</label>
+                            <span *ngFor="let c of _ticketService.caja.venta.ticket.cargos" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 75%; float: right; margin-bottom: 5px">{{c.pago | currency}} - {{c.descripcion}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.productos.length == 0">
+                            <label style="width: 26%;">{{'producto.productos'| translate}}</label>
+                            <span *ngFor="let p of _ticketService.caja.venta.ticket.productos" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{p.pago | currency}} - {{p.descripcion}}</span>
+                        </div>
+                         <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.certificadosRegalo.length == 0">
+                            <label style="width: 26%;">Certificado Reg.</label>
+                            <span *ngFor="let cr of _ticketService.caja.venta.ticket.certificadosRegalo" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{cr.pago | currency}} - {{cr.descripcion}}</span>
+                        </div>
+                        <!-- <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.descuento.pago == 0">
+                            <label style="width: 26%;">{{'agendaTranslate.descuento'| translate}}</label>
+                            <span style="width: 74%; float: right; margin-bottom: 5px">-{{_ticketService.caja.venta.ticket.descuento.pago * -1 | currency}}</span>
+                        </div> -->
+                        <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.promocion.length == 0">
+                            <label style="width: 26%;">{{'agendaTranslate.promocion'| translate}}</label>
+                            <span *ngFor="let p of _ticketService.caja.venta.ticket.promocion" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">-{{p.pago | currency}} - {{p.descripcion}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="!_ticketService.caja.venta.ticket.propina.pago">
+                            <label style="width: 26%;">Propina</label>
+                            <span style="width: 74%; float: right; margin-bottom: 5px">{{_ticketService.caja.venta.ticket.propina.pago | currency}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.totalDescuento == 0">
+                            <label style="width: 25%;"> Descuento </label>
+                            <span style="width: 75%; float: right; margin-bottom: 5px">{{_ticketService.caja.venta.ticket.totalDescuento | currency}}</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px; border-bottom: 1px dashed #bcbcbc;height: 27px;">
+                        <label style="width: 15%; float: left; text-align: right">{{'agendaTranslate.totalMay'| translate}} </label>
+                        <span style="margin-left: 30px">{{_ticketService.caja.venta.ticket.total | currency}}</span>
+                    </div>
+
+                    <div style="margin-top: 10px">
+                        <label style="width: 50%">{{'pagoTranslate.metodoPago'| translate}}</label>
+                    </div>
+
+                    <div *ngFor="let mp of _ticketService.caja.venta.ticket.metodoPago" style="display: inline-block; width: 100%;">
+                        <label style="width:70%;" *ngIf="mp.digitos">{{ mp.descripcion }} ( {{ mp.digitos }} )</label>
+                        <label style="width:70%;" *ngIf="!mp.digitos">{{ mp.descripcion }} </label>
+                        <span style="width:25%;margin-bottom: 5px">{{ mp.pago | currency }}</span>
+                    </div>
+
+                    <div style="margin-top: 10px; border-top: 1px dashed #bcbcbc; padding-top: 10px; padding-bottom: 15px;">
+                        <label style="width: 15%; float: left; text-align: right"> TOTAL PAGADO </label>
+                        <span style="margin-left: 30px">{{_ticketService.caja.venta.ticket.totalPagado | currency}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: block;">
+                <!--Se agrega Validacion en Agenda de Acuerdo al Estatus de la Factura -->
+                <div class="recibo-print" style="margin-right: 26px;">
+                    <!--funcion:moduloFactura.factura().se cambio-->
+                    <!-- [disabled]="!esPremium" -->
+                    <a style="cursor: pointer; line-height: 2.5; position: relative; left: 100px;" (click)="_facturacionService.validarestatusfactura(_ticketService.caja.venta.ticket.idCliente, _ticketService.caja.venta.ticket.folio_pago)">
+                        {{'agendaTranslate.factura'| translate}}
+                    </a>
+                    <!-- <div style="float: left" class="premium_feature" [hidden]="esPremium">
+                        {{'agendaTranslate.premium'| translate}}
+                        <div style="background-color: #092a38; border-radius: 61px; width: 16px; height: 16px; margin-top: 4px; margin-left: 3px;">
+                            <i class="glyphicon glyphicon-lock" style="font-size: 8px; margin-top: 3px;"></i>
+                        </div>
+                    </div> -->
+
+                    <a id="btnImprimirTicket" style="float: right; cursor: pointer; line-height: 2.5; display: flex;" (click)="_ticketService.imprimir_control_imprimirTicket();">
+                        <mat-icon class="iconosBookipp" svgIcon="iconImprimir" style="width: 24px; height: auto;"></mat-icon>
+                        {{'agendaTranslate.imprimir'| translate}}
+                    </a>
+
+                    <a style="float: right; cursor: pointer; line-height: 2.5; margin-right: 10px; display: flex;" (click)="_ticketService.imprimir_control_mandarCorreoTicket()">
+                        <mat-icon class="iconosBookipp" svgIcon="iconCorreo" style="width: 24px; height: auto;"></mat-icon>
+                        {{'agendaTranslate.reciboEnviarCorreo'| translate}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------------------- TICKET DE VENTA ----------------------------->       
+<div id="modalGlobalTicketVenta" style="z-index: 1056; overflow: auto;" role="dialog" aria-hidden="true" class="modal fade modalGlobalTicketVenta">
+    <div class="modal-dialog" style="min-width: 800px !important;">
+        <div class="modal-content md-modal" style="margin: 0 auto; font-weight: 400;">
+            <div class="modal-header">
+                <span> RECIBO DE VENTA </span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body">
+                <div class="recibo-pago" style="border: 1px solid #bcbcbc; margin: 10px 20px 20px 20px; padding: 15px 20px 20px 20px;">
+
+                    <p style="font-size: 16px; font-weight: 500; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;"> VENTA </p>
+
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;">{{'agendaTranslate.cliente'| translate}}</label>
+                            <span style="width: 75%">{{_ticketService.caja.venta.ticketVenta.cliente}}</span>
+                        </div>
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;"> Folio Venta </label>
+                            <span style="width: 75%">{{_ticketService.caja.venta.ticketVenta.folioVenta}}</span>
+                        </div>
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;">{{'agendaTranslate.fecha'| translate}}</label>
+                            <span style="width: 75%">{{_ticketService.caja.venta.ticketVenta.fecha}}</span>
+                        </div>
+                        <div style="float: left; width: 100%" [hidden]="_ticketService.caja.venta.ticketVenta.paquetes.length == 0">
+                            <label style="width: 26%;">Paquete</label>
+                            <span *ngFor="let c of _ticketService.caja.venta.ticketVenta.paquetes" style="overflow: hidden; word-break: keep-all; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{c.pago | currency}} - {{c.descripcion}}</span>
+                        </div>
+                        <div style="float: left; width: 100%" [hidden]="_ticketService.caja.venta.ticketVenta.cargos.length == 0">
+                            <label style="width: 26%;">{{'agendaTranslate.cargos'| translate}}</label>
+                            <span *ngFor="let c of _ticketService.caja.venta.ticketVenta.cargos" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{c.pago | currency}} - {{c.descripcion}}</span>
+                        </div>
+                        <div style="float: left; width: 100%" [hidden]="_ticketService.caja.venta.ticketVenta.productos.length == 0">
+                            <label style="width: 26%;">{{'producto.productos'| translate}}</label>
+                            <span *ngFor="let p of _ticketService.caja.venta.ticketVenta.productos" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{p.pago | currency}} - {{p.descripcion}}</span>
+                        </div>
+                        <div style="float: left; width: 100%" [hidden]="_ticketService.caja.venta.ticketVenta.promocion.length == 0">
+                            <label style="width: 26%;">{{'agendaTranslate.promocion'| translate}}</label>
+                            <span *ngFor="let p of _ticketService.caja.venta.ticketVenta.promocion" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">-{{p.pago * -1 | currency}} - {{p.descripcion}}</span>
+                        </div>
+
+                        <div style="float: left; width: 100%" [hidden]="_ticketService.caja.venta.ticketVenta.certificadosRegalo.length == 0">
+                            <label style="width: 26%;">Certificado Reg.</label>
+                            <span *ngFor="let c of _ticketService.caja.venta.ticketVenta.certificadosRegalo" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{c.pago | currency}} - {{c.descripcion}}</span>
+                        </div>
+                    </div>
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;" [hidden]="_ticketService.caja.venta.ticketVenta.descuento == 0">
+                        <div style="float: left; width: 100%; margin-top: 5px">
+                            <label style="width: 26%;"> Descuento </label>
+                            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px"> {{ _ticketService.caja.venta.ticketVenta.descuento | currency}} </span>
+                        </div>
+                    </div>
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px; color:red;" [hidden]="_ticketService.caja.venta.ticketVenta.devoluciones.length == 0">
+                        <div style="float: left; width: 100%">
+                            <label style="width: 26%;">Devoluciones</label>
+                            <span *ngFor="let d of _ticketService.caja.venta.ticketVenta.devoluciones" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">-{{d.montoTotal | currency}} - {{d.descripcion}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------------------- TICKET DE RETIRO ---------------------------->
+<div id="modalGlobalTicketRetiro" style="z-index: 1056; overflow: auto;" role="dialog" aria-hidden="true" class="modal fade modalGlobalTicketRetiro">
+    <div class="modal-dialog" style="min-width: 800px !important;">
+        <div class="modal-content md-modal" style="margin: 0 auto; font-weight: 400;">
+            <div class="modal-header">
+                <span>TICKET RETIRO EFECTIVO</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body">
+                <div class="recibo-pago" style="border: 1px solid #bcbcbc; margin: 10px 20px 20px 20px; padding: 15px 20px 20px 20px;">
+                    <p style="font-size: 16px; font-weight: 500; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">Retiro Efectivo</p>
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;">Usuario </label>
+                            <span style="width: 75%">{{_ticketService.caja.retiroEfectivo.ticket.Usuario}}</span>
+                        </div>
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;">Folio Retiro</label>
+                            <span style="width: 75%">{{_ticketService.caja.retiroEfectivo.ticket.Folio}}</span>
+                        </div>
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;">Fecha</label>
+                            <span style="width: 75%">{{_ticketService.caja.retiroEfectivo.ticket.Fecha}}</span>
+                        </div>
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;">Motivo Retiro</label>
+                            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 75%; float: right; margin-bottom: 5px">{{_ticketService.caja.retiroEfectivo.ticket.motivoRetiro}}</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px; border-bottom: 1px dashed #bcbcbc;height: 27px; padding-bottom: 15px;">
+                        <label style="width: 15%; float: left; text-align: right">TOTAL: </label>
+                        <span style="margin-left: 30px">{{_ticketService.caja.retiroEfectivo.ticket.Monto | currency }}</span>
+                    </div>
+                </div>
+                <!-- <div class="recibo-print">
+                    <div style="float: left" class="premium_feature" ng-hide="esPremium">
+                        {{'agendaTranslate.premium'| translate}}
+                        <div style="background-color: #092a38; border-radius: 61px; width: 16px; height: 16px; margin-top: 4px; margin-left: 3px;">
+                            <i class="glyphicon glyphicon-lock" style="font-size: 8px; margin-top: 3px;"></i>
+                        </div>
+                    </div>
+                </div> -->
+                    <a id="A1" style="float: right; cursor: pointer; line-height: 2.5; display: flex;" (click)="_ticketService.imprimir_control_imprimirTicketRetiroEfectivo()">
+                        <mat-icon class="iconosBookipp" svgIcon="iconImprimir" style="width: 24px; height: auto;"></mat-icon>
+                        Imprimir
+                    </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-------------------- TICKET DE PAGO CON DDL PARA AGENDA ----------------->
+<div id="modalGlobalTicketPagoAgenda" style="z-index: 1056; overflow: auto;" role="dialog" aria-hidden="true" class="modal fade modalGlobalTicketPagoAgenda">
+    <div class="modal-dialog" style="min-width: 800px !important;">
+        <div class="modal-content md-modal" style="margin: 0 auto; font-weight: 400;">
+            <div class="modal-header">
+                <span>{{'agendaTranslate.reciboCitaMayus'| translate}}</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="_ticketService.caja_movimientos_ocultarTicketFolioPagoAgenda()" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+            <div class="modal-body">
+                <div id="cajaTipoCorte" class="row col-lg-12" style="min-height: 40px;">
+                    <div class="col-lg-2" style="margin-top: 6px; font-size: 15px; display: flex;">
+                        <label> Folio Pago </label>
+                    </div>
+
+                    <div class="col-lg-8" style="padding: 0;" >
+                        <ng-select id="ddlTicketPagoCita" style="width: 100%;" [multiple]="false" appendTo="#modalGlobalTicketPagoAgenda" [searchable]="true"
+                            [(ngModel)]="_ticketService.ticketPago.ticketSelecionado" [clearable]="false" placeholder="{{'agendaTranslate.placeholderCliente'| translate}}"
+                            (ngModelChange)="_ticketService.caja_movimientos_mostrarTicketFolioPago('agenda')"
+                            [items]="_ticketService.ticketPago.dataTickets" bindLabel="folioMostrar" bindValue="folio">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div class="recibo-pago" style="border: 1px solid #bcbcbc; margin: 10px 20px 20px 20px; padding: 15px 20px 20px 20px;" *ngIf="_ticketService.ticketPago.ticketSelecionado">
+                    <p style="font-size: 16px; font-weight: 500; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">{{'agendaTranslate.reciboPago'| translate}}</p>
+
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px dashed #bcbcbc; padding-bottom: 10px;">
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;">{{'agendaTranslate.cliente'| translate}}</label>
+                            <span style="width: 75%">{{_ticketService.caja.venta.ticket.cliente}}</span>
+                        </div>
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;"> Folio Pago </label>
+                            <span style="width: 75%">{{_ticketService.caja.venta.ticket.folio}}</span>
+                        </div>
+                        <div style="float: left; width: 100%">
+                            <label style="width: 25%;">{{'agendaTranslate.fecha'| translate}}</label>
+                            <span style="width: 75%">{{_ticketService.caja.venta.ticket.fecha}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.paquetes.length == 0">
+                            <label style="width: 25%;">Paquete</label>
+                            <span *ngFor="let c of _ticketService.caja.venta.ticket.paquetes" style="overflow: hidden; word-break: keep-all; text-overflow: ellipsis; width: 75%; float: right; margin-bottom: 5px">{{c.pago | currency}} - {{c.descripcion}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.cargos.length == 0">
+                            <label style="width: 25%;">{{'agendaTranslate.cargos'| translate}}</label>
+                            <span *ngFor="let c of _ticketService.caja.venta.ticket.cargos" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 75%; float: right; margin-bottom: 5px">{{c.pago | currency}} - {{c.descripcion}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.productos.length == 0">
+                            <label style="width: 26%;">{{'producto.productos'| translate}}</label>
+                            <span *ngFor="let p of _ticketService.caja.venta.ticket.productos" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{p.pago | currency}} - {{p.descripcion}}</span>
+                        </div>
+                         <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.certificadosRegalo.length == 0">
+                            <label style="width: 26%;">Certificado Reg.</label>
+                            <span *ngFor="let cr of _ticketService.caja.venta.ticket.certificadosRegalo" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">{{cr.pago | currency}} - {{cr.descripcion}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.promocion.length == 0">
+                            <label style="width: 26%;">{{'agendaTranslate.promocion'| translate}}</label>
+                            <span *ngFor="let p of _ticketService.caja.venta.ticket.promocion" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 74%; float: right; margin-bottom: 5px">-{{p.pago | currency}} - {{p.descripcion}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="!_ticketService.caja.venta.ticket.propina.pago">
+                            <label style="width: 26%;">Propina</label>
+                            <span style="width: 74%; float: right; margin-bottom: 5px">{{_ticketService.caja.venta.ticket.propina.pago | currency}}</span>
+                        </div>
+                        <div style="float: left; width: 100%"  [hidden]="_ticketService.caja.venta.ticket.totalDescuento == 0">
+                            <label style="width: 25%;"> Descuento </label>
+                            <span style="width: 75%; float: right; margin-bottom: 5px">{{_ticketService.caja.venta.ticket.totalDescuento | currency}}</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px; border-bottom: 1px dashed #bcbcbc;height: 27px;">
+                        <label style="width: 15%; float: left; text-align: right">{{'agendaTranslate.totalMay'| translate}} </label>
+                        <span style="margin-left: 30px">{{_ticketService.caja.venta.ticket.total | currency}}</span>
+                    </div>
+
+                    <div style="margin-top: 10px">
+                        <label style="width: 50%">{{'pagoTranslate.metodoPago'| translate}}</label>
+                    </div>
+
+                    <div *ngFor="let mp of _ticketService.caja.venta.ticket.metodoPago" style="display: inline-block; width: 100%;">
+                        <label style="width:70%;" *ngIf="mp.digitos">{{ mp.descripcion }} ( {{ mp.digitos }} )</label>
+                        <label style="width:70%;" *ngIf="!mp.digitos">{{ mp.descripcion }} </label>
+                        <span style="width:25%;margin-bottom: 5px">{{ mp.pago | currency }}</span>
+                    </div>
+
+                    <div style="margin-top: 10px; border-top: 1px dashed #bcbcbc; padding-top: 10px; padding-bottom: 15px;">
+                        <label style="width: 15%; float: left; text-align: right"> TOTAL PAGADO </label>
+                        <span style="margin-left: 30px">{{_ticketService.caja.venta.ticket.totalPagado | currency}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: block;" *ngIf="_ticketService.ticketPago.ticketSelecionado">
+                <!--Se agrega Validacion en Agenda de Acuerdo al Estatus de la Factura -->
+                <div class="recibo-print" style="margin-right: 26px;">
+                    <a style="cursor: pointer; line-height: 2.5; position: relative; left: 100px;" (click)="_facturacionService.validarestatusfactura(_ticketService.caja.venta.ticket.idCliente, _ticketService.caja.venta.ticket.folio_pago)">
+                        {{'agendaTranslate.factura'| translate}}
+                    </a>
+
+                    <a id="btnImprimirTicket" style="float: right; cursor: pointer; line-height: 2.5; display: flex;" (click)="_ticketService.imprimir_control_imprimirTicket();">
+                        <mat-icon class="iconosBookipp" svgIcon="iconImprimir" style="width: 24px; height: auto;"></mat-icon>
+                        {{'agendaTranslate.imprimir'| translate}}
+                    </a>
+
+                    <a style="float: right; cursor: pointer; line-height: 2.5; margin-right: 10px; display: flex;" (click)="_ticketService.imprimir_control_mandarCorreoTicket()">
+                        <mat-icon class="iconosBookipp" svgIcon="iconCorreo" style="width: 24px; height: auto;"></mat-icon>
+                        {{'agendaTranslate.reciboEnviarCorreo'| translate}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!------------------------------------------------ FACTURACIÓN ------------------------------------------------>
+<!--------------------- MENSAJE DE ERROR DE FACTURA ------------------------>
+<div id="modalGlobalInformacionFactura" style="z-index: 1057; overflow: auto;" role="dialog" aria-hidden="true" class="modal fade modalGlobalInformacionFactura">
+    <div class="modal-dialog" style="margin-top: 120px;">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            
+            <div class="modal-footer">
+                <button class="buttonEstiloBlanco" style="max-width: 120px; height: 40px;" data-bs-dismiss="modal" type="button">
+                    {{'agendaTranslate.aceptar'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-------------------------- MODAL DE FACTURA ------------------------------>
+<div id="modalGlobalFactura" style="z-index: 1057" role="dialog" aria-hidden="true" class="modal fade modalGlobalFactura">
+    <div class="modal-dialog" style="max-width: 1300px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-header">
+                <span>Generar Factura</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="_facturacionService.cerrarModalFactura()" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+
+            <div id="modalFacturaBody" class="modal-body" style="min-height: 50px;">
+                 <!---- Datos Generales de la factura -->
+                <div id="datosGenerales" class="row mx-auto" *ngIf="_facturacionService.conceptos">
+                    <!---- EMISOR -->
+                    <div class="col-lg-12 page_seccion_titulo">
+                        Emisor
+                    </div>
+                    <div class="col-lg-12 page_seccion_titulo_barra">
+                        <hr class="page_seccion_titulo_barra_contenido" />
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'usuarioTranslate.sucursal' | translate}} *</span>
+                        <ng-select id="sucursalInput" style="width: 100%;" [multiple]="false" appendTo="#modalFacturaBody" [searchable]="true"
+                            [(ngModel)]="_facturacionService.facturacion.emisorSucursal" [clearable]="false"
+                            (ngModelChange)="_facturacionService.actualizarSucursal(_facturacionService.facturacion.emisorSucursal)"
+                            placeholder="{{'usuarioTranslate.placeholderSucursal' | translate}}"
+                            [items]="_facturacionService.dataSucursales" bindLabel="nombre" bindValue="idSucursal">
+                        </ng-select>
+						<label></label>
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">Regimen Fiscal *</span>
+                        <ng-select id="regimenFiscalInput" style="width: 100%;" [multiple]="false" appendTo="#modalFacturaBody" [searchable]="true"
+                            [(ngModel)]="_facturacionService.facturacion.emisorRegimenFiscal" [clearable]="false"
+                            placeholder="Regimen Fiscal"
+                            [items]="_facturacionService.dataRegimen" bindLabel="descripcion" bindValue="idRegimenFiscal">
+                        </ng-select>
+						<label></label>
+                    </div>
+
+                    <!---- RECEPTOR -->
+                    <div class="col-lg-12 page_seccion_titulo">
+                        Receptor
+                    </div>
+                    <div class="col-lg-12 page_seccion_titulo_barra">
+                        <hr class="page_seccion_titulo_barra_contenido" />
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'informacionFiscalClienteTranslate.nombre' | translate}}</span>
+                        <input id="nombreInput" type="text" maxlength="250" class="form-control borderAzul" [(ngModel)]="_facturacionService.facturacion.receptorNombre" style="width: 100%;">
+                        <label id="errornombreInput" class="control-label" style="height: 20px; color: red;"></label>
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'informacionFiscalSucursalTranslate.rfc' | translate}} *</span>
+                        <input id="rfcInput" type="text" maxlength="250" class="form-control borderAzul" [(ngModel)]="_facturacionService.facturacion.receptorRFC" style="width: 100%;">
+                        <label id="errorRFCInput" class="control-label" style="height: 20px; color: red;"></label>   
+                    </div>
+
+                    <!---- DATOS GENERALES -->
+                    <div class="col-lg-12 page_seccion_titulo">
+                        Datos Generales
+                    </div>
+                    <div class="col-lg-12 page_seccion_titulo_barra">
+                        <hr class="page_seccion_titulo_barra_contenido" />
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'configuracionSucursalTranslate.formasDePago'| translate}} *</span>
+                        <ng-select id="formasDePagoSelect" style="width: 100%;" [multiple]="false" appendTo="#modalFacturaBody" [searchable]="true"
+                            [(ngModel)]="_facturacionService.facturacion.receptorFormaPago" [clearable]="false"
+                            placeholder="Selecciona la forma de pago"
+                            [items]="_facturacionService.dataformasDePago" bindLabel="descripcion" bindValue="idDatosFiscalesFormaPago">
+                        </ng-select>
+						<label></label>
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'configuracionSucursalTranslate.metodosDePago'| translate}} *</span>
+                        <ng-select id="metodosDePagoSelect" appendTo="#modalFacturaBody" [searchable]="true"
+                            [clearable]="false" [items]="_facturacionService.datametodosDePago" bindLabel="descripcion"
+                            bindValue="idDatosFiscalesMetodoPago" placeholder="Selecciona el metodo de pago"
+                            [(ngModel)]="_facturacionService.facturacion.receptorMetodoPago">
+                        </ng-select>
+						<label></label>
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">Serie - Folio *</span>
+                        <mat-icon id="btnNuevo" class="iconosBookipp" svgIcon="iconAgregar" *ngIf="_facturacionService.sinSeries" (click)="_facturacionService.nuevaSerie()" style="position: relative; top: 1px; width: 32px; height: 32px; cursor: pointer; "></mat-icon>
+                        <ng-select *ngIf="_facturacionService.dataSerie.length != 0" id="serieFolioInput" style="width: 100%;" [multiple]="false" appendTo="#modalFacturaBody" [searchable]="true"
+                            [(ngModel)]="_facturacionService.facturacion.serieyFolioFactura" [clearable]="false"
+                            placeholder="Seleccione una serie"
+                            [items]="_facturacionService.dataSerie" bindLabel="nombre" bindValue="idSerie" [virtualScroll]="true">
+                            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+								<div title="item">{{ item.nombre }} - {{ item.contador }}</div>
+							</ng-template>
+                        </ng-select>
+						<label></label>
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'configuracionSucursalTranslate.usoCFDI' | translate}} *</span>
+                        <ng-select id="CFDIInput" style="width: 100%;" [multiple]="false" appendTo="#modalFacturaBody" [searchable]="true"
+                            [(ngModel)]="_facturacionService.facturacion.receptorCFDI" [clearable]="false"
+                            placeholder="Seleccione un CFDI"
+                            [items]="_facturacionService.dataCFDI" bindLabel="descripcion" bindValue="idDatosFiscalesUsoCFDI">
+                        </ng-select>
+						<label></label>
+                    </div>
+                </div>
+
+                <!---- Conceptos de factura -->
+                <div id="conceptos" class="row mx-auto" *ngIf="_facturacionService.datosGenerales">
+                    <div class="col-lg-12" style="padding: 0px;">
+                        <!---- Cabezal de los conceptos -->
+                        <div class="row mx-auto">
+                            <div class="col-lg-8">
+                                <h4 style="color: #777777;">Conceptos</h4>
+                            </div>
+                            <div class="col-lg-4">
+                                <ng-select [disabled]="_facturacionService.facturacion.aplicaIVA" id="aplicaIvaDDL" style="width: 100%;" [multiple]="false" appendTo="#modalFacturaBody" [searchable]="true"
+                                    [(ngModel)]="_facturacionService.facturacion.ivaGeneral" [clearable]="false"
+                                    (ngModelChange)="_facturacionService.changeIvaGeneral()"
+                                    placeholder="Factor IVA"
+                                    [items]="_facturacionService.dataImpuestoIva" bindLabel="valor" bindValue="valor">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!---- Detalle del concepto -->
+                    <div class="row mx-auto">                        
+                        <div class="col-md-12" style="padding: 0px;">
+                            <div class="overflow-auto">
+                                <table class="table tableCustomFactura">
+                                    <thead>
+                                        <tr>
+                                            <th style="min-width: 30px;"></th>
+                                            <th style="min-width: 100px; width: 9%;">Unidad</th>
+                                            <th style="min-width: 140px; width: 10%;">Cve. Prod. o Serv.</th>
+                                            <th style="min-width: 150px; width: 26%;">Descripcion</th>
+                                            <th style="min-width: 90px;  width: 9%;">Cantidad</th>
+                                            <th style="min-width: 100px; width: 10%;">Valor Unitario</th>
+                                            <th style="min-width: 100px; width: 10%;">Importe</th>
+                                            <th style="min-width: 100px; width: 5%;">Aplica IVA</th>
+                                            <th style="min-width: 100px; width: 10%;">Importe IVA</th>
+                                            <th style="min-width: 100px; width: 10%;">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let lf of _facturacionService.facturacion.listaFacturar; let i = index;">
+                                            <td>
+                                                <mat-checkbox id="{{'seFactura' + i}}" checked
+                                                    [(ngModel)]="lf.seFactura"
+                                                    [disabled]="lf.yaFacturado"
+                                                    (ngModelChange)="_facturacionService.calcularTotalFactura(i,lf.seFactura)">
+                                                </mat-checkbox>
+                                            </td>
+                                            <td>
+                                                <ng-select id="{{'unidad'+i}}" appendTo="#modalFacturaBody" [searchable]="true"
+                                                    [disabled]="!lf.seFactura || lf.yaFacturado" 
+                                                    [(ngModel)]="lf.cveUnidad" [clearable]="false"
+                                                    [items]="lf.dataUnidadMedida" bindLabel="nombre" bindValue="idUnidadMedida">
+                                                </ng-select>
+                                            </td>
+                                            <td>
+                                                <ng-select id="{{'cveProdServ'+i}}" appendTo="#modalFacturaBody" [searchable]="true"
+                                                    [disabled]="!lf.seFactura || lf.yaFacturado"
+                                                    [(ngModel)]="lf.cveProdServ" [clearable]="false"
+                                                    [items]="lf.dataCveProdServ" bindLabel="descripcion" bindValue="idClaveProdServ">
+                                                </ng-select>
+                                            </td>
+                                            <td>
+                                                <input id="{{'descripcion' + i}}" maxlength="200" [(ngModel)]="lf.descripcion" class="form-control borderAzul" disabled/>
+                                            </td>
+                                            <td>
+                                                <input id="{{'cantidad' + i}}" class="form-control borderAzul" [(ngModel)]="lf.cantidad" disabled/>
+                                            </td>
+                                            <td>
+                                                <input id="{{'valorUnitario' + i}}" maxlength="100" currency-mask [(ngModel)]="lf.valorU" class="form-control borderAzul" disabled/>
+                                            </td>
+                                            <td>
+                                                <input id="{{'importe' + i}}" maxlength="100" currency-mask [(ngModel)]="lf.importeMostrar" class="form-control borderAzul" disabled />
+                                            </td>
+                                            <td>
+                                                <div
+                                                    style="display: flex; justify-content: center; align-items: center; width: 100%; height: 34px;">
+                                                    <mat-slide-toggle id="{{ 'chkAplicaIVA' + i }}" cd-true-value="1" cd-false-value="0" 
+                                                        [disabled]="!lf.seFactura || lf.yaFacturado"
+                                                        [(ngModel)]="lf.aplicaIVA"
+                                                        (ngModelChange)="_facturacionService.deshabilitarIvaDropDown(i)">
+                                                    </mat-slide-toggle>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input id="{{'ivaImporte' + i}}" maxlength="100" currency-mask [(ngModel)]="lf.ivaImporteMostrar" class="form-control borderAzul" disabled/>
+                                            </td>
+                                            <td>
+                                                <input id="{{'totalImporte' + i}}" maxlength="100" currency-mask [(ngModel)]="lf.totalImporte" class="form-control borderAzul" disabled/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr style="background-color: gray; height: 1px; margin: 18px 0px 0px 0px;"/>
+
+                    <!---- Totales -->
+                    <div class="row mx-auto mt-3" style="color: #777777;">
+                        <div class="col-lg-8">
+                            <h4>Totales e Impuestos</h4>
+                        </div>
+                        <div class="col-lg-4">
+                            <div id="totalImpuestos" class="row mx-auto px-2">
+                                <div class="col-6">
+                                    <h5>Subtotal</h5>
+                                </div>
+                                <div class="col-6">
+                                    <h5 class="text-end">
+                                        {{_facturacionService.facturacion.subtotalMostrar | currency}}
+                                    </h5>
+                                </div>
+                                <div class="col-6">
+                                    <h5>Impuestos</h5>
+                                </div>
+                                <div class="col-6">
+                                    <h5 class="text-end">
+                                        {{_facturacionService.facturacion.impuestoIvaMostrar | currency}}
+                                    </h5>
+                                </div>
+                                <div class="col-6">
+                                    <h5>Total</h5>
+                                </div>
+                                <div class="col-6">
+                                    <h5 class="text-end">
+                                        {{_facturacionService.facturacion.totalMostrar | currency}}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+
+            <div class="modal-footer" style="height: 63px;">
+                <div style="margin-bottom:25px;">
+                    <button id="safeButton" class="buttonEstiloBlanco" type="button" (click)="_facturacionService.validarConceptos(1)" *ngIf="_facturacionService.datosGenerales && !_facturacionService.ocultarGuardar" style="width:83px; height: auto;">
+                        {{'informacionFiscalClienteTranslate.guardar' | translate}}
+                    </button>
+                </div>
+                <div style="margin-bottom:25px;">
+                    <button id="timbrarButton" class="buttonEstiloBlanco" type="button" (click)="_facturacionService.validarConceptos(2)" *ngIf="_facturacionService.datosGenerales && !_facturacionService.ocultarGuardar" style="width:83px; height: auto;">
+                        Timbrar
+                    </button>
+                </div>
+                <div style="margin-bottom:25px;">
+                    <button id="nextButton" class="buttonEstiloBlanco" type="button" (click)="_facturacionService.validarCamposGenerales()" *ngIf="!_facturacionService.datosGenerales" style="width:83px; height: auto;">
+                        {{'tourTranslate.siguiente' | translate}}
+                    </button>
+                </div>
+                <div style="margin-bottom:25px;">
+                    <button id="backButton" class="buttonEstiloBlanco" type="button" (click)="_facturacionService.regresarDatosGenerales()" *ngIf="_facturacionService.datosGenerales" style="width:83px; height: auto;">
+                        {{ 'producto.regresar' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>    
+    </div>
+</div>
+
+<!---------------------- MODAL PARA AGREGAR SERIES -------------------------->
+<div id="modalGlobalSerie" style="z-index: 1057" role="dialog" aria-hidden="true" class="modal fade modalGlobalSerie">
+    <div class="modal-dialog" style="font-weight: 400; min-width: 100px;width: 651px;height: 485px">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; margin-top: -1px;">
+            <div class="modal-header">
+                <span>Agregar Serie</span>
+                <mat-icon class="iconosBookipp" svgIcon="iconCruzCirculo" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+            </div>
+
+            <div class="modal-body" style="width: 650px;padding-top: 0px !important;">
+                <div style="padding-left:10px;">
+                    <div class="row">
+                        <div class="col-md-6" style="margin-top: 20px; border: 0px solid; border-color: red;">
+                            <div class="col-md-3" style="border: 0px solid; border-color: green;">
+                                <label style="margin-top: 10px;">{{'consultaFacturaSerieTranslate.nombre' | translate}}</label>
+                            </div>
+                            <div class="col-md-9" style="padding-left: 0px; border: 0px solid; border-color: green;">
+                                <div class="col-md-12" style="padding: 0; border: 0px solid; border-color: blue;">
+                                    <input id="nombre" class="form-control ng-pristine ng-valid" type="text" maxlength="5" [(ngModel)]="_facturacionService.facturaSeries.nombre">
+                                        <!-- (focus)="onFocusTxt('nombre')" (blur)="onBlurTxt('nombre')"> -->
+                                </div>
+                                <div style="color: red;" class="col-md-offset-1">
+                                    <label class="control-label" style="margin-top: 3%;">
+                                        {{_facturacionService.msgErrorNombre}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="margin-top: 20px; border: 0px solid; border-color: red;">
+                            <div class="col-md-3" style="border: 0px solid; border-color: green;">
+                                <label style="margin-top: 10px;">{{'consultaFacturaSerieTranslate.contador' | translate}}</label>
+                            </div>
+                            <div class="col-md-9" style="padding-left: 0px; border: 0px solid; border-color: green;">
+                                <div class="col-md-12" style="padding: 0; border: 0px solid; border-color: blue;">
+                                    <input id="contador" class="form-control ng-pristine ng-valid" type="text" maxlength="6" [(ngModel)]="_facturacionService.facturaSeries.contador">
+                                        <!-- (focus)="onFocusTxt('contador')" (blur)="onBlurTxt('contador')"> -->
+                                </div>
+                                <div style="color: red;" class="col-md-offset-1">
+                                    <label class="control-label" style="margin-top: 3%;">
+                                        {{_facturacionService.msgErrorContador}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                                        
+                    <div class="row">
+                        <div class="col-md-6" style="margin-top: 20px; border: 0px solid; border-color: red;">
+                            <div class="col-md-3" style="border: 0px solid; border-color: green;">
+                                <label style="margin-top: 10px;">{{'consultaFacturaSerieTranslate.minimo' | translate}}</label>
+                            </div>
+                            <div class="col-md-9" style="padding-left: 0px; border: 0px solid; border-color: green;">
+                                <div class="col-md-12" style="padding: 0; border: 0px solid; border-color: blue;">
+                                    <input id="minimo" class="form-control ng-pristine ng-valid" type="text" maxlength="6" [(ngModel)]="_facturacionService.facturaSeries.minimo">
+                                        <!-- (focus)="onFocusTxt('minimo')" (blur)="onBlurTxt('minimo')"> -->
+                                </div>
+                                <div style="color: red;" class="col-md-offset-1">
+                                    <label class="control-label" style="margin-top: 3%;">
+                                        {{_facturacionService.msgErrorMinimo}}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6" style="margin-top: 20px; border: 0px solid; border-color: red;">
+                            <div class="col-md-3" style="border: 0px solid; border-color: green;">
+                                <label style="margin-top: 10px;">{{'consultaFacturaSerieTranslate.maximo' | translate}}</label>
+                            </div>
+                            <div class="col-md-9" style="padding-left: 0px; border: 0px solid; border-color: green;">
+                                <div class="col-md-12" style="padding: 0; border: 0px solid; border-color: blue;">
+                                    <input id="maximo" class="form-control ng-pristine ng-valid" type="text" maxlength="6" [(ngModel)]="_facturacionService.facturaSeries.maximo">
+                                        <!-- (focus)="onFocusTxt('maximo')" (blur)="onBlurTxt('maximo')"> -->
+                                </div>
+                                <div style="color: red;" class="col-md-offset-1">
+                                    <label class="control-label" style="margin-top: 3%;">
+                                        {{_facturacionService.msgErrorMaximo}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                    <div class="col-md-12" style="margin-top: 20px; border: 0px solid; border-color: red;">
+                        <div class="col-md-2" style="border: 0px solid; border-color: green; ">
+                            <label style="margin-top: 10px;">{{'consultaFacturaSerieTranslate.descripcion' | translate}}</label>
+                        </div>
+                        <div class="col-md-10" style="padding-left: 0px; border: 0px solid; border-color: green;">
+                            <div class="col-md-12" style="padding: 0; border: 0px solid; border-color: blue;">
+                                <textarea id="descripcion" rows="5" class="form-control ng-pristine ng-valid borderAzul"
+                                    style="width: 100%; resize: none; overflow: hidden !important;"
+                                    [(ngModel)]="_facturacionService.facturaSeries.descripcion" maxlength="50">
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>                                        
+                </div>
+            </div>
+
+            <div class="modal-footer" style="height: 63px;">
+                <div class="col-3" style="margin-bottom:25px;">
+                    <!-- <button id="btnGuardar" class="buttonEstiloBlanco" type="button" (click)="_facturacionService.guardar()" [disabled]="checked" style="width:83px; height: auto;">
+                        {{'consultaFacturaSerieTranslate.guardar' | translate}}
+                    </button> -->
+                </div>
+                <div class="col-3" style="margin-bottom:25px;">
+                    <!-- <button id="btnRegresar" class="buttonEstiloBlanco" type="button" (click)="_facturacionService.cancelarPantalla()" style="width:83px; height: auto;">
+                        {{'consultaFacturaSerieTranslate.cancelar' | translate}}
+                    </button> -->
+                </div>
+            </div>
+        </div>    
+    </div>
+</div>

@@ -1,0 +1,96 @@
+<mat-toolbar>
+    <mat-toolbar-row class="eliminarPaddginLeft">
+        <mat-icon class="colorIconosNavbar togle-menu eliminarMarginPadding" (click)="clickMenuSide()" svgIcon="iconMenuHambur" matListIcon *ngIf="sidenav.sidenav.mode == 'side'" style="height: 35px;"></mat-icon>
+        <mat-icon class="colorIconosNavbar togle-menu eliminarMarginPadding" (click)="clickMenuOver()" svgIcon="iconMenuHambur" matListIcon *ngIf="sidenav.sidenav.mode == 'over'" style="height: 35px;"></mat-icon>
+        <!-- <mat-icon (click)="clickMenuSide()" fontSet="fa" fontIcon="fa-bars" matListIcon class="togle-menu" *ngIf="sidenav.sidenav.mode == 'side'"></mat-icon>
+        <mat-icon (click)="clickMenuOver()" fontSet="fa" fontIcon="fa-bars" matListIcon class="togle-menu" *ngIf="sidenav.sidenav.mode == 'over'"></mat-icon> -->
+        <!-- <img [ngClass]="menuOpen === true ? 'img-menu-open' : 'img-menu-close'" src="{{this.logo}}" alt="logo" /> -->
+        <img class="mx-auto d-block mb-1 logopequenio" width="120px" src="../../assets/images/system/logo.png" alt="image" (click)="irAAgenda()" style="cursor: pointer;"/>
+
+        <div class="ocultarBeta" style="color: white; margin-left: 15px; border: white solid 1px; width: 70px; text-align: center; border-radius: 20px;">BETA</div>
+        <!-- <button mat-icon-button>
+            <mat-icon (click)="togleSideNav()" class="fa-xl icon-toolbar" fontSet="fa"
+                fontIcon="{{isTogleMenu ? 'fa-toggle-off' : 'fa-toggle-on'}}"></mat-icon>
+        </button> -->
+
+        <span class="example-spacer"></span>
+
+        <!-- WPP -->
+        <div style="width: 60px; height: 30px;" [hidden]="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.iconosSMSDisponibles == false">
+            <button
+                mat-icon-button
+                matBadge="{{ _pantallaService.dataTempWppMinimos.wppDisponibles }}" matBadgePosition="before" matBadgeColor="accent"
+
+                title="WPP"
+                placement="bottom"
+                ngbPopover="{{ _pantallaService.dataTempWppMinimos.mensaje }}"
+                popoverTitle="WPP"
+                container="body">
+                <mat-icon class="colorIconosNavbar" svgIcon="iconWSPNotificacion" style="height: 35px;"></mat-icon>
+                <!-- <mat-icon fontSet="fa-brands" fontIcon="fa-whatsapp" class="fa-xl icon-toolbar" ></mat-icon> -->
+            </button>
+        </div>
+
+        <!-- SMS -->
+        <div style="width: 60px; height: 30px;" [hidden]="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.iconosSMSDisponibles == false">
+            <button
+                mat-icon-button
+                matBadge="{{ _pantallaService.dataTempSmsMinimos.smsDisponibles }}" matBadgePosition="before" matBadgeColor="accent"
+
+                title="SMS"
+                placement="bottom"
+                ngbPopover="{{ _pantallaService.dataTempSmsMinimos.mensaje }}"
+                popoverTitle="SMS"
+                container="body">
+                <mat-icon class="colorIconosNavbar" svgIcon="iconSMSNotificacion" style="height: 35px;"></mat-icon>
+                <!-- <mat-icon fontSet="fa" fontIcon="fa-comments" class="fa-xl icon-toolbar" ></mat-icon> -->
+            </button>
+        </div>
+
+        <!-- Alertas -->
+        <div style="width: 60px; height: 30px;">
+            <ng-template #popContent>
+                <div *ngFor="let da of _pantallaService.dataAlertas; index as i;">
+                    <span class="label label-blue">
+                        <i class="fa {{da.icono}}"></i>
+                    </span>
+                    {{da.descripcion}}
+                </div>
+            </ng-template>
+            <button
+                mat-icon-button
+                matBadge="{{ _pantallaService.datos_pantalla.numAlertas }}" matBadgePosition="before" matBadgeColor="accent"
+
+                title="Notificaciones"
+                placement="bottom"
+                [ngbPopover]="popContent"
+                popoverTitle="Notificaciones"
+                container="body"
+                (click)="verAlertas()">
+                <mat-icon class="colorIconosNavbar" svgIcon="iconCampanaNotificacion" style="height: 35px;"></mat-icon>
+                <!-- <mat-icon fontSet="fa" fontIcon="fa-bell" class="fa-xl icon-toolbar" ></mat-icon> -->
+            </button>
+        </div>
+
+        <!-- Sucursales -->
+        <div style="height: 100%; width: 15%; min-width: 150px;">
+            <ng-select id="ddlSucursalesNB" style="width: 100%; margin-top: 12px;" placeholder="Sucursales"
+                appendTo="body"
+                [searchable]="false"
+                [clearable]="false"
+                [items]="_pantallaService.dataSucursales"
+                bindLabel="nombre"
+                bindValue="idSucursal"
+                [(ngModel)]="_pantallaService.idSucursal"
+                (change)="cambiarSucursal()"
+                [disabled]="_pantallaService.permisos_visualizacion.accesosPantalla.sitebar.todasLasAgendas == false">
+            </ng-select>
+        </div>
+
+        <button title="Salir" mat-icon-button (click)="logOut()">
+            <mat-icon class="colorIconosNavbar" svgIcon="iconLogOut" style="height: 45px;"></mat-icon>
+            <!-- <mat-icon fontSet="fa" fontIcon="fa-arrow-right-from-bracket" class="fa-xl icon-toolbar"></mat-icon> -->
+        </button>
+
+    </mat-toolbar-row>
+</mat-toolbar>

@@ -1,0 +1,531 @@
+<mat-card class="mat-elevation-z8">
+    <mat-card-header class="cardHeaderMaterial">
+        <mat-card-title>
+            {{'facturaTranslate.listado' | translate}}
+        </mat-card-title>
+
+        <div class="breadcrumbCustom">
+            <a href="/procesos/agenda">
+                <mat-icon matListIcon class="iconosBookipp iconoSize" style="margin: 0px 0px 3px 0px;"
+                    svgIcon="iconCasita"></mat-icon>
+                <span>{{'consultaProductosTranslate.inicio' | translate}}</span>
+            </a>
+            <a href="#">
+                <mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;"
+                    svgIcon="iconFlechaDerecha"></mat-icon>
+            </a>
+            <a href="#" class="active">
+                <span>{{'facturaTranslate.listado' | translate}}</span>
+            </a>
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content style="margin-top: 10px">
+        <div class="row mx-auto">
+            <!-- BARRA DE BUSQUEDA -->
+            <div class="col-lg-12">
+                <!-- Barra de arriba -->
+                <div class="row mx-auto">
+                    <div class="col-lg-3">
+                        <span class="subtitle">
+                            {{'facturaTranslate.fechaInicio' | translate}} - {{'facturaTranslate.fechaFin' | translate}}
+                        </span>
+                        <div class="d-flex align-items-center position-relative calenderWidth">
+                            <mat-icon matListIcon class="iconosBookipp position-absolute"
+                                style="width: 24px; height: 24px; left: 30px; top: 8px" svgIcon="iconAgenda"></mat-icon>
+                            <input id="reportrange" type="text" ngxDaterangepickerMd [(ngModel)]="filtro.fechas"
+                                [showCustomRangeLabel]="true" [alwaysShowCalendars]="false" [ranges]="ranges"
+                                [linkedCalendars]="true" [locale]="{format: 'DD/MM/YYYY', applyLabel: calendarioTranslate.aceptar,
+             	 						cancelLabel: calendarioTranslate.cancelar,
+              							customRangeLabel: calendarioTranslate.rango
+            					}" [isInvalidDate]="isInvalidDate" [showClearButton]="false" [showCancel]="true"
+                                placeholder="Select please..." class="inputCalenderSelect" />
+                            <mat-icon matListIcon class="iconosBookipp position-absolute"
+                                style="cursor: pointer; width: 24px; height: 24px; right: 30px; top: 8px"
+                                svgIcon="iconFlechaAbajo"></mat-icon>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <span class="subtitle">
+                            {{'facturaTranslate.cliente' | translate}}
+                        </span>
+                        <ng-select id="cliente" appendTo="body" [searchable]="true" [clearable]="true"
+                            [items]="clientes" bindLabel="nombre"
+                            placeholder="{{'facturaTranslate.cliente' | translate}}" bindValue="idCliente"
+                            [(ngModel)]="filtro.cliente">
+                        </ng-select>
+                    </div>
+                    <div class="col-lg-2">
+                        <span class="subtitle">
+                            {{'facturaTranslate.serie' | translate}}
+                        </span>
+                        <ng-select id="serie" appendTo="body" [searchable]="true" [clearable]="true" [items]="series"
+                            bindLabel="nombreSerie" bindValue="idSerie"
+                            placeholder="{{'facturaTranslate.serie' | translate}}" [(ngModel)]="filtro.serie">
+                        </ng-select>
+                    </div>
+                    <div class="col-lg-2">
+                        <span class="subtitle">
+                            {{'facturaTranslate.folio' | translate}}
+                        </span>
+                        <input id="folio" type="text" class="form-control borderAzul" placeholder="Folio"
+                            [(ngModel)]="filtro.folio" (ngModelChange)="busquedaFolio()" />
+                    </div>
+                    <div class="col-lg-2">
+                        <span class="subtitle"></span>
+                        <button class="buttonEstiloBlanco btnW100" (click)="consultarDocumentos()">
+                            {{'facturaTranslate.buscar' | translate}}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Boton de descarga -->
+                <div class="row mx-auto mt-4">
+                    <div class="col-lg-2">
+                        <button class="buttonEstiloBlanco btnW100" (click)="descargarDocumento()">
+                            {{'facturaTranslate.descargar' | translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla con la informacion desglosada -->
+            <div class="col-lg-12 mt-4">
+                <div class="mat-elevation-z8 overflow-auto">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="tableCustom">
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef style="min-width: 140px; text-align: center; width: 10%;"> {{
+                                facturaTranslate.acciones }} </th>
+                            <td mat-cell *matCellDef="let element" style="min-width: 140px; text-align: center; width: 10%;">
+                                <div style="display: flex; justify-content: center; align-items: center;">
+                                    <mat-checkbox [(ngModel)]="element.seleccionado"
+                                        (change)="changeDocument(element.seleccionado, element.idFactura)"
+                                        class="checkboxCustom"></mat-checkbox>
+                                    <mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconEditar"
+                                        (click)="editarDocumento(element)"></mat-icon>
+                                    <mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconCancelar"
+                                        (click)="preparacionCancelarFactura(element.idFactura)"></mat-icon>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- nombre Column -->
+                        <ng-container matColumnDef="nombre">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by cliente" style="text-align: center; min-width: 180px; width: 17%;">
+                                {{ facturaTranslate.cliente }}
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center; min-width: 180px; width: 17%;">
+                                {{element.nombre}} </td>
+                        </ng-container>
+
+                        <!-- estatus Column -->
+                        <ng-container matColumnDef="estatus">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by estatus" style="text-align: center; min-width: 100px; width: 10%;">
+                                {{ facturaTranslate.estatus }}
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center; min-width: 100px; width: 10%;"> {{element.estatus}}
+                            </td>
+                        </ng-container>
+
+                        <!-- nombreSerie Column -->
+                        <ng-container matColumnDef="nombreSerie">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by serie" style="text-align: center; min-width: 100px; width: 10%;">
+                                {{ facturaTranslate.serie }}
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center; min-width: 100px; width: 10%;">
+                                {{element.nombreSerie}}
+                            </td>
+                        </ng-container>
+
+                        <!-- folio Column -->
+                        <ng-container matColumnDef="folio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by folio" style="text-align: center; min-width: 140px; width: 12%;">
+                                {{ facturaTranslate.numeroFolio }}
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center; min-width: 140px; width: 12%;">
+                                {{element.folio}} </td>
+                        </ng-container>
+
+                        <!-- uuid Column -->
+                        <ng-container matColumnDef="uuid">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by uuid" style="text-align: center; min-width: 200px; width: 17%;">
+                                UUID
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center; min-width: 200px; width: 17%;">
+                                {{element.uuid}}
+                            </td>
+                        </ng-container>
+
+                        <!-- importe Column -->
+                        <ng-container matColumnDef="importe">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by importe" style="text-align: center; min-width: 150px; width: 12%;">
+                                {{ facturaTranslate.montoFactura }}
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center; min-width: 150px; width: 12%;">
+                                {{element.importe | currency}}
+                            </td>
+                        </ng-container>
+
+                        <!-- fechaCreacion Column -->
+                        <ng-container matColumnDef="fechaCreacion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by fecha" style="text-align: center; width: 12%;">
+                                {{ facturaTranslate.fecha }}
+                            </th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center; width: 12%;">
+                                {{element.fechaCreacion | date: 'dd/MM/yyyy'}}
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[15, 50, 100]" showFirstLastButtons
+                        aria-label="Select page of periodic elements">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!---------------------Modales---------------->
+
+<!--MODAL FACTURACION-->
+<div id="modalFactura" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalFactura">
+    <div class="modal-dialog" style="max-width: 1300px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-header">
+                <span>Generar Factura</span>
+                <mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconCerrarModal"
+                    (click)="cerrarModalFactura()"></mat-icon>
+            </div>
+            <div id="modalFacturaModalBody" class="modal-body" style="min-height: 50px;">
+                <!---- Datos Generales de la factura -->
+                <div id="datosGenerales" class="row mx-auto" *ngIf="conceptos">
+                    <!---- EMISOR -->
+                    <div class="col-lg-12 page_seccion_titulo">
+                        Emisor
+                    </div>
+                    <div class="col-lg-12 page_seccion_titulo_barra">
+                        <hr class="page_seccion_titulo_barra_contenido" />
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'usuarioTranslate.sucursal' | translate}} *</span>
+                        <ng-select id="sucursalInput" appendTo="#modalFacturaModalBody" [searchable]="true" [clearable]="false"
+                            [items]="dataSucursales" bindLabel="nombre" bindValue="idSucursal"
+                            placeholder="{{'usuarioTranslate.placeholderSucursal' | translate}}"
+                            [(ngModel)]="facturacion.emisorSucursal">
+                        </ng-select>
+						<label></label>
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">Regimen Fiscal *</span>
+                        <ng-select id="regimenFiscalInput" appendTo="#modalFacturaModalBody" [searchable]="true"
+                            [clearable]="false" [items]="dataRegimen" bindLabel="descripcion"
+                            bindValue="idRegimenFiscal" placeholder="Regimen Fiscal"
+                            [(ngModel)]="facturacion.emisorRegimenFiscal">
+                        </ng-select>
+						<label></label>
+                    </div>
+
+                    <!---- RECEPTOR -->
+                    <div class="col-lg-12 page_seccion_titulo">
+                        Receptor
+                    </div>
+                    <div class="col-lg-12 page_seccion_titulo_barra">
+                        <hr class="page_seccion_titulo_barra_contenido" />
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'informacionFiscalClienteTranslate.nombre' | translate}}</span>
+                        <input id="nombreInput" type="text" maxlength="250" class="form-control borderAzul"
+                            [(ngModel)]="facturacion.receptorNombre" />
+                        <label id="errornombreInput" style="color: red;"></label>
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'informacionFiscalSucursalTranslate.rfc' | translate}} *</span>
+                        <input id="rfcInput" type="text" maxlength="250" class="form-control borderAzul"
+                            [(ngModel)]="facturacion.receptorRFC" />
+                        <label id="errorRFCInput" style="color: red;"></label>
+                    </div>
+
+
+                    <!---- DATOS GENERALES -->
+                    <div class="col-lg-12 page_seccion_titulo">
+                        Datos Generales
+                    </div>
+                    <div class="col-lg-12 page_seccion_titulo_barra">
+                        <hr class="page_seccion_titulo_barra_contenido" />
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'configuracionSucursalTranslate.formasDePago'| translate}} *</span>
+                        <ng-select id="formasDePagoSelect" appendTo="#modalFacturaModalBody" [searchable]="true"
+                            [clearable]="false" [items]="dataformasDePago" bindLabel="descripcion"
+                            bindValue="idDatosFiscalesFormaPago" placeholder="Selecciona la forma de pago"
+                            [(ngModel)]="facturacion.receptorFormaPago">
+                        </ng-select>
+						<label></label>
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'configuracionSucursalTranslate.metodosDePago'| translate}} *</span>
+                        <ng-select id="metodosDePagoSelect" appendTo="#modalFacturaModalBody" [searchable]="true"
+                            [clearable]="false" [items]="datametodosDePago" bindLabel="descripcion"
+                            bindValue="idDatosFiscalesMetodoPago" placeholder="Selecciona el metodo de pago"
+                            [(ngModel)]="facturacion.receptorMetodoPago">
+                        </ng-select>
+						<label></label>
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">Serie - Folio *</span>
+                        <ng-select id="serieFolioInput" appendTo="#modalFacturaModalBody" [searchable]="true" [clearable]="false"
+                            [items]="dataSerie" bindValue="idSerie" 
+                            placeholder="Seleccione una serie" [(ngModel)]="facturacion.serieyFolioFactura" [virtualScroll]="true">
+							<ng-template ng-option-tmp ng-label-tmp let-item="item">
+								<div title="item">{{ item.nombre }} - {{ item.contador }}</div>
+							</ng-template>
+                        </ng-select>
+						<label></label>
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="subtitleModal">{{'configuracionSucursalTranslate.usoCFDI' | translate}} *</span>
+                        <ng-select id="CFDIInput" appendTo="#modalFacturaModalBody" [searchable]="true" [clearable]="false"
+                            [items]="dataCFDI" bindLabel="descripcion" bindValue="idDatosFiscalesUsoCFDI"
+                            placeholder="Seleccione un CFDI" [(ngModel)]="facturacion.receptorCFDI">
+                        </ng-select>
+						<label></label>
+                    </div>
+                </div>
+
+                <!---- Conceptos de factura -->
+                <div id="conceptos" class="row mx-auto" *ngIf="datosGenerales">
+                    <div class="col-lg-12" style="padding: 0px;">
+                        <!---- Cabezal de los conceptos -->
+                        <div class="row mx-auto">
+                            <div class="col-lg-8">
+                                <h4 style="color: #777777;">Conceptos</h4>
+                            </div>
+                            <div class="col-lg-4">
+                                <ng-select id="ddlIvaGeneral" appendTo="#modalFacturaModalBody" [searchable]="true"
+                                    [clearable]="false" [items]="dataImpuestoIva" bindLabel="valor" bindValue="valor"
+                                    (change)="changeIvaGeneral()" [disabled]="facturacion.aplicaIVA"
+                                    placeholder="Factor IVA" [(ngModel)]="facturacion.ivaGeneral">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <!---- Detalle del concepto -->
+                        <div class="row mx-auto">
+                            <div class="col-lg-12" style="padding: 0px;">
+                                <div class="overflow-auto">
+                                    <table class="table tableCustomFactura">
+                                        <thead>
+                                            <tr>
+                                                <th style="min-width: 30px;"></th>
+                                                <th style="min-width: 100px; width: 9%;">Unidad</th>
+                                                <th style="min-width: 140px; width: 10%;">Cve. Prod. o Serv.</th>
+                                                <th style="min-width: 150px; width: 26%;">Descripcion</th>
+                                                <th style="min-width: 90px;  width: 9%;">Cantidad</th>
+                                                <th style="min-width: 100px; width: 10%;">Valor Unitario</th>
+                                                <th style="min-width: 100px; width: 10%;">Importe</th>
+                                                <th style="min-width: 100px; width: 5%;">Aplica IVA</th>
+                                                <th style="min-width: 100px; width: 10%;">Importe IVA</th>
+                                                <th style="min-width: 100px; width: 5%;">Aplica Resico</th>
+                                                <th style="min-width: 100px; width: 10%;">Retencion ISR</th>
+                                                <th style="min-width: 100px; width: 10%;">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let lf of facturacion.listaFacturar; let i = index;">
+                                                <td>
+                                                    <mat-checkbox id="{{'seFactura' + i}}" [(ngModel)]="lf.seFactura"
+                                                        [disabled]="lf.yaFacturado === 1"
+                                                        (change)="calcularTotalFactura(i, lf.seFactura)"></mat-checkbox>
+                                                </td>
+                                                <td>
+                                                    <ng-select id="{{'unidad' + i}}" appendTo="#modalFacturaModalBody"
+                                                        [searchable]="true" [clearable]="false"
+                                                        [items]="lf.dataUnidadMedida" bindLabel="nombre"
+                                                        bindValue="idUnidadMedida"
+                                                        [disabled]="!lf.seFactura || lf.yaFacturado"
+                                                        [(ngModel)]="lf.cveUnidad">
+                                                    </ng-select>
+                                                </td>
+                                                <td>
+                                                    <ng-select id="{{'cveProdServ' + i}}" appendTo="#modalFacturaModalBody"
+                                                        [searchable]="true" [clearable]="false"
+                                                        [items]="lf.dataCveProdServ" bindLabel="descripcion"
+                                                        bindValue="idClaveProdServ"
+                                                        [disabled]="!lf.seFactura || lf.yaFacturado"
+                                                        [(ngModel)]="lf.cveProdServ">
+                                                    </ng-select>
+                                                </td>
+                                                <td>
+                                                    <input id="{{'descripcion' + i}}" class="form-control borderAzul"
+                                                        type="text" [(ngModel)]="lf.descripcion" maxlength="200"
+                                                        disabled />
+                                                </td>
+                                                <td>
+                                                    <input id="{{'cantidad' + i}}" class="form-control borderAzul"
+                                                        type="text" [(ngModel)]="lf.cantidad" disabled />
+                                                </td>
+                                                <td>
+                                                    <input id="{{'valorUnitario' + i}}" maxlength="100"
+                                                        class="form-control borderAzul" type="text"
+                                                        [(ngModel)]="lf.valorU" disabled />
+                                                </td>
+                                                <td>
+                                                    <input id="{{'importe' + i}}" maxlength="100"
+                                                        class="form-control borderAzul" type="text"
+                                                        [(ngModel)]="lf.importeMostrar" disabled />
+                                                </td>
+                                                <td>
+                                                    <div
+                                                        style="display: flex; justify-content: center; align-items: center; width: 100%; height: 34px;">
+                                                        <mat-slide-toggle id="{{'chkBox' + i}}"
+                                                            [(ngModel)]="lf.aplicaIVA" 
+															(change)="deshabilitarIvaDropDown(i)" 
+                                                            [disabled]="!lf.seFactura || lf.yaFacturado === 1">
+                                                        </mat-slide-toggle>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input id="{{'ivaImporte' + i}}" maxlength="100"
+                                                        class="form-control borderAzul" type="text"
+                                                        [(ngModel)]="lf.ivaImporteMostrar" disabled />
+                                                </td>
+                                                <!--Drop de Resico -->
+                                                <td>
+                                                    <div
+                                                        style="display: flex; justify-content: center; align-items: center; width: 100%; height: 34px;">
+                                                        <mat-slide-toggle id="{{'chkBoxRes' + i}}"
+                                                            [(ngModel)]="lf.aplicaResico" 
+															(change)="deshabilitarIvaDropDown(i)"
+                                                            [disabled]="!lf.seFactura || lf.yaFacturado === 1">
+                                                        </mat-slide-toggle>
+                                                    </div>
+                                                </td>
+                                                <!--Mostrar la retencion ISR Resico -->
+                                                <td>
+                                                    <input id="{{'retISR' + i}}" maxlength="100"
+                                                        class="form-control borderAzul" type="text"
+                                                        [(ngModel)]="lf.retencionISRMostrar" disabled />
+                                                </td>
+                                                <td>
+                                                    <input id="{{'totalImporte' + i}}" maxlength="100"
+                                                        class="form-control borderAzul" type="text"
+                                                        [(ngModel)]="lf.totalImporte" disabled />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!---- Totales -->
+                        <div class="row mx-auto mt-3" style="color: #777777;">
+                            <div class="col-lg-8">
+                                <h4>Totales e Impuestos</h4>
+                            </div>
+                            <div class="col-lg-4">
+                                <div id="totalImpuestos" class="row mx-auto px-2">
+                                    <div class="col-6">
+                                        <h5>Subtotal</h5>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-end">
+                                            {{facturacion.subtotalMostrar | currency}}
+                                        </h5>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5>Impuestos</h5>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-end">
+                                            {{facturacion.impuestoIvaMostrar | currency}}
+                                        </h5>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5>Retencion ISR</h5>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-end">
+                                            {{facturacion.impuestoRetencionISR | currency}}
+                                        </h5>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5>Total</h5>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-end">
+                                            {{facturacion.totalMostrar | currency}}                                          
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="height: auto; display: flex;">
+                <button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+                    (click)="validarConceptos(1)" *ngIf="datosGenerales && !ocultarGuardar">
+                    {{'informacionFiscalClienteTranslate.guardar' | translate}}
+                </button>
+                <button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+                    (click)="validarConceptos(2)" *ngIf="datosGenerales && !ocultarGuardar">
+                    Timbrar
+                </button>
+                <button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+                    (click)="validarCamposGenerales()" *ngIf="!datosGenerales">
+                    {{'tourTranslate.siguiente' | translate}}
+                </button>
+                <button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+                    (click)="regresarDatosGenerales()" *ngIf="datosGenerales">
+                    {{ 'producto.regresar' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Mensaje de Error de Facturacion -->
+<div id="modalInformacionFactura" tabindex="-1" role="dialog" aria-hidden="true"
+    class="modal fade modalInformacionFactura">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{ msgInformacionFactura }}
+            </div>
+            <div class="modal-footer" style="height: auto; display: flex;">
+                <button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+                    data-bs-dismiss="modal">
+                    {{'agendaTranslate.aceptar'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Confirm-->
+<div id="modalconfirmBorrarFactura" tabindex="-1" role="dialog" aria-hidden="true"
+    class="modal fade modalconfirmBorrarFactura">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-body" style="min-height: 50px;">
+                {{ msgConfirmBorrar }}
+            </div>
+            <div class="modal-footer" style="height: auto; display: flex;">
+                <button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+                    data-bs-dismiss="modal" (click)="cerrarBorrarFactura()">
+                    {{'consultaFacturaSerieTranslate.cancelar' | translate}}
+                </button>
+                <button type="button" class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+                    data-bs-dismiss="modal" (click)="cancelarFactura()">
+                    {{'consultaFacturaSerieTranslate.si' | translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+.headerModal{
+	padding-bottom: 20px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	display: flex;
+	align-items: center;
+
+	h4 {
+		display: inline-block;
+		flex-grow: 1;
+		margin: 0;
+	}
+}
+
+.footerModal{
+    display: flex;
+    justify-content: end;
+	padding-top: 10px;
+	margin-top: 5px;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}

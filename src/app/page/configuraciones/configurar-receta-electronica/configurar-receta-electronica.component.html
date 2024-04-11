@@ -1,0 +1,319 @@
+<mat-card class="mat-elevation-z8">
+	<mat-card-header class="cardHeaderMaterial">
+		<mat-card-title>
+			Receta Electrónica
+		</mat-card-title>
+
+		<div class="breadcrumbCustom">
+			<a href="/procesos/agenda">
+				<mat-icon matListIcon class="iconosBookipp iconoSize" style="margin: 0px 0px 3px 0px;"
+					svgIcon="iconCasita"></mat-icon>
+				<span>Inicio</span>
+			</a>
+			<a href="#">
+				<mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;"
+					svgIcon="iconFlechaDerecha"></mat-icon>
+			</a>
+			<a href="#" class="active">
+				<span>Receta Electrónica</span>
+			</a>
+		</div>
+	</mat-card-header>
+	<mat-divider></mat-divider>
+
+	<div class="row mx-auto mt-4">
+		<!-- Panel Izquierdo -->
+		<div class="col-lg-6">
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.nomConsultorio' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<input id="nomConsultorio" type="text" style="width: 100%;" class="form-control borderAzul"
+						(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" maxlength="50"
+						[(ngModel)]="receta.nomConsultorio" />
+
+					<label id="errornomConsultorio" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.cedProf' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<input id="cedulaProfesional" type="text" style="width: 100%;" class="form-control borderAzul"
+						(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" maxlength="10"
+						[(ngModel)]="receta.cedulaProfesional" />
+
+					<label id="errorcedulaProfesional" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.espMed' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<input id="especialidad" type="text" style="width: 100%;" class="form-control borderAzul"
+						maxlength="50" [(ngModel)]="receta.especialidadMedica" />
+
+					<label id="errorespecialidad" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.direccion' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<input id="direccion" type="text" style="width: 100%;" class="form-control borderAzul"
+						maxlength="60" [(ngModel)]="receta.direccion" />
+
+					<label id="errordireccion" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.pais' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<ng-select id="nomPais" style="width: 100%"
+						placeholder="{{'recetaMedicaTranslate.selectP' | translate}}" appendTo="body"
+						[searchable]="true" [clearable]="true" [items]="receta.dataPaises" bindLabel="nombre"
+						(change)="consultarEstados(receta.selectPais)" (click)="focus('#nomPais')" bindValue="idPais"
+						[(ngModel)]="receta.selectPais">
+					</ng-select>
+
+					<label id="errornomPais" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.estado' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<ng-select id="nomEstado" style="width: 100%"
+						placeholder="{{'recetaMedicaTranslate.selectE' | translate}}" appendTo="body"
+						[searchable]="true" [clearable]="true" [items]="receta.dataEstados" bindLabel="nombre"
+						(click)="focus('#nomEstado')" bindValue="idEstado" [(ngModel)]="receta.selectEstado">
+					</ng-select>
+
+					<label id="errornomEstado" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.ciudad' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<input id="nomCiudad" type="text" style="width: 100%;" class="form-control borderAzul"
+						(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" maxlength="30"
+						[(ngModel)]="receta.ciudad" />
+
+					<label id="errornomCiudad" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.codigoPostal' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<input id="cp" type="text" style="width: 100%;" class="form-control borderAzul"
+						(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" maxlength="5"
+						[(ngModel)]="receta.cp" />
+
+					<label id="errorcp" class="control-label" style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+		</div>
+
+		<!-- Panel Derecho -->
+		<div class="col-lg-6">
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.prescribe' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<input id="nomPrescribe" type="text" style="width: 100%;" class="form-control borderAzul"
+						maxlength="60" [(ngModel)]="receta.nomPrescribe" />
+
+					<label id="errornomPrescribe" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.institucionEmite' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<input id="nomInstituto" type="text" style="width: 100%;" class="form-control borderAzul"
+						(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" maxlength="40"
+						[(ngModel)]="receta.institutoCedula" />
+
+					<label id="errornomInstituto" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.cedEsp' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<input id="cedulaEsp" type="text" style="width: 100%;" class="form-control borderAzul"
+						(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" maxlength="10"
+						[(ngModel)]="receta.cedulaEspecialidad" />
+
+					<label id="errorcedulaEsp" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.telefono' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<input id="telefono" type="text" style="width: 100%;" class="form-control borderAzul"
+						(focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" maxlength="12"
+						[(ngModel)]="receta.telefono" />
+
+					<label id="errortelefono" class="control-label"
+						style="color: red;text-align: start !important;"></label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<canvas id="Canvas1" width="550" height="450" style="display: none;"></canvas>
+					<div class="d-flex flex-column justify-content-center align-items-center">
+						<div class="position-relative" style="width: 240px; height: 155px; text-align: center;">
+							<a id="btnBorrarImagen" class="fa fa-times iconCloseImage" (click)="borrarImagen()"></a>
+							<img id="clienteFoto" style="width: 155px; height: 155px;"
+								src="../../../../assets/images/migracion/Imagen-Foto-300x300.png">
+						</div>
+
+						<label id="cajaInput" class="buttonEstiloBlanco"
+							style="height: 40px; width: 160px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+							{{'recetaMedicaTranslate.selectImg' | translate}}
+							<input id="fileFoto" style="display: none;" type="file" accept="image/*"
+								(change)="fileFotoOnchange($event)" />
+						</label>
+
+						<label id="txtImagen" class="control-label text-left"
+							style="height: 25px; color: red; text-align:center;"></label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Panel Inferior izquierdo -->
+		<div class="col-lg-6">
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.copia' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<mat-slide-toggle id="recetaCopiaCheck" [(ngModel)]="receta.copia">
+					</mat-slide-toggle>
+				</div>
+			</div>
+		</div>
+
+		<!-- Panel Inferior derecho -->
+		<div class="col-lg-6">
+			<div class="row">
+				<div class="col-lg-4">
+					{{'recetaMedicaTranslate.orientacion' | translate}}
+				</div>
+				<div class="col-lg-8">
+					<mat-slide-toggle id="recetaOrientacionCheck" [(ngModel)]="receta.orientacion">
+					</mat-slide-toggle>
+				</div>
+			</div>
+		</div>
+
+		<!-- Botón de guardar pie -->
+		<div class="col-lg-12">
+			<div id="botonGuardarPie" class="row mx-auto d-flex justify-content-center"
+				style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+				<div class="col-lg-3"></div>
+				<div class="col-lg-3 my-1">
+					<button class="buttonEstiloBlanco" (click)="guardarReceta()">
+						{{ 'recetaMedicaTranslate.guardar' | translate }}
+					</button>
+				</div>
+				<div class="col-lg-3 my-1" *ngIf="receta.bandConfiguracionRecetaExistente">
+					<button class="buttonEstiloBlanco" (click)="verEjemplo()">
+						{{ 'recetaMedicaTranslate.verEjemplo' | translate }}
+					</button>
+				</div>
+				<div class="col-lg-3"></div>
+			</div>
+		</div>
+
+		<!-- Imagen de receta prueba -->
+		<div id="ejemploReceta" class="col-lg-12">
+			<div class="row">
+				<!-- Aqui va la imágen de muestra de ejemplo de como quedan las plantillas -->
+				<div class="col-lg-4"></div>
+				<div class="col-lg-4" style="margin-bottom:20px; justify-content: center; text-align: center;">
+					<img src="../../../../assets/images/system/Plantilla_Ejemplo.PNG" style="width:100%" />
+				</div>
+				<div class="col-lg-4"></div>
+			</div>
+		</div>
+	</div>
+</mat-card>
+
+<!-- Modales -->
+<div id="modalCargarImagen" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalCargarImagen">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>{{'recetaMedicaTranslate.cargarImg' | translate}}</span>
+				<mat-icon class="iconosBookipp iconoSize" data-bs-dismiss="modal" (click)="cancelarRecortadoImagen()"
+					svgIcon="iconCerrarModal"></mat-icon>
+			</div>
+			<div class="modal-body" style="min-height: 50px;">
+				<div id="cropImage" style="width: 100%; overflow: auto;"></div>
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+					style="height: 40px; width: 140px;" (click)="recortarImagen()">
+					{{'recetaMedicaTranslate.aceptar' | translate}}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Modal guardar-->
+<div id="modalGuardar" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalGuardar">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body">
+				{{ messageConfirmGuardar }}
+			</div>
+			<div class="modal-footer" style="height: auto; display: flex">
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+					style="width: 140px; height: 40px;">
+					{{'recetaMedicaTranslate.aceptar' | translate}}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

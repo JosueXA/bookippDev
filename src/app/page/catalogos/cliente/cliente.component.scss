@@ -1,0 +1,92 @@
+// .table-container {
+//     position: relative;
+//     min-height: 200px;
+//     max-height: none;
+//     overflow: auto;    
+// }
+
+.mat-column-acciones {
+    min-width: 200px !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-nombre {
+    min-width: 280px !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-telefono {
+    min-width: 100px !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-email {
+    min-width: 188px !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-fechaNacimiento {
+    min-width: 150px !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-edad {
+    min-width: 80px !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-fecha {
+    min-width: 110px !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-realizoAltaUsuario {
+    min-width: 100px !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-etiquetaNombre {
+    min-width: 157px !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-fechaAlta {
+    min-width: 120px !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+input, textarea{
+    outline: 1px solid #20c4e6 !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}
+
+.th{
+    text-transform: uppercase !important;
+}
+
+.suprimirFloat{
+    @media screen and (max-width: 991px){
+        float: none !important;
+    }
+}

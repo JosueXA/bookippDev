@@ -1,0 +1,241 @@
+<mat-card class="mat-elevation-z8">
+  <mat-card-header class="cardHeaderMaterial">
+    <mat-card-title>
+      {{ "consultaProductosTranslate.productos" | translate }}
+    </mat-card-title>
+
+	<div class="breadcrumbCustom">
+		<a href="/procesos/agenda">
+			<mat-icon matListIcon class="iconosBookipp iconoSize" 
+			style="margin: 0px 0px 3px 0px;" svgIcon="iconCasita"></mat-icon>
+			<span>Inicio</span>
+		</a>
+		<a href="#">
+			<mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;" svgIcon="iconFlechaDerecha"></mat-icon>
+		</a>
+		<a href="#" class="active">
+			<span>{{ "consultaProductosTranslate.productos" | translate }}</span>
+		</a>
+	</div>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+
+  <mat-card-content style="margin-top: 10px">
+    <mat-tab-group
+      dynamicHeight="true"
+      mat-align-tabs="center"
+      preserveContent="true"
+      [(selectedIndex)]="tabSelect"
+    >
+      <mat-tab id="listadoTab" label="1 / 2: Importacion" [disabled]="true">
+        <div class="row mx-auto mt-3">
+          <div class="col-lg-12">
+            {{ "importadorProductos.relacionaInfo" | translate }}
+          </div>
+          <div class="col-lg-12 mt-2">
+            <label
+              class="buttonEstiloBlanco"
+			  style="width: 140px; height: 40px; display: inline-flex; justify-content: center; align-items: center; cursor: pointer;"
+            >
+              {{ "importadorProductos.selectArchivo" | translate }}
+              <input
+                id="file"
+                type="file"
+                (change)="fileSelected($event)"
+                style="display: none"
+              />
+            </label>
+            <label class="ms-3">
+              {{ "importadorProductos.archivoSelect" | translate }}:
+              <span id="nomArchivo">...</span>
+            </label>
+          </div>
+          <div class="col-lg-12">
+            <div class="d-flex align-items-center mt-3" style="height: 30px">
+              <span style="margin-right: 10px">
+                {{ "importador.ignorarErrores" | translate }}
+              </span>
+              <mat-slide-toggle
+                id="chkEstaActiva"
+                [(ngModel)]="ignorarCambios"
+              ></mat-slide-toggle>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <div
+              class="overflow-auto mt-3"
+              style="min-width: 1000px; max-height: 300px; min-height: 300px"
+            >
+              <table class="table table-striped table-bordered tableCustom">
+                <thead>
+                  <tr>
+                    <th *ngFor="let col of colDefExcel; let i = index">
+                      <ng-select
+                        id="{{ 'header' + i }}"
+                        style="width: 100%"
+                        appendTo="body"
+                        [searchable]="false"
+                        [clearable]="true"
+                        [items]="colExcel"
+                        [(ngModel)]="configuracion['header' + i]"
+                        bindLabel="nombre"
+                        bindValue="idCampo"
+                      >
+                      </ng-select>
+                      <span>
+                        {{ col }}
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of dataExcel">
+                    <td *ngFor="let col of colDefExcel">
+                      {{ item[col] }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab
+        id="listadoTab"
+        label="2 / 2: Importación de Productos"
+        [disabled]="true"
+      >
+        <div class="row mx-auto mt-3">
+          <div class="col-lg-12">
+            <label style="font-size: 14px">
+              {{ "importadorProductos.verificaInfo" | translate }}
+            </label>
+          </div>
+          <div class="col-lg-12">
+            <div
+              class="overflow-auto mt-3"
+              style="min-width: 1000px; max-height: 300px; min-height: 300px"
+            >
+              <table class="table table-striped table-bordered tableCustom">
+                <thead>
+                  <tr>
+                    <th *ngFor="let col of colDefExcel; let i = index">
+                      <ng-select
+                        id="{{ 'headerAux' + i }}"
+                        style="width: 100%"
+                        appendTo="body"
+                        [searchable]="false"
+                        [clearable]="false"
+                        [items]="colExcel"
+                        [disabled]="true"
+                        [(ngModel)]="configuracion['header' + i]"
+                        bindLabel="nombre"
+                        bindValue="idCampo"
+                      >
+                      </ng-select>
+                      <span>
+                        {{ col }}
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of dataExcel">
+                    <td *ngFor="let col of colDefExcel">
+                      {{ item[col] }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+
+    <!-- Boton de guardardo y cancelado -->
+    <div
+      class="row mx-auto"
+      style="text-align: center; margin-top: 40px; margin-bottom: 30px"
+    >
+      <div class="col-lg-3"></div>
+      <div class="col-lg-3 my-2" *ngIf="!isExcel2">
+        <button class="buttonEstiloBlanco" (click)="regresarProductos()">
+          {{ "importadorProductos.regresar" | translate }}
+        </button>
+      </div>
+      <div class="col-lg-3 my-2" *ngIf="!isExcel2 && isExcel">
+        <button class="buttonEstiloBlanco" (click)="crearGrid2()">
+          {{ "importadorProductos.siguiente" | translate }}
+        </button>
+      </div>
+      <div class="col-lg-3 my-2" *ngIf="isExcel2">
+        <button class="buttonEstiloBlanco" (click)="regresarGrid()">
+          {{ "importadorProductos.regresar" | translate }}
+        </button>
+      </div>
+      <div class="col-lg-3 my-2" *ngIf="isExcel2">
+        <button class="buttonEstiloBlanco" (click)="guardarDatos()">
+          {{ "importadorProductos.finalizar" | translate }}
+        </button>
+      </div>
+      <div class="col-lg-3" *ngIf="!isExcel2 && !isExcel"></div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!--Modal Confirm-->
+<div
+  id="modalConfirm"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  class="modal fade modalConfirm"
+>
+  <div class="modal-dialog" style="max-width: 600px" role="document">
+    <div
+      class="modal-content"
+      style="margin: 0 auto; font-weight: 400; width: 100%"
+    >
+      <div class="modal-body" style="min-height: 50px">
+        {{ modalConfirmMessage }}
+      </div>
+      <div class="modal-footer" style="height: auto; display: flex">
+        <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="width: 140px; height: 40px;">
+          {{ "clienteTranslate.aceptar" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal Finalizar-->
+<div
+  id="modalFinalizar"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  class="modal fade modalFinalizar"
+>
+  <div class="modal-dialog" style="max-width: 600px" role="document">
+    <div
+      class="modal-content"
+      style="margin: 0 auto; font-weight: 400; width: 100%"
+    >
+      <div class="modal-body" style="min-height: 50px">
+        {{ "importadorProductos.finalizarAgregar" | translate }}
+      </div>
+      <div class="modal-footer" style="height: auto; display: flex">
+        <button
+          type="button"
+          data-bs-dismiss="modal"
+          (click)="regresarProductos()"
+          class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+        >
+          {{ "consultaProductosTranslate.aceptar" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

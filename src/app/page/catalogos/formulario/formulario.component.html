@@ -1,0 +1,68 @@
+<mat-card class="mat-elevation-z8">
+    <mat-card-header>
+        <div style="width: 100%; display: flex;">
+            <mat-card-title style="margin-right: 10px;"> Formularios </mat-card-title>
+            <mat-icon id="btnNuevo" (click)="AgregarNuevoFormulario();" class="iconosBookipp" svgIcon="iconAgregar" matListIcon
+                style="cursor: pointer; width: 30px; height: 30px; position: relative; left: -5px;">
+            </mat-icon>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="''" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a (click)="''" style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">{{'consultaClienteTranslate.inicio' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">Formularios</a>
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content style="margin-top: 5px;">
+        <div class="row" *ngIf="formularios">
+            <div *ngFor="let formulario of formularios; let i=index" class="col-lg-6 col-sm-6 col-xs-12">
+                <div style="display: flex;">
+                    <div class="col-lg-1 col-sm-2 col-xs-2" style="display: grid; justify-items: end;">
+                        <mat-icon svgIcon="iconEditar" *ngIf="permisos.acciones" (click)="EditarFormulario(formulario.idFormulario)" class="iconosBookipp" style="font-size: 1.2em; cursor:pointer; width:29px;" matListIcon>
+                        </mat-icon>
+
+                        <mat-icon svgIcon="iconBasura" *ngIf="permisos.acciones" (click)="borrar_formulario(formulario);" class="iconosBookipp" style="font-size: 1.2em; cursor:pointer; width:29px;" matListIcon>
+                        </mat-icon>
+
+                        <mat-icon svgIcon="iconCopy" *ngIf="permisos.acciones" (click)="copiarFormulario(formulario);" class="iconosBookipp"style="font-size: 1.2em; cursor:pointer; width:29px;" matListIcon>
+                        </mat-icon>
+                    </div>
+                    <div class="col-lg-4 col-sm-4 col-xs-4" style="text-align: center;">
+                        <img width="100%" height="100%" src="../../../../assets/images/assets/Formulario.png" style="width: 135px; height: 110px;" />
+                    </div>
+                    <div class="col-lg-7 col-sm-6 col-xs-6" style="display: flex;">
+                        <p style="margin: auto 0; cursor:pointer;" class="ls-link-b" (click)="EditarFormulario(formulario.idFormulario)">{{formulario.nombreFormulario}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+
+
+<!--Modal confirmEliminar-->
+<div id="modal-confirmEliminar" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirmEliminar">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;"
+            style="margin: 0 auto; font-weight: 400; width: 600px;">
+            <div class="modal-body" style="min-height: 50px;" id="Div2">
+                {{msg_modalConfirmEliminar}}
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco">
+                        {{'personalTranslate.cancelar'| translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco"
+                        (click)="confirmarAcccion();">
+                        {{'personalTranslate.si'| translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

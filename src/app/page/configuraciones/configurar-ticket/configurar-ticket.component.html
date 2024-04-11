@@ -1,0 +1,529 @@
+<mat-card class="mat-elevation-z8">
+	<mat-card-header class="cardHeaderMaterial">
+		<mat-card-title>
+			{{ "configurarTicketTranslate.configTicket" | translate }}
+		</mat-card-title>
+
+		<div class="breadcrumbCustom">
+			<a href="/procesos/agenda">
+				<mat-icon matListIcon class="iconosBookipp iconoSize" 
+				style="margin: 0px 0px 3px 0px;" svgIcon="iconCasita"></mat-icon>
+				<span>Inicio</span>
+			</a>
+			<a href="#">
+				<mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;" svgIcon="iconFlechaDerecha"></mat-icon>
+			</a>
+			<a href="#" class="active">
+				<span>{{ "configurarTicketTranslate.configTicket" | translate }}</span>
+			</a>
+		</div>
+	</mat-card-header>
+	<mat-divider></mat-divider>
+
+	<div class="row mx-auto mt-4">
+		<div class="col-lg-4">
+			<div class="row mx-auto">
+				<div class="col-lg-4">
+					{{ 'configurarTicketTranslate.tipoHoja' | translate }}
+				</div>
+				<div class="col-lg-8">
+					<ng-select id="Ui-select1" style="width: 100%"
+						placeholder="{{ 'configurarTicketTranslate.tipoHoja' | translate }}" appendTo="body"
+						[searchable]="true" [clearable]="false" [items]="ticket.tipoHoja" bindLabel="tipo"
+						bindValue="id" [(ngModel)]="tipoHojaSelect" (change)="observarCambioHoja()">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="row mx-auto">
+				<div class="col-lg-4">
+					{{ 'configurarTicketTranslate.ancho' | translate }}
+				</div>
+				<div class="col-lg-8">
+					<ng-select id="Ui-select2" style="width: 100%" [disabled]="tipoHojaSelect !== 0"
+						placeholder="{{ 'configurarTicketTranslate.ancho' | translate }}" appendTo="body"
+						[searchable]="true" [clearable]="false" [items]="ticket.ancho" bindLabel="tipo" bindValue="id"
+						[(ngModel)]="anchoHojaSelect" (change)="observarCambioHoja()">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="row mx-auto">
+				<div class="col-lg-4">
+					{{ 'configurarTicketTranslate.margenExtra' | translate }}
+				</div>
+				<div class="col-11 col-lg-7">
+					<input id="txtMargen" type="text" style="width: 100%;" class="form-control borderAzul me-2"
+						maxlength="2" (keypress)="validarNum($event)"
+						placeholder="{{ 'configurarTicketTranslate.maximoMargen' | translate }}"
+						[(ngModel)]="ticket.margenExtra" (ngModelChange)="changeMargen()" />
+				</div>
+				<div class="col-1 col-lg-1 d-flex justify-content-center align-items-center">
+					<div>
+						<mat-icon matListIcon class="iconosBookipp iconoSize" placement="auto"
+						ngbPopover="Esta cantidad se aumentará al margen izquierdo y derecho del ticket, máximo 20"
+						svgIcon="iconInfo"></mat-icon>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<mat-card-content style="margin-top: 10px">
+		<mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true">
+			<!-- Cabecera filtro -->
+			<mat-tab id="configCabecera" label="{{ 'configurarTicketTranslate.cabecera' | translate }}">
+				<div class="row mx-auto mt-3">
+					<!-- Filtro -->
+					<div class="col-12">
+						<div class="row mx-auto">
+							<div class="col-lg-2">
+								<div class="titleFiltro">
+									<span>
+										{{ 'configurarTicketTranslate.tamanio' | translate }}
+									</span>
+									<ng-select id="Ui-select3" style="width: 100%"
+										placeholder="{{ 'configurarTicketTranslate.tamanio' | translate }}"
+										appendTo="body" [searchable]="false" [clearable]="false"
+										[items]="ticket.tamaniosLetra" bindLabel="tamanio" bindValue="id"
+										[disabled]="(ticket.cabecera.textoTotal.length >= ticket.cabecera.maxLineas)"
+										[(ngModel)]="ticket.cabecera.tamanioLetraId"
+										(change)="(ticket.cabecera.linea = '')">
+									</ng-select>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="titleFiltro">
+									<span></span>
+									<input id="textoLineaCab" type="text" style="width: 100%;"
+										[disabled]="ticket.cabecera.textoTotal.length >= ticket.cabecera.maxLineas"
+										class="form-control borderAzul me-2"
+										maxlength="{{ticket.cabecera.tamanioLetra.maxLength}}"
+										placeholder="{{ 'configurarTicketTranslate.maximo' | translate }}{{ticket.cabecera.tamanioLetra.maxLength}}{{ 'configurarTicketTranslate.caracteres' | translate }}"
+										(focus)="onFocusTxt('textoLineaCab')" (blur)="onBlurTxt('textoLineaCab')"
+										[(ngModel)]="ticket.cabecera.linea" />
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="titleFiltro my-2">
+									<span>
+										{{ 'configurarTicketTranslate.alineacion' | translate }}
+									</span>
+									<section class="example-section">
+										<mat-radio-group aria-label="Select1" class="inputCustom"
+											[(ngModel)]="ticket.cabecera.alineacion">
+											<mat-radio-button id="cabeceraRadioLeft" class="example-margin" value="1">
+												<i class="fa-sharp fa-solid fa-align-left"></i>
+											</mat-radio-button>
+											<mat-radio-button id="cabeceraRadioCenter" class="example-margin" value="2">
+												<i class="fa-sharp fa-solid fa-align-center"></i>
+											</mat-radio-button>
+											<mat-radio-button id="cabeceraRadioRight" class="example-margin" value="3">
+												<i class="fa-sharp fa-solid fa-align-right"></i>
+											</mat-radio-button>
+										</mat-radio-group>
+									</section>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="titleFiltro my-2">
+									<span>
+										{{ 'configurarTicketTranslate.estilo' | translate }}
+									</span>
+									<section class="example-section inputCustom">
+										<mat-checkbox id="cabeceraCheckBold" class="example-margin"
+											[(ngModel)]="ticket.cabecera.bold">
+											<b>{{ 'configurarTicketTranslate.n' | translate }}</b>
+										</mat-checkbox>
+										<mat-checkbox id="cabeceraCheckItalic" class="example-margin"
+											[(ngModel)]="ticket.cabecera.italic">
+											<i>{{ 'configurarTicketTranslate.k' | translate }}</i>
+										</mat-checkbox>
+									</section>
+								</div>
+							</div>
+							<div class="col-lg-1">
+								<div class="titleFiltro">
+									<span>
+										<label *ngIf="(ticket.cabecera.textoTotal.length >= ticket.cabecera.maxLineas)"
+											class="alertaMaximo">
+											{{ 'configurarTicketTranslate.maximo' | translate }}
+											{{ticket.cabecera.maxLineas}} {{ 'configurarTicketTranslate.lineas' |
+											translate }}
+										</label>
+										<label *ngIf="(ticket.cabecera.textoTotal.length < ticket.cabecera.maxLineas)">
+											&nbsp;
+										</label>
+									</span>
+									<mat-icon matListIcon class="iconosBookipp iconoSize"
+										(click)="agregarLinea('cabecera'); validarInput('textoLineaCab')"
+										svgIcon="iconAgregar" *ngIf="permiso_accion"></mat-icon>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Tabla -->
+					<div class="col-12">
+						<div class="tableOverflow">
+							<table class="table table-striped table-bordered">
+								<thead>
+									<tr>
+										<th style="width:10%; min-width: 100px;">{{ 'configurarTicketTranslate.editar' | translate }}</th>
+										<th style="width:15%; min-width: 120px;">
+											{{ 'configurarTicketTranslate.tamanioLetra' | translate }}
+										</th>
+										<th style="width:30%">{{ 'configurarTicketTranslate.texto' | translate }}</th>
+										<th style="width:25%">
+											{{ 'configurarTicketTranslate.alineacion' | translate }}
+										</th>
+										<th style="width:5%">{{ 'configurarTicketTranslate.negrita' | translate }}</th>
+										<th style="width:5%">{{ 'configurarTicketTranslate.cursiva' | translate }}</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngFor="let linea of ticket.cabecera.textoTotal; let i = index;">
+										<td>
+											<div *ngIf="!linea.editar && permiso_accion">
+												<mat-icon matListIcon class="iconosBookipp"
+													style="width: 24px; height: 24px; cursor: pointer;"
+													(click)="changeEdit(i, 'cabecera', true)"
+													svgIcon="iconEditar"></mat-icon>
+												<mat-icon matListIcon class="iconosBookipp"
+													style="width: 24px; height: 24px; cursor: pointer;"
+													(click)="removerLinea(i, 'cabecera')"
+													svgIcon="iconBasura"></mat-icon>
+											</div>
+											<div *ngIf="linea.editar">
+												<mat-icon matListIcon class="iconosBookipp"
+													style="width: 24px; height: 24px; cursor: pointer;"
+													(click)="changeSaveEdit(i, 'cabecera')"
+													svgIcon="iconGuardar"></mat-icon>
+												<mat-icon matListIcon class="iconosBookipp"
+													style="width: 24px; height: 24px; cursor: pointer;"
+													(click)="changeEdit(i, 'cabecera', false)"
+													svgIcon="iconCerrar"></mat-icon>
+											</div>
+										</td>
+										<td>
+											{{ !linea.editar ? linea.tamanioLetra.tamanio : "" }}
+
+											<ng-select id="Ui-select3{{ i }}"
+												style="width: 100%; max-width: 100px; margin: auto;"
+												*ngIf="linea.editar" appendTo="body" [searchable]="false"
+												[clearable]="false"
+												placeholder="{{ 'configurarTicketTranslate.tamanio' | translate }}"
+												[items]="ticket.tamaniosLetra" bindLabel="tamanio" bindValue="id"
+												[(ngModel)]="ticket.cabeceraTemp.textoTotal[i].tamanioLetraId">
+											</ng-select>
+										</td>
+										<td>
+											{{ !linea.editar ? linea.texto : "" }}
+
+											<input id="textoLineaCab{{ i }}" type="text"
+												style="width: 100%; max-width: 300px; display: inline-block;"
+												*ngIf="linea.editar"
+												[disabled]="ticket.cabecera.textoTotal.length >= ticket.cabecera.maxLineas"
+												class="form-control borderAzul me-2"
+												maxlength="{{ticket.cabecera.tamanioLetra.maxLength}}"
+												placeholder="{{ 'configurarTicketTranslate.maximo' | translate }}{{ticket.cabecera.tamanioLetra.maxLength}}{{ 'configurarTicketTranslate.caracteres' | translate }}"
+												(focus)="onFocusTxt('textoLineaCab' + i)"
+												(blur)="onBlurTxt('textoLineaCab' + i)"
+												[(ngModel)]="ticket.cabeceraTemp.textoTotal[i].texto" />
+										</td>
+										<td>
+											{{ !linea.editar ? mostrarAlineacion(linea.alineacion) : "" }}
+
+											<mat-radio-group aria-label="Select" *ngIf="linea.editar"
+												[(ngModel)]="ticket.cabeceraTemp.textoTotal[i].alineacion">
+												<mat-radio-button id="cabeceraRadioLeftTemp{{ i }}"
+													class="example-margin" value="1">
+													{{ mostrarAlineacion(this.ticket.alineacion[0].id) }}
+												</mat-radio-button>
+												<mat-radio-button id="cabeceraRadioCenterTemp{{ i }}"
+													class="example-margin" value="2">
+													{{ mostrarAlineacion(this.ticket.alineacion[1].id) }}
+												</mat-radio-button>
+												<mat-radio-button id="cabeceraRadioRightTemp{{ i }}"
+													class="example-margin" value="3">
+													{{ mostrarAlineacion(this.ticket.alineacion[2].id) }}
+												</mat-radio-button>
+											</mat-radio-group>
+
+										</td>
+										<td>
+											{{ !linea.editar ? ((linea.bold ? "configurarTicketTranslate.si" :
+											"configurarTicketTranslate.no") | translate) : "" }}
+
+											<mat-checkbox id="cabeceraCheckBold{{ i }}" class="example-margin"
+												*ngIf="linea.editar"
+												[(ngModel)]="ticket.cabeceraTemp.textoTotal[i].bold">
+											</mat-checkbox>
+										</td>
+										<td>
+											{{ !linea.editar ? ((linea.italics ? "configurarTicketTranslate.si" :
+											"configurarTicketTranslate.no") | translate) : "" }}
+
+											<mat-checkbox id="cabeceraCheckItalic{{ i }}" class="example-margin"
+												*ngIf="linea.editar"
+												[(ngModel)]="ticket.cabeceraTemp.textoTotal[i].italics">
+											</mat-checkbox>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<!-- Botón de guardar cabecera -->
+					<div class="col-lg-12">
+						<div id="botonGuardarCabecera" class="row mx-auto"
+							style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+							<div class="col-lg-3"></div>
+							<div class="col-lg-3 my-1">
+								<button class="buttonEstiloBlanco" (click)="vistaPrevia()">
+									{{ 'configurarTicketTranslate.vistaPrevia' | translate }}
+								</button>
+							</div>
+							<div class="col-lg-3 my-1">
+								<button class="buttonEstiloBlanco" (click)="guardar()" *ngIf="permiso_accion">
+									{{ 'configurarTicketTranslate.guardar' | translate }}
+								</button>
+							</div>
+							<div class="col-lg-3"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+
+			<!-- Pie filtro -->
+			<mat-tab id="configPiePagina" label="{{ 'configurarTicketTranslate.piePagina' | translate }}">
+				<div class="row mx-auto mt-3">
+					<!-- Filtro -->
+					<div class="col-12">
+						<div class="row mx-auto">
+							<div class="col-lg-2">
+								<div class="titleFiltro">
+									<span>
+										{{ 'configurarTicketTranslate.tamanio' | translate }}
+									</span>
+									<ng-select id="Ui-select3" style="width: 100%"
+										placeholder="{{ 'configurarTicketTranslate.tamanio' | translate }}"
+										appendTo="body" [searchable]="false" [clearable]="false"
+										[items]="ticket.tamaniosLetra" bindLabel="tamanio" bindValue="id"
+										[disabled]="(ticket.pieDePagina.textoTotal.length >= ticket.pieDePagina.maxLineas)"
+										[(ngModel)]="ticket.pieDePagina.tamanioLetraId"
+										(change)="(ticket.pieDePagina.linea = '')">
+									</ng-select>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="titleFiltro">
+									<span></span>
+									<input id="textoLineaPie" type="text" style="width: 100%;"
+										[disabled]="ticket.pieDePagina.textoTotal.length >= ticket.pieDePagina.maxLineas"
+										class="form-control borderAzul me-2"
+										maxlength="{{ticket.pieDePagina.tamanioLetra.maxLength}}"
+										placeholder="{{ 'configurarTicketTranslate.maximo' | translate }}{{ticket.pieDePagina.tamanioLetra.maxLength}}{{ 'configurarTicketTranslate.caracteres' | translate }}"
+										(focus)="onFocusTxt('textoLineaPie')" (blur)="onBlurTxt('textoLineaPie')"
+										[(ngModel)]="ticket.pieDePagina.linea" />
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="titleFiltro my-2">
+									<span>
+										{{ 'configurarTicketTranslate.alineacion' | translate }}
+									</span>
+									<section class="example-section">
+										<mat-radio-group aria-label="Select2" class="inputCustom"
+											[(ngModel)]="ticket.pieDePagina.alineacion">
+											<mat-radio-button id="pieRadioLeft" class="example-margin" value="1">
+												<i class="fa-sharp fa-solid fa-align-left"></i>
+											</mat-radio-button>
+											<mat-radio-button id="pieRadioCenter" class="example-margin" value="2">
+												<i class="fa-sharp fa-solid fa-align-center"></i>
+											</mat-radio-button>
+											<mat-radio-button id="pieRadioRight" class="example-margin" value="3">
+												<i class="fa-sharp fa-solid fa-align-right"></i>
+											</mat-radio-button>
+										</mat-radio-group>
+									</section>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="titleFiltro my-2">
+									<span>
+										{{ 'configurarTicketTranslate.estilo' | translate }}
+									</span>
+									<section class="example-section inputCustom">
+										<mat-checkbox id="pieCheckBold" class="example-margin"
+											[(ngModel)]="ticket.pieDePagina.bold">
+											<b>{{ 'configurarTicketTranslate.n' | translate }}</b>
+										</mat-checkbox>
+										<mat-checkbox id="pieCheckItalic" class="example-margin"
+											[(ngModel)]="ticket.pieDePagina.italic">
+											<i>{{ 'configurarTicketTranslate.k' | translate }}</i>
+										</mat-checkbox>
+									</section>
+								</div>
+							</div>
+							<div class="col-lg-1">
+								<div class="titleFiltro">
+									<span>
+										<label
+											*ngIf="(ticket.pieDePagina.textoTotal.length >= ticket.pieDePagina.maxLineas)"
+											class="alertaMaximo">
+											{{ 'configurarTicketTranslate.maximo' | translate }}
+											{{ticket.pieDePagina.maxLineas}} {{ 'configurarTicketTranslate.lineas' |
+											translate }}
+										</label>
+										<label
+											*ngIf="(ticket.pieDePagina.textoTotal.length < ticket.pieDePagina.maxLineas)">
+											&nbsp;
+										</label>
+									</span>
+									<mat-icon matListIcon class="iconosBookipp iconoSize"
+										(click)="agregarLinea('pieDePagina'); validarInput('textoLineaPie')"
+										svgIcon="iconAgregar" *ngIf="permiso_accion"></mat-icon>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Tabla -->
+					<div class="col-12">
+						<div class="tableOverflow">
+							<table class="table table-striped table-bordered">
+								<thead>
+									<tr>
+										<th style="width:10%; min-width: 100px;">{{ 'configurarTicketTranslate.editar' | translate }}</th>
+										<th style="width:15%; min-width: 120px;">
+											{{ 'configurarTicketTranslate.tamanioLetra' | translate }}
+										</th>
+										<th style="width:30%">{{ 'configurarTicketTranslate.texto' | translate }}</th>
+										<th style="width:25%">
+											{{ 'configurarTicketTranslate.alineacion' | translate }}
+										</th>
+										<th style="width:5%">{{ 'configurarTicketTranslate.negrita' | translate }}</th>
+										<th style="width:5%">{{ 'configurarTicketTranslate.cursiva' | translate }}</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngFor="let linea of ticket.pieDePagina.textoTotal; let i = index;">
+										<td>
+											<div *ngIf="!linea.editar && permiso_accion">
+												<mat-icon matListIcon class="iconosBookipp"
+													style="width: 24px; height: 24px; cursor: pointer;"
+													(click)="changeEdit(i, 'pieDePagina', true)"
+													svgIcon="iconEditar"></mat-icon>
+												<mat-icon matListIcon class="iconosBookipp"
+													style="width: 24px; height: 24px; cursor: pointer;"
+													(click)="removerLinea(i, 'pieDePagina')"
+													svgIcon="iconBasura"></mat-icon>
+											</div>
+											<div *ngIf="linea.editar">
+												<mat-icon matListIcon class="iconosBookipp"
+													style="width: 24px; height: 24px; cursor: pointer;"
+													(click)="changeSaveEdit(i, 'pieDePagina')"
+													svgIcon="iconGuardar"></mat-icon>
+												<mat-icon matListIcon class="iconosBookipp"
+													style="width: 24px; height: 24px; cursor: pointer;"
+													(click)="changeEdit(i, 'pieDePagina', false)"
+													svgIcon="iconCerrar"></mat-icon>
+											</div>
+										</td>
+										<td>
+											{{ !linea.editar ? linea.tamanioLetra.tamanio : "" }}
+
+											<ng-select id="Ui-select3{{ i }}"
+												style="width: 100%; max-width: 100px; margin: auto;"
+												*ngIf="linea.editar" appendTo="body" [searchable]="false"
+												[clearable]="false"
+												placeholder="{{ 'configurarTicketTranslate.tamanio' | translate }}"
+												[items]="ticket.tamaniosLetra" bindLabel="tamanio" bindValue="id"
+												[(ngModel)]="ticket.pieDePaginaTemp.textoTotal[i].tamanioLetraId">
+											</ng-select>
+										</td>
+										<td>
+											{{ !linea.editar ? linea.texto : "" }}
+
+											<input id="textoLineaPie{{ i }}" type="text"
+												style="width: 100%; max-width: 300px; display: inline-block;"
+												*ngIf="linea.editar"
+												[disabled]="ticket.pieDePagina.textoTotal.length >= ticket.pieDePagina.maxLineas"
+												class="form-control borderAzul me-2"
+												maxlength="{{ticket.pieDePagina.tamanioLetra.maxLength}}"
+												placeholder="{{ 'configurarTicketTranslate.maximo' | translate }}{{ticket.pieDePagina.tamanioLetra.maxLength}}{{ 'configurarTicketTranslate.caracteres' | translate }}"
+												(focus)="onFocusTxt('textoLineaPie' + i)"
+												(blur)="onBlurTxt('textoLineaPie' + i)"
+												[(ngModel)]="ticket.pieDePaginaTemp.textoTotal[i].texto" />
+										</td>
+										<td>
+											{{ !linea.editar ? mostrarAlineacion(linea.alineacion) : "" }}
+
+											<mat-radio-group aria-label="Select" *ngIf="linea.editar"
+												[(ngModel)]="ticket.pieDePaginaTemp.textoTotal[i].alineacion">
+												<mat-radio-button id="pieDePaginaRadioLeftTemp{{ i }}"
+													class="example-margin" value="1">
+													{{ mostrarAlineacion(this.ticket.alineacion[0].id) }}
+												</mat-radio-button>
+												<mat-radio-button id="pieDePaginaRadioCenterTemp{{ i }}"
+													class="example-margin" value="2">
+													{{ mostrarAlineacion(this.ticket.alineacion[1].id) }}
+												</mat-radio-button>
+												<mat-radio-button id="pieDePaginaRadioRightTemp{{ i }}"
+													class="example-margin" value="3">
+													{{ mostrarAlineacion(this.ticket.alineacion[2].id) }}
+												</mat-radio-button>
+											</mat-radio-group>
+
+										</td>
+										<td>
+											{{ !linea.editar ? ((linea.bold ? "configurarTicketTranslate.si" :
+											"configurarTicketTranslate.no") | translate) : "" }}
+
+											<mat-checkbox id="pieDePaginaCheckBold{{ i }}" class="example-margin"
+												*ngIf="linea.editar"
+												[(ngModel)]="ticket.pieDePaginaTemp.textoTotal[i].bold">
+											</mat-checkbox>
+										</td>
+										<td>
+											{{ !linea.editar ? ((linea.italics ? "configurarTicketTranslate.si" :
+											"configurarTicketTranslate.no") | translate) : "" }}
+
+											<mat-checkbox id="pieDePaginaCheckItalic{{ i }}" class="example-margin"
+												*ngIf="linea.editar"
+												[(ngModel)]="ticket.pieDePaginaTemp.textoTotal[i].italics">
+											</mat-checkbox>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<!-- Botón de guardar pie -->
+					<div class="col-lg-12">
+						<div id="botonGuardarPie" class="row mx-auto"
+							style="text-align: center; margin-top: 40px; margin-bottom: 40px">
+							<div class="col-lg-3"></div>
+							<div class="col-lg-3 my-1">
+								<button class="buttonEstiloBlanco" (click)="vistaPrevia()">
+									{{ 'configurarTicketTranslate.vistaPrevia' | translate }}
+								</button>
+							</div>
+							<div class="col-lg-3 my-1">
+								<button class="buttonEstiloBlanco" (click)="guardar()" *ngIf="permiso_accion">
+									{{ 'configurarTicketTranslate.guardar' | translate }}
+								</button>
+							</div>
+							<div class="col-lg-3"></div>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+		</mat-tab-group>
+	</mat-card-content>
+</mat-card>

@@ -1,0 +1,62 @@
+.subtitle {
+  display: block;
+  min-height: 22px;
+  margin-bottom: 10px;
+}
+
+.inputCalenderSelect {
+  cursor: pointer;
+  height: 40px;
+  width: 100%;
+  border: 1px solid #b7c4c9;
+  border-radius: 1.5rem;
+  text-align: center;
+}
+
+.calenderWidth{
+	max-width: 350px
+}
+
+.btnW100{
+	height: 40px !important; 
+	width: 140px !important;
+}
+
+.tableCustom{
+	min-width: 950px;
+	width: 100%;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.checkboxCustom{
+	margin: 0px 5px;
+}
+
+.tableCustomFactura{
+    min-width: 950px;
+    margin: 20px 0px;
+
+	thead {
+        tr {
+            th{
+                font-size: 13px;
+            }
+        }
+    }
+}
+
+.subtitleModal{
+	margin: 0px 0px 5px 0px; 
+	display: block;
+}
+
+$breakpoint-tablet: 1000px;
+@media (max-width: $breakpoint-tablet) {
+	.calenderWidth{
+		max-width: 100%;
+	}
+
+	.btnW100{
+		width: 100% !important;
+	}
+}

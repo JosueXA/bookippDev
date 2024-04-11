@@ -1,0 +1,197 @@
+.page-content {
+    padding-right: 0px;
+    min-height: 700px;
+}
+
+.breadcrumb {
+    margin-bottom: 0px !important;
+}
+
+.gradBarraLeft {
+    background: #337dc0 !important;
+}
+
+.grad {
+    background: #337dc0 !important;
+}
+
+#page-wrapper {
+    background-color: white;
+}
+
+.onoffswitch {
+    height: 34px !important;
+}
+
+.onoffswitch-inner:before {
+    content: "" !important;
+    background-color: #4ed164 !important;
+    height: 34px !important;
+    padding-right: 9px !important;
+    padding-top: 2px !important;
+}
+
+.onoffswitch-inner:after {
+    content: "" !important;
+    background-color: #dddddd !important;
+    height: 34px !important;
+    padding-right: 9px !important;
+    padding-top: 2px !important;
+}
+
+.onoffswitch-switch {
+    width: 18px;
+    margin: 8px 10px 8px 0px !important;
+}
+
+.onoffswitch-label {
+    margin-bottom: 0px !important;
+}
+
+.contenedor input#reportrange {
+    width: 100% !important;
+    background-color: white !important;
+    border: none !important;
+}
+
+.contenedor .glyphicon.glyphicon-calendar {
+    color: #337dc0 !important;
+    top: 10px !important;
+    padding-top: 0px !important;
+}
+
+.subcontenedor .fa-caret-down {
+    color: #337dc0 !important;
+    top: 12px !important;
+    padding-top: 0px !important;
+    padding-left: 1.5% !important;
+}
+
+.borderAzul {
+    height: 34px !important;
+    outline: 1px solid #337dc0 !important;
+    outline-offset: 0 !important;
+    border: none;
+}
+
+.borderAzul:focus {
+    outline: 1px solid #8bc3f7 !important;
+    outline-offset: 0 !important;
+    border: none;
+}
+
+.select2-choice {
+    border: none !important;
+}
+
+.select2-choice:focus {
+    outline: 1px solid #8bc3f7 !important;
+    outline-offset: 0 !important;
+    border: none;
+}
+
+.select2-container .select2-choice .select2-arrow b {
+    background-position-y: 4px !important;
+}
+
+.select2-container .select2-choice {
+    padding: 0px 18px 0px 12px !important;
+}
+
+.select2-container-multi .select2-choices {
+    border: none !important;
+    min-height: 34px !important;
+}
+
+.buttonNewStyle {
+    height: 50px;
+    width: 100%;
+    border-radius: 10px;
+    color: #337dc0 !important;
+    background: #ffffff;
+    border: 2px solid #337dc0 !important;
+
+    display: inline-block;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.4s ease 0s;
+}
+
+.buttonNewStyle:hover {
+    color: #ffffff !important;
+    background: #337dc0;
+    border-color: #337dc0 !important;
+    transition: all 0.4s ease 0s;
+}
+
+#contenedorPromocion .fa-info-circle {
+    color: #337dc0 !important;
+    font-size: 13px;
+}
+
+.errorCampo {
+    outline: red solid 1px !important;
+    outline-offset: 0 !important;
+}
+
+.errorCampo:focus {
+    outline: #ff9191 solid 1px !important;
+    outline-offset: 0 !important;
+}
+
+.errorCampo2 {
+    outline: red solid 2px !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}
+
+.errorCampo2:focus {
+    outline: #ff9191 solid 2px !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}
+
+input[type="time"]::-webkit-clear-button {
+    display: none;
+}
+
+.buttonNewImagen {
+    height: 100px;
+    width: 100px;
+    color: #337dc0 !important;
+    background: #ffffff;
+    /*border: 2px solid #337dc0 !important;*/
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.buttonNewImagen:hover {
+    color: #ffffff !important;
+    background: #337dc0;
+    border-color: #337dc0 !important;
+    transition: all 0.4s ease 0s;
+}
+
+.divider {
+    height: 100%;
+    width: 1px;
+    background-color: red;
+}
+
+.btn-default {
+    background-color: white;
+}
+
+.datepicker.dropdown-menu {
+    width: 80% !important;
+    min-width: 250px !important;
+    max-width: 500px !important;
+}
+
+.btn-info {
+    background-color: #5bc0de !important;
+}
+
+.btn-primary {
+    background-color: #dc6767 !important;
+}

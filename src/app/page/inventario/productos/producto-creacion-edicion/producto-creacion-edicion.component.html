@@ -1,0 +1,860 @@
+<mat-card class="mat-elevation-z8">
+  <mat-card-header class="cardHeaderMaterial">
+    <mat-card-title>
+      {{ "producto.productos" | translate }}
+    </mat-card-title>
+
+	<div class="breadcrumbCustom">
+		<a href="/procesos/agenda">
+			<mat-icon matListIcon class="iconosBookipp iconoSize" 
+			style="margin: 0px 0px 3px 0px;" svgIcon="iconCasita"></mat-icon>
+			<span>Inicio</span>
+		</a>
+		<a href="#">
+			<mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;" svgIcon="iconFlechaDerecha"></mat-icon>
+		</a>
+		<a href="#" class="active">
+			<span>{{ "producto.productos" | translate }}</span>
+		</a>
+	</div>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+
+  <mat-card-content style="margin-top: 10px">
+    <!-- Panel superior -->
+    <div class="row mx-auto">
+      <!-- imagen -->
+      <div class="col-lg-3" style="text-align: center">
+        <div id="imagen" style="position: relative">
+          <a
+            id="btnBorrarImagen"
+            class="fa fa-times fa-2x"
+            aria-hidden="true"
+            (click)="borrarImagen()"
+            style="
+              position: absolute;
+              margin-left: 130px;
+              top: 0;
+              color: white;
+              background-color: #ababab;
+              cursor: pointer;
+              display: none;
+            "
+          ></a>
+          <img
+            id="productoFoto"
+            src="../../../../../assets/images/migracion/Imagen-Foto-300x300.png"
+            height="150"
+            width="150"
+          />
+        </div>
+        <div>
+          <button
+            type="button"
+            class="buttonEstiloBlanco"
+            (click)="openImg()"
+            style="width: 160px;height: 40px;"
+          >
+            {{ "importador.selectArchivo" | translate }}
+          </button>
+          <input
+            id="fileFoto"
+            [hidden]="true"
+            (change)="fileFotoChange($event)"
+            style="margin-top: 3%; padding: 0; width: 150px; font-size: 15.4px"
+            type="file"
+            accept="image/*"
+          />
+        </div>
+        <label
+          id="txtImagen"
+          class="control-label text-left"
+          style="height: 25px; color: red; text-align: center"
+        ></label>
+      </div>
+
+      <!-- Formulario muestra -->
+      <div class="col-lg-9">
+        <div
+          class="row p-4 m-2 d-flex align-items-center"
+          id="ficha"
+          style="outline: gray 2px solid; min-height: 180px"
+        >
+          <div class="col-lg-2">{{ "producto.producto" | translate }}:</div>
+          <div class="col-lg-4">
+            <div class="inputCardInfo">
+              <b>{{
+                isJson(producto.select)
+                  ? producto.select.nombre
+                  : producto.select
+              }}</b>
+            </div>
+          </div>
+          <div class="col-lg-2">{{ "producto.precioVenta" | translate }}:</div>
+          <div class="col-lg-4">
+            <div class="inputCardInfo">
+              <b>{{ producto.precio }}</b>
+            </div>
+          </div>
+          <div class="col-lg-2">{{ "producto.marca" | translate }}:</div>
+          <div class="col-lg-4">
+            <div class="inputCardInfo">
+              <b>{{
+                isJson(marca.select) ? marca.select.nombre : marca.select
+              }}</b>
+            </div>
+          </div>
+          <div class="col-lg-2">{{ "producto.existencia" | translate }}:</div>
+          <div class="col-lg-4">
+            <div class="inputCardInfo">
+              <b>{{ producto.existencia }}</b>
+            </div>
+          </div>
+          <div class="col-lg-2">{{ "producto.presentacion" | translate }}:</div>
+          <div class="col-lg-10">
+            <div class="inputCardInfo">
+              <b>{{ producto.presentacion }}</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel del formulario -->
+    <div class="row mx-auto mt-3">
+      <!-- Panel del izquierdo -->
+      <div class="col-lg-6">
+        <div class="row mx-auto">
+          <div class="col-lg-3">
+            {{ "producto.activo" | translate }}
+          </div>
+          <div class="col-lg-9">
+            <mat-slide-toggle id="chkActivo" [(ngModel)]="producto.activo">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="row mx-auto mt-3">
+          <div class="col-lg-3">
+            <span
+              style="text-decoration: underline; cursor: pointer"
+              (click)="mostrarGrid(1)"
+            >
+              {{ "producto.marca" | translate }}
+            </span>
+          </div>
+          <div class="col-lg-9">
+            <input
+              id="txtMarca"
+              class="form-control borderAzul"
+              style="margin-top: 0px"
+              type="text"
+              placeholder="{{ 'producto.selectMarca' | translate }}"
+              [matAutocomplete]="txtMarcaAutocomplete"
+              [(ngModel)]="marca.select"
+              (ngModelChange)="filterInput('marca')"
+            />
+            <mat-autocomplete #txtMarcaAutocomplete="matAutocomplete">
+              <mat-option
+                *ngFor="let marca of displayFilterMarcas"
+                [value]="marca.nombre"
+              >
+                {{ marca.nombre }}
+              </mat-option>
+            </mat-autocomplete>
+            <label
+              id="errortxtMarca"
+              class="control-label text-left txtErrorV"
+            ></label>
+          </div>
+        </div>
+        <div class="row mx-auto">
+          <div class="col-lg-3">
+            <span
+              style="text-decoration: underline; cursor: pointer"
+              (click)="mostrarGrid(2)"
+            >
+              {{ "producto.producto" | translate }}
+            </span>
+          </div>
+          <div class="col-lg-9">
+            <input
+              id="txtProducto"
+              class="form-control borderAzul"
+              style="margin-top: 0px"
+              type="text"
+              placeholder="{{ 'producto.selectProducto' | translate }}"
+              [matAutocomplete]="txtProductoAutocomplete"
+              [(ngModel)]="producto.select"
+              (ngModelChange)="filterInput('producto')"
+            />
+            <mat-autocomplete #txtProductoAutocomplete="matAutocomplete">
+              <mat-option
+                *ngFor="let producto of displayFilterProductos"
+                [value]="producto.nombre"
+              >
+                {{ producto.nombre }}
+              </mat-option>
+            </mat-autocomplete>
+            <label
+              id="errortxtProducto"
+              class="control-label text-left txtErrorV"
+            ></label>
+          </div>
+        </div>
+        <div class="row mx-auto">
+          <div class="col-lg-3">
+            <span
+              style="text-decoration: underline; cursor: pointer"
+              (click)="mostrarGrid(4)"
+            >
+              {{ "producto.proveedor" | translate }}
+            </span>
+          </div>
+          <div class="col-lg-9">
+            <input
+              id="txtProveedor"
+              class="form-control borderAzul"
+              style="margin-top: 0px"
+              type="text"
+              placeholder="{{ 'producto.selectProducto' | translate }}"
+              [matAutocomplete]="txtProveedorAutocomplete"
+              [(ngModel)]="proveedor.select"
+              (ngModelChange)="filterInput('proveedor')"
+            />
+            <mat-autocomplete #txtProveedorAutocomplete="matAutocomplete">
+              <mat-option
+                *ngFor="let proveedor of displayFilterProveedores"
+                [value]="proveedor.nombre"
+              >
+                {{ proveedor.nombre }}
+              </mat-option>
+            </mat-autocomplete>
+            <label
+              id="errortxtProveedor"
+              class="control-label text-left txtErrorV"
+            ></label>
+          </div>
+        </div>
+        <div class="row mx-auto" [hidden]="this._pantallaServicio.permisos_visualizacion.accesosPantalla.sitebar.mostrarFacturacion == false">
+          <div class="col-lg-3">Clave Producto Servicio</div>
+          <div class="col-lg-9">
+            <ng-select
+              id="txtCPS"
+              style="width: 100%"
+              placeholder="Seleccione una clave"
+              appendTo="body"
+              [searchable]="false"
+              [items]="dataCPS"
+              bindLabel="descripcion"
+              bindValue="idClaveProdServ"
+              [(ngModel)]="producto.idClaveProdServ"
+            >
+            </ng-select>
+            <label
+              id="errortxtCPS"
+              class="control-label text-left txtErrorV"
+              style="color: red"
+            ></label>
+          </div>
+        </div>
+        <div class="row mx-auto">
+          <div class="col-lg-3">
+            {{ "producto.contactoProv" | translate }}
+          </div>
+          <div class="col-lg-9">
+            <input
+              id="txtContactoProv"
+              placeholder="{{ 'producto.placeholderContacto' | translate }}"
+              style="width: 100%"
+              [(ngModel)]="producto.contactoProv"
+              (focus)="txtfocus(1, $event, 'f')"
+              (blur)="txtfocus(1, $event, 'b')"
+              type="text"
+              class="form-control borderAzul"
+              maxlength="225"
+            />
+            <label
+              id="errortxtContactoProv"
+              class="control-label text-left txtErrorV"
+            ></label>
+          </div>
+        </div>
+        <div class="row mx-auto">
+          <div class="col-lg-3">
+            {{ "producto.aplicaIVA" | translate }}
+          </div>
+          <div class="col-lg-9">
+            <mat-slide-toggle id="chkActivoIva" [(ngModel)]="producto.iva">
+            </mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel del derecho -->
+      <div class="col-lg-6">
+        <div class="row mx-auto">
+          <div class="col-lg-3">
+            {{ "producto.presentacion" | translate }}
+          </div>
+          <div class="col-lg-9">
+            <div
+              *ngIf="!productoCargado"
+              class="form-control borderAzul txtPresentacion"
+            >
+              <mat-chip-list
+                #chipListPresentacion
+                aria-label="presetnacion selection"
+              >
+                <mat-chip
+                  *ngFor="let item of listProductos"
+                  (removed)="remove(item, 'listProductos')"
+                >
+                  {{ item }}
+                  <button matChipRemove>
+                    <mat-icon
+                      fontSet="fa"
+                      fontIcon="fa-circle-xmark"
+                      matListIcon
+                      class="iconMenu"
+                    ></mat-icon>
+                  </button>
+                </mat-chip>
+                <input
+                  placeholder="{{ 'producto.selectPresentacion' | translate }}"
+                  [matChipInputFor]="chipListPresentacion"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="add($event, 'listProductos')"
+                />
+              </mat-chip-list>
+            </div>
+
+            <input
+              id="txtPresentacion"
+              *ngIf="productoCargado"
+              style="width: 100%"
+              [(ngModel)]="producto.presentacion"
+              (focus)="txtfocus(1, $event, 'f')"
+              (blur)="txtfocus(1, $event, 'b')"
+              placeholder="{{ 'producto.selectPresentacion' | translate }}"
+              type="text"
+              class="form-control borderAzul"
+              maxlength="225"
+            />
+            <label
+              id="errortxtPresentacion"
+              class="control-label text-left txtErrorV"
+              style="color: red"
+            ></label>
+          </div>
+        </div>
+        <div class="row mx-auto">
+          <div class="col-lg-3">
+            {{ "producto.existencia" | translate }}
+          </div>
+          <div class="col-lg-9">
+            <div
+              *ngIf="!productoCargado"
+              class="form-control borderAzul txtExistencia"
+            >
+              <mat-chip-list
+                #chipListExistencia
+                aria-label="presetnacion selection"
+              >
+                <mat-chip
+                  *ngFor="let item of listExistencia"
+                  (removed)="remove(item, 'listExistencia')"
+                >
+                  {{ item }}
+                  <button matChipRemove>
+                    <mat-icon
+                      fontSet="fa"
+                      fontIcon="fa-circle-xmark"
+                      matListIcon
+                      class="iconMenu"
+                    ></mat-icon>
+                  </button>
+                </mat-chip>
+                <input
+                  placeholder="{{
+                    'producto.placeholderExistencia' | translate
+                  }}"
+                  (keypress)="validarNum($event)"
+                  [matChipInputFor]="chipListExistencia"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="add($event, 'listExistencia')"
+                />
+              </mat-chip-list>
+            </div>
+
+            <input
+              id="txtExistencia"
+              *ngIf="productoCargado"
+              [disabled]="productoCargado"
+              placeholder="{{ 'producto.placeholderExistencia' | translate }}"
+              style="width: 100%"
+              maxlength="8"
+              [(ngModel)]="producto.existencia"
+              (focus)="txtfocus(1, $event, 'f')"
+              (blur)="txtfocus(1, $event, 'b')"
+              type="text"
+              class="form-control borderAzul"
+            />
+            <label
+              id="errortxtExistencia"
+              class="control-label text-left txtErrorV"
+              style="color: red"
+            ></label>
+          </div>
+        </div>
+        <div class="row mx-auto">
+          <div class="col-lg-3">
+            {{ "producto.precioVenta" | translate }}
+          </div>
+          <div class="col-lg-9">
+            <div
+              *ngIf="!productoCargado"
+              class="form-control borderAzul txtPrecio"
+            >
+              <mat-chip-list
+                #chipListPrecioVenta
+                aria-label="presetnacion selection"
+              >
+                <mat-chip
+                  *ngFor="let item of listPrecio"
+                  (removed)="remove(item, 'listPrecio')"
+                >
+                  {{ item }}
+                  <button matChipRemove>
+                    <mat-icon
+                      fontSet="fa"
+                      fontIcon="fa-circle-xmark"
+                      matListIcon
+                      class="iconMenu"
+                    ></mat-icon>
+                  </button>
+                </mat-chip>
+                <input
+                  placeholder="{{
+                    'producto.placeholderPrecioVenta' | translate
+                  }}"
+                  (keypress)="validarNumDecimal($event)"
+                  [matChipInputFor]="chipListPrecioVenta"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="add($event, 'listPrecio')"
+                />
+              </mat-chip-list>
+            </div>
+
+            <input
+              id="txtPrecio"
+              *ngIf="productoCargado"
+              placeholder="{{ 'producto.placeholderPrecioVenta' | translate }}"
+              style="width: 100%"
+              [(ngModel)]="producto.precio"
+              (focus)="txtfocus(1, $event, 'f')"
+              (blur)="txtfocus(1, $event, 'b')"
+              type="text"
+              class="form-control borderAzul"
+              maxlength="13"
+            />
+            <label
+              id="errortxtPrecio"
+              class="control-label text-left txtErrorV"
+              style="color: red"
+            ></label>
+          </div>
+        </div>
+        <div class="row mx-auto" *ngIf="isGerenteCosto">
+          <div class="col-lg-3">
+            {{ "producto.costo" | translate }}
+          </div>
+          <div class="col-lg-9">
+            <div
+              *ngIf="!productoCargado"
+              class="form-control borderAzul txtCosto"
+            >
+              <mat-chip-list #chipListCosto aria-label="presetnacion selection">
+                <mat-chip
+                  *ngFor="let item of listCosto"
+                  (removed)="remove(item, 'listCosto')"
+                >
+                  {{ item }}
+                  <button matChipRemove>
+                    <mat-icon
+                      fontSet="fa"
+                      fontIcon="fa-circle-xmark"
+                      matListIcon
+                      class="iconMenu"
+                    ></mat-icon>
+                  </button>
+                </mat-chip>
+                <input
+                  placeholder="{{ 'producto.placeholderCosto' | translate }}"
+                  (keypress)="validarNumDecimal($event)"
+                  [matChipInputFor]="chipListCosto"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="add($event, 'listCosto')"
+                />
+              </mat-chip-list>
+            </div>
+
+            <input
+              id="txtCosto"
+              *ngIf="productoCargado"
+              [disabled]="productoCargado"
+              placeholder="{{ 'producto.placeholderCosto' | translate }}"
+              style="width: 100%"
+              [(ngModel)]="producto.costo"
+              (focus)="txtfocus(1, $event, 'f')"
+              (blur)="txtfocus(1, $event, 'b')"
+              type="text"
+              class="form-control borderAzul"
+              maxlength="13"
+            />
+            <label
+              id="errortxtCosto"
+              class="control-label text-left txtErrorV"
+              style="color: red"
+            ></label>
+          </div>
+        </div>
+        <div class="row mx-auto" *ngIf="productoCargado">
+          <div class="col-lg-3">
+            {{ "producto.codigoBarras" | translate }}
+          </div>
+          <div class="col-11 col-lg-8" style="position: relative">
+            <input
+              id="txtCbarras"
+              maxlength="25"
+              [(ngModel)]="producto.cbarras"
+              type="text"
+              class="form-control borderAzul"
+            />
+            <label
+              id="errortxtCbarras"
+              class="control-label text-left txtErrorV"
+              style="color: red"
+            ></label>
+          </div>
+          <div class="col-1 col-lg-1">
+            <div
+              id="camara"
+              style="font-size: 18px; color: #357ec1; cursor: pointer"
+            >
+              <mat-icon matListIcon class="iconosBookipp iconoSize" (click)="leerCodigoBarras()" svgIcon="iconConfigurar"></mat-icon>
+            </div>
+          </div>
+        </div>
+        <div class="row mx-auto" [hidden]="this._pantallaServicio.permisos_visualizacion.accesosPantalla.sitebar.mostrarFacturacion == false">
+          <div class="col-lg-3">Unidad de Medida</div>
+          <div class="col-lg-9">
+            <ng-select
+              id="txtUnidadMedida"
+              style="width: 100%"
+              placeholder="Seleccione una clave"
+              appendTo="body"
+              [searchable]="false"
+              [items]="dataUM"
+              bindLabel="nombre"
+              bindValue="idUnidadMedida"
+              [(ngModel)]="producto.idUnidadMedida"
+            >
+            </ng-select>
+            <label
+              id="errortxtUnidadMedida"
+              class="control-label text-left txtErrorV"
+              style="color: red"
+            ></label>
+          </div>
+        </div>
+        <div class="row mx-auto">
+          <div class="col-lg-3">
+            {{ "producto.infoProducto" | translate }}
+          </div>
+          <div class="col-lg-9">
+            <input
+              id="txtInfoProducto"
+              style="width: 100%"
+              [(ngModel)]="producto.infoProducto"
+              (focus)="txtfocus(1, $event, 'f')"
+              (blur)="txtfocus(1, $event, 'b')"
+              type="text"
+              class="form-control borderAzul"
+              maxlength="225"
+            />
+            <label
+              id="errortxtInfoProducto"
+              class="control-label text-left txtErrorV"
+            ></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel de datos configurables -->
+    <div class="row mx-auto mt-3">
+      <!-- Titulo de sección -->
+      <div class="col-lg-12 page_seccion_titulo">
+        {{ "producto.datosConfigurables" | translate }}
+      </div>
+      <div class="col-lg-12 page_seccion_titulo_barra">
+        <hr class="page_seccion_titulo_barra_contenido" />
+      </div>
+
+      <div class="col-lg-12" style="max-width: 500px">
+        <div class="row mx-auto">
+          <div class="col-lg-3"></div>
+          <div class="col-11 col-lg-8">
+            <input
+              id="inputCampoConfigurable"
+              style="width: 100%"
+              placeholder="Nombre del Campo"
+              type="text"
+              [(ngModel)]="configurables.nombreCampoNuevo"
+              class="form-control borderAzul"
+              maxlength="200"
+            />
+          </div>
+          <div class="col-1 col-lg-1">
+            <mat-icon matListIcon class="iconosBookipp iconoSize" (click)="guardarConfigurables()" svgIcon="iconAgregar"></mat-icon>
+          </div>
+        </div>
+
+        <div
+          class="row mx-auto mt-3"
+          *ngFor="let x of configurables.dataConfigurables"
+        >
+          <div class="col-lg-3">
+            {{ x.nombre }}
+          </div>
+          <div class="col-11 col-lg-8">
+            <input
+              id="txtCampoValor{{ x.idCampo }}"
+              [(ngModel)]="x.valor"
+              style="width: 100%"
+              type="text"
+              class="form-control borderAzul"
+              maxlength="200"
+            />
+          </div>
+          <div class="col-1 col-lg-1">
+            <mat-icon matListIcon class="iconosBookipp iconoSize" (click)="eliminarConfigurables(x.idCampo)" svgIcon="iconBasura"></mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Boton de guardardo y cancelado -->
+    <div
+      class="row mx-auto"
+      style="text-align: center; margin-top: 40px; margin-bottom: 40px"
+    >
+      <div class="col-lg-3"></div>
+      <div class="col-lg-3 my-2">
+        <button class="buttonEstiloBlanco" (click)="guardarProducto()">
+          {{ "producto.guardar" | translate }}
+        </button>
+      </div>
+      <div class="col-lg-3 my-2">
+        <button
+          class="buttonEstiloBlanco"
+          (click)="descartarCambiosProductos()"
+        >
+          {{ "producto.regresar" | translate }}
+        </button>
+      </div>
+      <div class="col-lg-3"></div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!--Modal Confirm-->
+<div
+  id="modalConfirm"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  class="modal fade modalConfirm"
+>
+  <div class="modal-dialog" style="max-width: 600px" role="document">
+    <div
+      class="modal-content"
+      style="margin: 0 auto; font-weight: 400; width: 100%"
+    >
+      <div class="modal-body" style="min-height: 50px"></div>
+      <div class="modal-footer" style="height: 62px; display: flex">
+        <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="width: 140px; height: 40px;">
+          {{ "configuracionSucursalTranslate.cancelar" | translate }}
+        </button>
+        <button
+          type="button"
+          data-bs-dismiss="modal"
+          class="buttonEstiloBlanco" 
+          style="width: 140px; height: 40px;"
+          (click)="cancelarParametros()"
+        >
+          {{ "configuracionSucursalTranslate.si" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal Grid-->
+<div
+  id="modalgrid"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  class="modal fade modalgrid"
+>
+  <div class="modal-dialog" style="max-width: 600px" role="document">
+    <div
+      class="modal-content"
+      style="margin: 0 auto; font-weight: 400; width: 100%"
+    >
+      <div class="modal-header">
+        <span id="tituloModal">{{ tituloModal }}</span>
+        <mat-icon matListIcon class="iconosBookipp iconoSize" data-bs-dismiss="modal" svgIcon="iconCerrar"></mat-icon>
+      </div>
+      <div class="modal-body" style="min-height: 50px">
+        <div class="mat-elevation-z8 my-2">
+          <table mat-table [dataSource]="dataSourceTable" style="width: 100%">
+            <ng-container
+              *ngFor="let column of columnsTable"
+              [matColumnDef]="column.nameCol"
+            >
+              <th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+                {{ column.title }}
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let element"
+                [style]="column.styleCssRow"
+              >
+                {{ element[column.nameCol] }}
+
+                <div *ngIf="column.nameCol === 'acciones'">
+                  <mat-icon matListIcon class="iconosBookipp iconoSize" (click)="eliminarFiltro(element.id)" svgIcon="iconBasura"></mat-icon>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedTable"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedTable"></tr>
+          </table>
+          <mat-paginator
+            #paginatorTable
+            [pageSizeOptions]="[10, 20, 50]"
+            showFirstLastButtons
+            aria-label="Select page of periodic elements"
+          >
+          </mat-paginator>
+        </div>
+      </div>
+      <div class="modal-footer" style="height: 62px; display: flex">
+        <button
+          type="button"
+          data-bs-dismiss="modal"
+          class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+          (click)="confirmarEliminar()"
+        >
+          {{ "producto.cargar" | translate }}
+        </button>
+        <button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="width: 140px; height: 40px;">
+          {{ "producto.salir" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal para Código de barras-->
+<div
+  id="modalBarCode"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  class="modal fade modalBarCode"
+>
+  <div class="modal-dialog" style="max-width: 600px" role="document">
+    <div
+      class="modal-content"
+      style="margin: 0 auto; font-weight: 400; width: 100%"
+    >
+      <div class="modal-header">
+        <span>{{ "producto.codigoBarras" | translate }}</span>
+        <mat-icon matListIcon class="iconosBookipp iconoSize" (click)="cerrarModal()" svgIcon="iconCerrar"></mat-icon>
+      </div>
+      <div class="modal-body" style="min-height: 50px">
+        <div style="width: 100%; position: relative">
+          <div class="row">
+            <div
+              class="col-lg-12"
+              style="text-align: center; margin-bottom: 10px"
+            >
+              <div style="width: 100%; max-width: 350px; margin: auto">
+                <select #selectList (change)="cambiarCamara(selectList.value)">
+                  <option
+                    *ngFor="let camera of availableDevices"
+                    value="{{ camera.deviceId }}"
+                  >
+                    {{ camera.label }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <img src="{{ imgCanvas }}" [hidden]="!imgCanvas" />
+
+            <div
+              id="imgScanner"
+              [hidden]="imgCanvas"
+              class="col-lg-12"
+              style="text-align: center"
+            >
+              <zxing-scanner
+                style="width: 350px; margin: auto"
+                [device]="selectedDevice"
+                [formats]="allowedFormats"
+                [enable]="scannerEnabled"
+                (scanSuccess)="scanSuccessHandler($event)"
+                (camerasFound)="camerasFoundHandler($event)"
+              ></zxing-scanner>
+            </div>
+
+            <div class="col-lg-12 mt-2" style="text-align: center">
+              <span [hidden]="!codigoBarrasCamara" style="font-weight: 700">
+                Codigo: {{ codigoBarrasCamara }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="height: 62px; display: flex">
+        <button
+          id="BarCodeRetry"
+          [hidden]="!imgCanvas"
+          type="button"
+          (click)="scannerAgain()"
+          class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+        >
+          Reintentar
+        </button>
+        <button
+          id="BarCodeSave"
+          [hidden]="!imgCanvas"
+          type="button"
+          class="buttonEstiloBlanco" style="width: 140px; height: 40px;"
+          (click)="guardarBarCode()"
+        >
+          {{ "producto.agregar" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

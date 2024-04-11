@@ -1,0 +1,25 @@
+.page-title-breadcrumb .page-header .page-title{
+    font-size:25px;
+    font-weight:700;
+    display:inline-block;
+    padding-top:10px
+}
+
+.paquete{
+    border-color:#d3d3d3;
+    border:3px solid;
+    display:inline-block;
+    width:265px;
+    height:350px;
+    text-align:justify;
+    margin:5px;
+    background-color:#d3d3d3
+}
+
+.paquete:hover{
+    border-color:#99d6ff
+}
+
+.selected{
+    border-color:#357EC1
+}

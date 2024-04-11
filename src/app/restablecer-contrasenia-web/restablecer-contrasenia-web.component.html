@@ -1,0 +1,26 @@
+<div class="container">
+	<div class="formulario">
+		<header>
+			<img alt="logo" src="../../assets/images/system/logoLIS1.png" />
+		</header>
+
+		<main>
+			<p class="titulo">Nueva contraseña creada</p>
+		
+			<div class="myMessage" id="correo" runat="server" *ngIf="correo">
+				<span>Usuario</span>
+				<p>{{ correo }}</p>
+			</div>
+			<div class="myMessage" id="pass" runat="server" *ngIf="pass">
+				<span>Contraseña</span>
+				<p>{{ pass }}</p>
+			</div>
+
+			<div class="myMessage" *ngIf="errorMensaje">
+				<h4>{{ errorMensaje }}</h4>
+			</div>
+
+			<cite class="nota">*Recomendación: cambia tu contraseña una vez dentro de la aplicación</cite>
+		</main>
+	</div>
+</div>

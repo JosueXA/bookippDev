@@ -1,0 +1,355 @@
+<div class="container">
+  <mat-card class="mat-elevation-z8" style="overflow-x:hidden;overflow-y: scroll;height: 100vh;">
+    <mat-card-header>
+      <div style="width: 100%; display: flex;">
+        <mat-card-title style="margin-right: 10px;" *ngIf="formularios.length > 0">
+          {{formularios[0]?.nombre}}</mat-card-title>
+
+      </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <form id="respuestasForm" style="padding: 1.5rem;">
+        <!-- Secciones -->
+        <div class="row" *ngFor="let seccion of secciones">
+          <div *ngIf="seccion.seccionDefault == 0" class="col-xl-12 m-2">
+            <div class="row">
+
+              <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 m2" style="display: inline;">
+                <div style="margin-left: -10px; width: 60px;float: left;">
+                </div>
+                <div style="float: left;margin-left: -5px;">
+                  <label class="control-label"> <b> {{seccion.nombre}}: </b> </label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-12 col-xl-12 m-2">
+            <!-- Campos -->
+            <div class="row" *ngFor="let campo of campos">
+              <!-- Opción Multiple - Respuesta Multiple -->
+              <div class="col-xl-12 m-2"
+                *ngIf="campo.idTipoElementoFormulario == 1 && seccion.idFormularioSeccion== campo.idFormularioSeccion"
+                style="position: relative;left: 10px;">
+                <div class="row">
+                  <div class="col-12 col-ms-3 col-md-3 col-xl-3">
+                    <label class="control-label" id="pregunta{{campo.idFormularioElemento}}"
+                      style="margin-top: 3px;">{{campo.descripcion}}:</label>
+                  </div>
+                  <div class="col-12 col-ms-9 col-md-9 col-xl-9" style="text-align: left;">
+                    <div class="col-12 col-ms-12 col-md-12 col-xl-12" style="text-align: left; padding-left: 12px;">
+                      <div class="form-check form-check-inline" style="padding: 12px;"
+                        *ngFor="let detalle_check of campos_detalle_check | opcionesRespuestas:campo.idFormularioElemento">
+                        <input class="form-check-input" type="checkbox"
+                          (change)="onChangeOpcionMultiple(campo.idFormularioElemento,campo.esRequerido)"
+                          id="check{{detalle_check.descripcion}}" value="{{detalle_check.descripcion}}"
+                          name="OM-{{detalle_check.idFormularioOpcion}}" id="OM-{{detalle_check.idFormularioOpcion}}"
+                          required>
+                        <label class="form-check-label"
+                          for="inline{{detalle_check.descripcion}}">{{detalle_check.descripcion}}</label>
+                      </div>
+                    </div>
+
+
+                  </div>
+                  <div style="width: 65%;text-align: center;">
+                    <label id="error{{campo.idFormularioElemento}}" class="control-label text-left"
+                      style="color: red;"></label>
+
+                  </div>
+                </div>
+              </div>
+
+              <!-- Opción Multiple - Respuesta Sencilla -->
+              <div class="col-xl-12 m-2"
+                *ngIf="campo.idTipoElementoFormulario == 2 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                style="position: relative;left: 10px;">
+                <div class="row">
+                  <div class="col-12 col-ms-3 col-md-3 col-xl-3">
+                    <label class="control-label" id="{{campo.idFormularioElemento}}"
+                      style="margin-top: 3px;">{{campo.descripcion}}:</label>
+                  </div>
+                  <div class="col-12 col-ms-9 col-md-9 col-xl-9" style="text-align: left;">
+
+                    <!-- Opciones -->
+                    <div class="form-check form-check-inline"
+                      *ngFor="let detalle_opcion of campos_detalle_om | opcionesRespuestas:campo.idFormularioElemento">
+                      <input (change)="onChangeOpcion(campo.idFormularioElemento,campo.esRequerido)"
+                        class="form-check-input" type="radio" [value]="detalle_opcion.idFormularioElemento"
+                        name="OP-{{campo.idFormularioElemento}}" id="OP-{{detalle_opcion.idFormularioOpcion}}" required>
+                      <label class="form-check-label"
+                        for="inline{{detalle_opcion.descripcion}}">{{detalle_opcion.descripcion}}</label>
+                    </div>
+                  </div>
+                  <div style="width: 65%;text-align: center;">
+                    <label id="error{{campo.idFormularioElemento}}" class="control-label text-left"
+                      style="color: red;"></label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Texto -->
+              <div class="col-xl-12 m-2"
+                *ngIf="campo.idTipoElementoFormulario == 3 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                style="position: relative;left: 10px;">
+                <div class="row">
+                  <!-- <div class="col-12 col-ms-2 col-md-2 col-lg-2 col-xl-1 text-center"
+                                        style="width: 88px;">
+
+                                    </div> -->
+                  <div *ngIf="campo.descripcion != ''" class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3">
+                    {{campo.descripcion}}:
+                  </div>
+                  <div class="col-12 col-ms-9 col-md-9 col-lg-9 col-xl-9 pe-3">
+                    <textarea name="{{campo.idFormularioElemento}}" id="TEXT-{{campo.idFormularioElemento}}"
+                      (change)="onChangeText(campo.idFormularioElemento,campo.esRequerido)"
+                      class="form-control borderAzul" aria-label="With textarea"
+                      style="width: 90%; resize:none; height: 80px; "></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lista Desplegable -->
+              <div class="col-xl-12 m-2"
+                *ngIf="campo.idTipoElementoFormulario == 4 && seccion.idFormularioSeccion== campo.idFormularioSeccion"
+                style="position: relative;left: 10px;">
+                <div class="row">
+                  <!-- <div class="col-12 col-ms-1 col-md-1 col-lg-1 col-xl-2 text-center"
+                                        style="width: 88px;">
+
+                                    </div> -->
+                  <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3">
+                    {{campo.descripcion}}:
+                  </div>
+                  <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4">
+                    <select class="form-select" aria-label="Default select example"
+                      id="LIST-{{campo.idFormularioElemento}}"
+                      (change)="onChangeLista(campo.idFormularioElemento,campo.esRequerido)">
+                      <option value="0" selected></option>
+                      <option *ngFor="let lista of campos_detalle_ld | opcionesRespuestas:campo.idFormularioElemento"
+                        value="{{lista.idFormularioOpcion}}"> {{lista.descripcion}}</option>
+                    </select>
+
+                    <!--<ng-select id="LIST-{{campo.idFormularioElemento}}" style="height: 100%; width: 100%;"
+                                            placeholder="Historial">
+
+                                                <ng-option *ngFor="let lista of campos_detalle_ld | opcionesRespuestas:campo.idFormularioElemento"
+
+                                                    [value]="lista.idFormularioOpcion">
+                                                    {{lista.descripcion}}
+                                                </ng-option>
+
+
+                                        </ng-select>-->
+                  </div>
+                  <!-- <div class="col-12 col-ms-4 col-md-1 col-lg-3 col-xl-4"></div> -->
+                </div>
+              </div>
+
+              <!-- Descripción -->
+              <div class="col-xl-12 m-2"
+                *ngIf="campo.idTipoElementoFormulario == 5 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                style="position: relative;left: 10px;">
+                <div class="row">
+                  <div class="col-12 col-ms-12 col-md-12 col-lg-12 col-xl-12 pe-3">
+                    <label id="LABEL-{{campo.idFormularioElemento}}"
+                      style="width: 90%;text-align: justify">{{campo.descripcion}}</label>
+                    <!-- <textarea id="txt{{campo.descripcion}}" aria-label="With textarea" name="{{campo.idFormularioElemento}}" id="TEXT-{{campo.idFormularioElemento}}" class="form-control borderAzul"
+                                            style="width: 100%; resize:none; height: 80px;overflow:hidden;">
+                                    </textarea>-->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Texto Completo -->
+              <div class="col-xl-12 m-2"
+                *ngIf="campo.idTipoElementoFormulario == 6 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                style="position: relative;left: 10px;">
+                <div class="row">
+                  <div class="col-12 col-ms-12 col-md-12 col-lg-12 col-xl-12 pe-3">
+                    <textarea name="{{campo.idFormularioElemento}}" id="TEXTSI-{{campo.idFormularioElemento}}"
+                      class="form-control borderAzul" aria-label="With textarea"
+                      (change)="onChangeTextSinInput(campo.idFormularioElemento,campo.esRequerido)"
+                      style="width: 90%; resize:none; height: 80px;"></textarea>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <!-- Iamagen -->
+              <div class="col-xl-12 m-2"
+              *ngIf="campo.idTipoElementoFormulario === 7 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+              style="position: relative;left: 10px;">
+              <div class="row" *ngIf="campo.imagenPath?.length <= 0 || !campo.imagenPath">
+                <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                  {{campo.descripcion}}:
+                </div>
+                <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4" style="text-align: center;">
+                  <div [id]="'botonImagenPromocion-' + campo.idFormularioElemento"
+                    style="width: 100%; height: 250px; max-width: 250px; margin: 10px auto; padding: 0; display: flex; border: 2px solid #20c4e6">
+                    <label [for]="'archivoImagenPromocion-' + campo.idFormularioElemento" class="buttonNewImagen"
+                      style="margin: auto auto; display: flex; cursor: pointer !important;">
+                      <i class="fa fa-camera" style="margin: auto auto; font-size: 50px;"></i>
+                    </label>
+
+                    <input [id]="'archivoImagenPromocion-' + campo.idFormularioElemento" (change)="imagePreview($event, campo);" type="file"
+                      accept="image/png, image/gif, image/jpeg" style="display: none;" />
+                  </div>
+                  <p style="color: red;"
+                    *ngIf="(campo.esRequerido === 1 && (campo.imagenPath?.lenght <= 0 || !campo.imagenPath?.length)) && this.BTN_CLICK_RESPONDER_FORM === true   ">
+                    * Requerido.</p>
+
+                </div>
+              </div>
+              <div class="row" *ngIf="campo.imagenPath?.length > 0">
+                <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                  {{campo.descripcion}}:
+                </div>
+                <div (click)="profilePictureInput.click();" class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3">
+                  <img id="img-elemento-{{campo.idFormularioElemento}}"
+                    style="cursor: pointer; margin-top: 3px; border-radius: 5px; height: 250px; width: 250px; max-width: 250px;"
+                    [src]="campo.imagenPath" alt="Image no content">
+                  <input [alt]="campo.descripcion" type="file" accept="image/*"
+                    (change)="imagePreview($event, campo);" #profilePictureInput type="file" hidden />
+                </div>
+                <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4 div-centrado">
+                  <button type="button" class="buttonEstiloBlanco" (click)="campo.imagenPath = '';"
+                    style="width:151px; font-size: 14px; height: auto;">
+                    Limpiar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+
+
+              <!-- <div class="col-xl-12 m-2"
+                *ngIf="campo.idTipoElementoFormulario === 7 && seccion.idFormularioSeccion == campo.idFormularioSeccion"
+                style="position: relative;left: 10px;">
+                <div class="row" *ngIf="campo.imagenPath?.length <= 0 || !campo.imagenPath?.length">
+                  <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                    {{campo.descripcion}}:
+                  </div>
+                  <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4" style="text-align: center;">
+                    <div id="botonImagenPromocion"
+                      style="width: 100%; height: 300px; max-width: 300px; margin: 10px auto; padding: 0; display: flex; border: 2px solid #20c4e6">
+                      <label for="archivoImagenPromocion" class="buttonNewImagen"
+                        style="margin: auto auto; display: flex; cursor: pointer !important;">
+                        <i class="fa fa-camera" style="margin: auto auto; font-size: 50px;"></i>
+                      </label>
+
+                      <input id="archivoImagenPromocion" (change)="imagePreview($event, campo);" type="file"
+                        accept="image/png, image/gif, image/jpeg" style="display: none;" />
+                    </div>
+                    <p style="color: red;"
+                      *ngIf="(campo.esRequerido === 1 && (campo.imagenPath?.lenght <= 0 || !campo.imagenPath?.length)) && this.BTN_CLICK_RESPONDER_FORM === true   ">
+                      * Requerido.</p>
+
+                  </div>
+                </div>
+                <div class="row" *ngIf="campo.imagenPath?.length > 0">
+                  <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                    {{campo.descripcion}}:
+                  </div>
+                  <div (click)="profilePictureInput.click();" class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3">
+                    <img id="img-elemento-{{campo.idFormularioElemento}}"
+                      style="cursor: pointer; margin-top: 3px; border-radius: 45px; height: 300px; width: 300px;"
+                      [src]="campo.imagenPath" alt="Image no content">
+                    <input [alt]="campo.descripcion" type="file" accept="image/*"
+                      (change)="imagePreview($event, campo);" #profilePictureInput type="file" hidden />
+                  </div>
+                  <div class="col-3 div-centrado">
+                    <button type="button" class="buttonEstiloBlanco"
+                      (click)="campo.imagenPath = '';"
+                      style="width:151px; font-size: 14px; height: auto;">
+                      Limpiar
+                    </button>
+                  </div>
+                </div>
+              </div> -->
+
+
+              <!-- Dibujo-->
+              <div class="col-xl-12 my-2" style="position: relative;padding-left: 10px;"
+                *ngIf="campo.idTipoElementoFormulario === 8 &&  seccion.idFormularioSeccion === campo.idFormularioSeccion">
+                <div class="row">
+                  <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3" style="display: flex; align-items: center;">
+                  </div>
+                  <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4" style="text-align: center;">
+                    <signature-pad class="form-control" #signature [options]="signaturePadOptions"
+                      (drawStart)="drawStart($event);"
+                      (drawEnd)="drawComplete($event, signature.toDataURL(), campo);"></signature-pad>
+                    <p>{{campo.descripcion}}</p>
+                    <p style="color: red;"
+                      *ngIf="campo.esRequerido === 1 && !campo.imagenPath && campo.imagenPath?.lenght <= 0 && this.BTN_CLICK_RESPONDER_FORM === true">
+                      * Requerido.</p>
+                  </div>
+                  <div class="col-12 col-ms-5 col-md-7 col-lg-6 col-xl-4 div-centrado">
+                    <button type="button" class="buttonEstiloBlanco" (click)="signature.clear(); limpiarDibujo(campo);"
+                      style="width:151px; font-size: 14px; height: auto;">
+                      Limpiar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <!-- <div class="col-xl-12 m-2" style="position: relative;left: 10px;"
+                  *ngIf="campo.idTipoElementoFormulario === 8 &&  seccion.idFormularioSeccion === campo.idFormularioSeccion">
+                  <div class="row justify-content-center">
+                    <div class="col-6">
+                      <signature-pad class="form-control" #signature [options]="signaturePadOptions"
+                        (drawStart)="drawStart($event);"
+                        (drawEnd)="drawComplete($event, signature.toDataURL(), campo);"></signature-pad>
+                    </div>
+                    <div class="col-3 div-centrado">
+                      <button type="button" class="buttonEstiloBlanco"
+                        (click)="signature.clear(); limpiarDibujo(campo); campo.imagenPath = '';"
+                        style="width:151px; font-size: 14px; height: auto;">
+                        Limpiar
+                      </button>
+                    </div>
+
+                  </div>
+
+                  <div class="row justify-content-center">
+                    <div class="col-12 col-ms-3 col-md-3 col-lg-3 col-xl-3  justify-content-center">
+                      {{campo.descripcion}}:
+                      <p style="color: red;" *ngIf="campo.esRequerido === 1 && campo.imagenPath?.lenght <= 0 && this.BTN_CLICK_RESPONDER_FORM === true">  * Requerido.</p>
+
+                    </div>
+                  </div>
+
+
+
+
+                </div> -->
+
+
+
+
+
+            </div>
+          </div>
+
+        </div>
+        <div class="row p-5">
+          <div class="col-3 col-sm-3 col-md-4 col-lg-5 col-xl-5">
+
+          </div>
+          <div class="col-6 col-sm-6 col-md-4 col-lg-2 col-xl-2">
+            <button type="button" *ngIf="formularios.length > 0" class="btn btn-primary text-center"
+              (click)="guardarRespuesta()" style="width: 100%;">Enviar</button>
+          </div>
+          <div class="col-3 col-sm-3 col-md-4 col-lg-5 col-xl-5">
+
+          </div>
+        </div>
+      </form>
+
+    </mat-card-content>
+  </mat-card>
+</div>

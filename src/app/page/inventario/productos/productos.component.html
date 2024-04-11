@@ -1,0 +1,926 @@
+<mat-card class="mat-elevation-z8">
+	<mat-card-header class="cardHeaderMaterial">
+		<mat-card-title>
+			{{ "consultaProductosTranslate.productos" | translate }}
+		</mat-card-title>
+
+		<mat-icon matListIcon class="iconosBookipp iconoSizeHeader" id="btnNuevo" *ngIf="permisoAccionInventario === 1"
+			(click)="crearNuevoProducto()" svgIcon="iconAgregar"></mat-icon>
+		<mat-icon matListIcon class="iconosBookipp iconoSizeHeader" id="btnExportar"
+			*ngIf="permisoAccionInventario === 1" (click)="importarProductos()" svgIcon="iconSubir"></mat-icon>
+
+		<div class="breadcrumbCustom">
+			<a href="/procesos/agenda">
+				<mat-icon matListIcon class="iconosBookipp iconoSize" style="margin: 0px 0px 3px 0px;"
+					svgIcon="iconCasita"></mat-icon>
+				<span>Inicio</span>
+			</a>
+			<a href="#">
+				<mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;"
+					svgIcon="iconFlechaDerecha"></mat-icon>
+			</a>
+			<a href="#" class="active">
+				<span>{{ "consultaProductosTranslate.productos" | translate }}</span>
+			</a>
+		</div>
+	</mat-card-header>
+	<mat-divider></mat-divider>
+
+	<mat-card-content style="margin-top: 10px">
+		<mat-tab-group dynamicHeight="true" mat-align-tabs="center" preserveContent="true"
+			(selectedTabChange)="onTabChanged($event)">
+			<!-- Listado de productos -->
+			<mat-tab id="listadoTab" label="{{ 'consultaProductosTranslate.listadoTab' | translate }}">
+				<!-- Principal -->
+				<div class="row mx-auto mt-3">
+					<!-- Buscador y exportador -->
+					<div class="col-lg-12">
+						<div class="barSetSearch">
+							<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconExcel"
+								(click)="exportarProductos()"></mat-icon>
+
+							<div class="form-control borderAzul barSearch">
+								<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconBuscar"
+									style="margin: 0px;"></mat-icon>
+
+								<input id="inputProductos" placeholder="Marca, Producto"
+									[(ngModel)]="listadoProductos.busquedaProductosTexto"
+									(ngModelChange)="buscarProductos()" type="text" />
+							</div>
+						</div>
+					</div>
+
+					<!-- Tabla de productos -->
+					<div class="col-lg-12 overflow-auto">
+						<div class="mat-elevation-z8 my-2" style="min-width: 700px">
+							<table mat-table [dataSource]="dataSourceProductos" style="width: 100%">
+								<ng-container *ngFor="let column of columnsProductos" [matColumnDef]="column.nameCol">
+									<th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+										{{ column.title }}
+									</th>
+									<td mat-cell *matCellDef="let element" [style]="column.styleCssRow">
+										{{ element[column.nameCol] }}
+
+										<div *ngIf="column.nameCol === 'acciones' && permisoAccionInventario === 1">
+											<mat-icon matListIcon class="iconosBookipp iconoSize"
+												(click)="actualizarProducto(element)" svgIcon="iconEditar"></mat-icon>
+
+											<mat-icon matListIcon class="iconosBookipp iconoSize"
+												(click)="preparacionBorrarProducto(element.presentacionNgModel)"
+												svgIcon="iconEliminar"></mat-icon>
+
+											<mat-icon matListIcon class="iconosBookipp iconoSize"
+												(click)="realizarOrdenCompra(element)"
+												svgIcon="iconOrdenCompra"></mat-icon>
+										</div>
+
+										<div *ngIf="column.nameCol === 'descripcion'">
+											<ng-select id="ddlPresentaciones" style="width: 150px; margin: auto"
+												appendTo="body" [searchable]="false" [clearable]="false"
+												[items]="element.presentaciones" bindLabel="descripcion"
+												bindValue="idInventarioPresentacion"
+												(change)="cambiarPresentacionSeleccionada(element)"
+												[(ngModel)]="element.presentacionNgModel">
+											</ng-select>
+										</div>
+
+										<div *ngIf="
+                        column.nameCol === 'existencia' &&
+                        permisoAccionInventario === 1
+                      " style="display: inline-flex">
+											<mat-icon matListIcon class="iconosBookipp iconoSize"
+												(click)="abrirModalAjuste(1, element)" svgIcon="iconMas"></mat-icon>
+
+											<mat-icon matListIcon class="iconosBookipp iconoSize"
+												(click)="abrirModalAjuste(2, element)" svgIcon="iconMenos"></mat-icon>
+										</div>
+									</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedProductos"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedProductos"></tr>
+							</table>
+							<mat-paginator #paginatorProductos [pageSizeOptions]="[15, 50, 100]" showFirstLastButtons
+								aria-label="Select page of periodic elements">
+							</mat-paginator>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+
+			<!-- Historio -->
+			<mat-tab id="historicoTab" label="{{ 'consultaProductosTranslate.historicoTab' | translate }}">
+				<!-- Principal -->
+				<div class="row mx-auto mt-3">
+					<!-- Indicadores -->
+					<div class="col-lg-12">
+						<div class="row mx-auto">
+							<div class="col-lg-4 my-2">
+								<div class="indicadorCard">
+									<p (click)="mostrarDetalleValorizacionActual()">
+										VALOR ALMACEN MES ACTUAL
+									</p>
+									<label>{{
+										movimientos.dashboard.valorizacionActual.indicador
+										| currency
+										}}</label>
+									<mat-icon matListIcon class="iconosBookipp" style="width: 40px; height: 40px;"
+										svgIcon="iconCoin"></mat-icon>
+								</div>
+							</div>
+							<div class="col-lg-4 my-2">
+								<div class="indicadorCard indicadorCardGreen">
+									<p (click)="mostrarDetalleValorizacionMesAnterior()">
+										VALOR ALMACEN MES ANTERIOR
+									</p>
+									<label>{{
+										movimientos.dashboard.valorizacionMesAnterior.indicador
+										| currency
+										}}</label>
+									<mat-icon matListIcon class="iconosBookipp" style="width: 40px; height: 40px;"
+										svgIcon="iconCoin"></mat-icon>
+								</div>
+							</div>
+							<div class="col-lg-4 my-2">
+								<div class="indicadorCard indicadorCardDark">
+									<p (click)="mostrarDetalleProductosDevueltos()">
+										CANTIDAD PRODUCTOS DEVUELTOS
+									</p>
+									<label>{{
+										movimientos.dashboard.productosDevueltos.indicador
+										}}</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Graficas -->
+					<div class="col-lg-12 my-4">
+						<div class="row mx-auto">
+							<!-- Grafica izquierda -->
+							<div class="col-lg-6 my-2 overflow-auto">
+								<div class="row mx-auto" style="min-width: 450px">
+									<div class="col-lg-12" style="text-align: right">
+										<!-- Dentro del PopOver -->
+										<ng-template #popOpcionesGra02>
+											<button class="btn my-1 colorBgBtnCharts" style="width: 100%"
+												(click)="verDetallePMV()">
+												Ver detalle
+											</button>
+											<button class="btn my-1 colorBgBtnCharts" style="width: 100%"
+												(click)="descargarPMV()">
+												Descargar PDF
+											</button>
+										</ng-template>
+
+										<!-- PopOver de Descarga -->
+										<button type="button" class="btn btn-square colorContainerChart"
+											[ngbPopover]="popOpcionesGra02" container="body">
+											<mat-icon matListIcon class="iconosBookipp iconoSize"
+												svgIcon="iconBars"></mat-icon>
+										</button>
+									</div>
+									<div class="col-lg-12">
+										<canvas id="graficaPMV"></canvas>
+									</div>
+									<div class="col-lg-12">
+										<label (click)="cargarGraficaPMV('Cantidad')"
+											style="cursor: pointer; margin: 0px 5px; z-index: 1"
+											[class.activeLinkProd]="selectGraficaPMV === 'Cantidad'">
+											Cantidad
+										</label>
+										<div style="
+                        width: 1px;
+                        height: 10px;
+                        background-color: rgba(0, 0, 0, 0.2);
+                        display: inline-block;
+                      "></div>
+										<label (click)="cargarGraficaPMV('Ganancia')"
+											style="cursor: pointer; margin: 0px 5px; z-index: 1"
+											[class.activeLinkProd]="selectGraficaPMV === 'Ganancia'">
+											Ganancia
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<!-- Grafica derecha -->
+							<div class="col-lg-6 my-2 overflow-auto">
+								<div class="row mx-auto" style="min-width: 450px">
+									<div class="col-lg-12" style="text-align: right">
+										<!-- Dentro del PopOver -->
+										<ng-template #popOpcionesGra01>
+											<button class="btn my-1 colorBgBtnCharts" style="width: 100%"
+												(click)="mostrarDetalleProductosMenorRotacion()">
+												Ver detalle
+											</button>
+											<button class="btn my-1 colorBgBtnCharts" style="width: 100%"
+												(click)="descargarPMR()">
+												Descargar PDF
+											</button>
+										</ng-template>
+
+										<!-- PopOver de Descarga -->
+										<button type="button" class="btn btn-square colorContainerChart"
+											[ngbPopover]="popOpcionesGra01" container="body">
+											<mat-icon matListIcon class="iconosBookipp iconoSize"
+												svgIcon="iconBars"></mat-icon>
+										</button>
+									</div>
+									<div class="col-lg-12">
+										<canvas id="graficaPMR"></canvas>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Filtro, Busqueda y exportar -->
+					<div class="col-lg-12 my-3">
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="d-flex align-items-center position-relative" style="max-width: 350px">
+									<mat-icon matListIcon class="iconosBookipp position-absolute"
+										style="width: 24px; height: 24px; left: 30px; top: 8px"
+										svgIcon="iconCalendario"></mat-icon>
+									<input type="text" ngxDaterangepickerMd [(ngModel)]="movimientos.fechaCalendario"
+										(ngModelChange)="consultarInventarioMovimiento()" [showCustomRangeLabel]="true"
+										[alwaysShowCalendars]="false" [ranges]="ranges" [linkedCalendars]="true"
+										[locale]="{
+                      format: 'DD/MM/YYYY',
+                      applyLabel: calendarioTranslate.aceptar,
+                      cancelLabel: calendarioTranslate.cancelar,
+                      customRangeLabel: calendarioTranslate.rango
+                    }" [isInvalidDate]="isInvalidDate" [showClearButton]="false" [showCancel]="true"
+										placeholder="Select please..." class="inputCalenderSelect" />
+									<mat-icon matListIcon class="iconosBookipp position-absolute"
+										style="cursor: pointer; width: 24px; height: 24px; right: 30px; top: 8px"
+										svgIcon="iconFlechaAbajo"></mat-icon>
+								</div>
+							</div>
+							<div class="col-lg-8">
+								<div class="barSetSearch">
+									<mat-icon matListIcon class="iconosBookipp iconoSize"
+										(click)="exportarMovimientos(1)" svgIcon="iconExcel"></mat-icon>
+
+									<div class="form-control borderAzul barSearch">
+										<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconBuscar"
+											style="margin: 0px;"></mat-icon>
+										<input id="inputHistorico" placeholder="{{
+                        'consultaProductosTranslate.buscar' | translate
+                      }}" [(ngModel)]="movimientos.textoFiltro" (ngModelChange)="filtrarMovimientos()" type="text" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Tabla -->
+					<div class="col-lg-12 overflow-auto" style="margin-bottom: 80px">
+						<div class="mat-elevation-z8 my-2" style="min-width: 700px">
+							<table mat-table [dataSource]="dataSourceHistorico" style="width: 100%">
+								<ng-container *ngFor="let column of columnsHistorico" [matColumnDef]="column.nameCol">
+									<th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+										{{ column.title }}
+									</th>
+									<td mat-cell *matCellDef="let element" [style]="column.styleCssRow">
+										{{ element[column.nameCol] }}
+
+										<div *ngIf="column.nameCol === 'acciones'">
+											<span class="detailPoint"
+												(click)="consultarInventarioMovimientoDetalle(element)">
+												Detalle
+											</span>
+										</div>
+									</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedHistorico"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedHistorico"></tr>
+							</table>
+							<mat-paginator #paginatorHistorico [pageSizeOptions]="[15, 50, 100]" showFirstLastButtons
+								aria-label="Select page of periodic elements">
+							</mat-paginator>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+
+			<!-- Ajuste -->
+			<mat-tab id="ajusteTab" label="{{ 'consultaProductosTranslate.ajusteTab' | translate }}">
+				<!-- Principal -->
+				<div class="row mx-auto mt-3">
+					<!-- Filtro, Busqueda y exportar -->
+					<div class="col-lg-12 my-3">
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="d-flex align-items-center position-relative" style="max-width: 350px">
+									<mat-icon matListIcon class="iconosBookipp position-absolute"
+										style="width: 24px; height: 24px; left: 30px; top: 8px"
+										svgIcon="iconCalendario"></mat-icon>
+									<input type="text" ngxDaterangepickerMd [(ngModel)]="ajustes.fechaCalendario"
+										(ngModelChange)="consultaAjustes()" [showCustomRangeLabel]="true"
+										[alwaysShowCalendars]="false" [ranges]="ranges" [linkedCalendars]="true"
+										[locale]="{
+                      format: 'DD/MM/YYYY',
+                      applyLabel: calendarioTranslate.aceptar,
+                      cancelLabel: calendarioTranslate.cancelar,
+                      customRangeLabel: calendarioTranslate.rango
+                    }" [isInvalidDate]="isInvalidDate" [showClearButton]="false" [showCancel]="true"
+										placeholder="Select please..." class="inputCalenderSelect" />
+									<mat-icon matListIcon class="iconosBookipp position-absolute"
+										style="cursor: pointer; width: 24px; height: 24px; right: 30px; top: 8px"
+										svgIcon="iconFlechaAbajo"></mat-icon>
+								</div>
+							</div>
+							<div class="col-lg-8">
+								<div class="barSetSearch">
+									<mat-icon matListIcon class="iconosBookipp iconoSize" (click)="exportarAjustes()"
+										svgIcon="iconExcel"></mat-icon>
+
+									<div class="form-control borderAzul barSearch">
+										<mat-icon matListIcon class="iconosBookipp iconoSize" svgIcon="iconBuscar"
+											style="margin: 0px;"></mat-icon>
+
+										<input id="inputAjuste" placeholder="{{
+                        'consultaProductosTranslate.buscar' | translate
+                      }}" [(ngModel)]="ajustes.textoFiltro" (ngModelChange)="filtrarAjustes()" type="text" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Tabla -->
+					<div class="col-lg-12 overflow-auto" style="margin-bottom: 80px">
+						<div class="mat-elevation-z8 my-2" style="min-width: 700px">
+							<table mat-table [dataSource]="dataSourceAjuste" style="width: 100%">
+								<ng-container *ngFor="let column of columnsAjuste" [matColumnDef]="column.nameCol">
+									<th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+										{{ column.title }}
+									</th>
+									<td mat-cell *matCellDef="let element" [style]="column.styleCssRow">
+										<div *ngIf="column.nameCol === 'folio'">
+											<span class="detailPoint" (click)="
+                          mostrarInformacionAjuste(element.idInventarioAjuste)
+                        ">
+												{{ element[column.nameCol] }}
+											</span>
+										</div>
+
+										<span *ngIf="column.nameCol !== 'folio'">
+											{{ element[column.nameCol] }}
+										</span>
+									</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedAjuste"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedAjuste"></tr>
+							</table>
+							<mat-paginator #paginatorAjuste [pageSizeOptions]="[15, 50, 100]" showFirstLastButtons
+								aria-label="Select page of periodic elements">
+							</mat-paginator>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+
+			<!-- Certificado -->
+			<mat-tab id="certificadoRegalo" label="Certificado Regalo"
+				*ngIf="this.permisoLecturaCertificadoRegalo === 1">
+				<!-- Principal -->
+				<div class="row mx-auto mt-3">
+					<div class="col-lg-12">
+						<button class="buttonEstiloBlanco my-3 wb150" style="max-width: 100px;"
+							(click)="nuevoCertificadoRegalo()">
+							Nuevo
+						</button>
+					</div>
+					<!-- Tabla -->
+					<div class="col-lg-12 overflow-auto" style="margin-bottom: 20px">
+						<div class="mat-elevation-z8 my-2" style="min-width: 700px">
+							<table mat-table [dataSource]="dataSourceCertificado" style="width: 100%">
+								<ng-container *ngFor="let column of columnsCertificado" [matColumnDef]="column.nameCol">
+									<th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+										{{ column.title }}
+									</th>
+									<td mat-cell *matCellDef="let element" [style]="column.styleCssRow">
+										{{
+										column.nameCol !== "esEmpresa"
+										? element[column.nameCol]
+										: element[column.nameCol] === 1
+										? "SI"
+										: "NO"
+										}}
+
+										<div
+											*ngIf="column.nameCol === 'acciones' && permisoAccionCertificadoRegalo === 1">
+											<mat-icon matListIcon class="iconosBookipp iconoSize"
+												(click)="editarCertificadoRegalo(element)"
+												svgIcon="iconEditar"></mat-icon>
+
+											<mat-icon matListIcon class="iconosBookipp iconoSize"
+												(click)="mdBorrarCertificadoRegalo(element)"
+												svgIcon="iconEliminar"></mat-icon>
+										</div>
+									</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedCertificado"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedCertificado"></tr>
+							</table>
+							<mat-paginator #paginatorCertificado [pageSizeOptions]="[15, 50, 100]" showFirstLastButtons
+								aria-label="Select page of periodic elements">
+							</mat-paginator>
+						</div>
+					</div>
+				</div>
+			</mat-tab>
+		</mat-tab-group>
+	</mat-card-content>
+</mat-card>
+
+<!--Borrar producto -->
+<div id="modalConfirmBorrarProducto" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalConfirmBorrarProducto">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px"></div>
+			<div class="modal-footer" style="min-height: 62px; display: flex">
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco wb150"
+					(click)="cerrarBorrarProducto()">
+					{{ "consultaProductosTranslate.cancelar" | translate }}
+				</button>
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco wb150"
+					(click)="borrarProducto()">
+					{{ "consultaProductosTranslate.si" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Div en el que se vacian los datos para exportar a excel y CSV-->
+<div id="excelTable" [hidden]="true"></div>
+
+<!--INDICADORES DETALLE -->
+<div id="modalDetalleValorizacionActual" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalDetalleValorizacionActual">
+	<div class="modal-dialog" style="max-width: 1000px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>{{
+					tipoModalMostrarMesActual
+					? "Valor Almacen Mes Actual - Detalle"
+					: "Valor Almacen Mes Anterior
+					- Detalle"
+					}}</span>
+
+				<mat-icon matListIcon class="iconosBookipp" data-bs-dismiss="modal"
+					style="cursor: pointer; float: right; margin-top: 4px; width: 24px; height: 24px;"
+					svgIcon="iconCross"></mat-icon>
+
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div class="row">
+					<!-- Tabla -->
+					<div class="col-lg-12">
+						<div class="mat-elevation-z8 my-2 tableFluidScroll">
+							<table mat-table [dataSource]="dataSourceHistoricoMesActual" style="width: 100%">
+								<ng-container *ngFor="let column of columnsHistoricoMesActual"
+									[matColumnDef]="column.nameCol">
+									<th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+										{{ column.title }}
+									</th>
+									<td mat-cell *matCellDef="let element" [style]="column.styleCssRow">
+										{{
+										column.nameCol === "costo"
+										? (element[column.nameCol] | currency)
+										: element[column.nameCol]
+										}}
+									</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedHistoricoMesActual"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedHistoricoMesActual"></tr>
+							</table>
+							<mat-paginator #paginatorHistoricoMesActual [pageSizeOptions]="[15, 50, 100]"
+								showFirstLastButtons aria-label="Select page of periodic elements">
+							</mat-paginator>
+						</div>
+					</div>
+					<!-- Totalizador -->
+					<div class="col-lg-12" style="
+              margin-top: 25px;
+              margin-bottom: 5px;
+              text-align: right;
+              font: 16px;
+            ">
+						<b>
+							Total:
+							{{
+							(tipoModalMostrarMesActual
+							? movimientos.dashboard.valorizacionActual.detalle.total
+							: movimientos.dashboard.valorizacionMesAnterior.detalle.total
+							) | currency
+							}}
+						</b>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--MODAL PRODUCTOS DEVUELTOS -->
+<div id="modalDetalleProductosDevueltos" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalDetalleProductosDevueltos">
+	<div class="modal-dialog" style="max-width: 1000px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>Productos Devueltos - Detalle</span>
+
+				<mat-icon matListIcon class="iconosBookipp" data-bs-dismiss="modal"
+					style="cursor: pointer; float: right; margin-top: 4px; width: 24px; height: 24px;"
+					svgIcon="iconCross"></mat-icon>
+
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div class="row">
+					<!-- Tabla -->
+					<div class="col-lg-12 my-3">
+						<div class="mat-elevation-z8 my-2 tableFluidScroll">
+							<table mat-table [dataSource]="dataSourceValorizacionActual" style="width: 100%">
+								<ng-container *ngFor="let column of columnsValorizacionActual"
+									[matColumnDef]="column.nameCol">
+									<th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+										{{ column.title }}
+									</th>
+									<td mat-cell *matCellDef="let element" [style]="column.styleCssRow">
+										{{ element[column.nameCol] }}
+									</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedValorizacionActual"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedValorizacionActual"></tr>
+							</table>
+							<mat-paginator #paginatorValorizacionActual [pageSizeOptions]="[15, 50, 100]"
+								showFirstLastButtons aria-label="Select page of periodic elements">
+							</mat-paginator>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--MODAL DE DETALLE MOVIMIENTO -->
+<div id="modalMovimientosDetalle" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalMovimientosDetalle">
+	<div class="modal-dialog" style="max-width: 1000px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>Movimientos de {{ movimientos.presentacionSeleccionada.mpp }}</span>
+
+				<mat-icon matListIcon class="iconosBookipp" data-bs-dismiss="modal"
+					style="cursor: pointer; float: right; margin-top: 4px; width: 24px; height: 24px;"
+					svgIcon="iconCross"></mat-icon>
+
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div class="row">
+					<div class="col-lg-12 text-end">
+						<mat-icon matListIcon class="iconosBookipp iconoSize" (click)="exportarMovimientos(2)"
+							svgIcon="iconExcel" style="overflow: visible;"></mat-icon>
+					</div>
+					<!-- Tabla -->
+					<div class="col-lg-12 my-3">
+						<div class="mat-elevation-z8 my-2 tableFluidScroll">
+							<table mat-table [dataSource]="dataSourceMovimientosDetalle" style="width: 100%">
+								<ng-container *ngFor="let column of columnsMovimientosDetalle"
+									[matColumnDef]="column.nameCol">
+									<th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+										{{ column.title }}
+									</th>
+									<td mat-cell *matCellDef="let element" [style]="column.styleCssRow">
+										{{ column.nameCol !== 'folio' ? element[column.nameCol] : '' }}
+
+										<ng-container *ngIf="column.nameCol === 'folio' && element['folioVenta']">
+											<span class="linkCustom"
+												(click)="mostrarTicketFolioVenta(element.folioVenta)">
+												{{ element[column.nameCol] }}
+											</span>
+										</ng-container>
+
+										<ng-container *ngIf="column.nameCol === 'folio' && !element['folioVenta']">
+											{{ element[column.nameCol] }}
+										</ng-container>
+									</td>
+								</ng-container>
+
+								<tr mat-header-row *matHeaderRowDef="displayedMovimientosDetalle"></tr>
+								<tr mat-row *matRowDef="let row; columns: displayedMovimientosDetalle"></tr>
+							</table>
+							<mat-paginator #paginatorMovimientosDetalle [pageSizeOptions]="[15, 50, 100]"
+								showFirstLastButtons aria-label="Select page of periodic elements">
+							</mat-paginator>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--MODAL DE AJUSTE -->
+<div id="modalAjuste" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modalAjuste">
+	<div class="modal-dialog" style="max-width: 700px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span id="tituloModal">{{
+					"consultaAjustesTranslate.numCtrl" | translate
+					}}</span>
+
+				<mat-icon matListIcon class="iconosBookipp" data-bs-dismiss="modal" (click)="cerrarModalAjuste()"
+					style="cursor: pointer; float: right; margin-top: 4px; width: 24px; height: 24px;"
+					svgIcon="iconCross"></mat-icon>
+
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div class="px-3">
+					<div class="row my-3">
+						<div class="col-lg-3">
+							{{ "consultaAjustesTranslate.numCtrl" | translate }}
+						</div>
+						<div class="col-lg-9">
+							{{ ajuste.numCtrl }}
+						</div>
+					</div>
+					<div class="row my-3">
+						<div class="col-lg-3">
+							{{ "consultaAjustesTranslate.fecha" | translate }}
+						</div>
+						<div class="col-lg-9">
+							<input type="date" class="form-control borderAzul"
+								placeholder="{{'consultaAjustesTranslate.diaPlace' | translate}}"
+								[(ngModel)]="ajuste.fecha" />
+						</div>
+						<div class="col-lg-12" style="color: red">
+							{{ msgErrorFecha }}
+						</div>
+					</div>
+					<div class="row my-3">
+						<div class="col-lg-3">
+							{{ "consultaAjustesTranslate.producto" | translate }}
+						</div>
+						<div class="col-lg-9">
+							<input id="buscarProducto" class="form-control borderAzul" type="text" maxlength="100"
+								disabled placeholder="{{
+                  'consultaAjustesTranslate.seleccProd' | translate
+                }}" [(ngModel)]="ajuste.productoSeleccionado" />
+						</div>
+						<div class="col-lg-12" style="color: red">
+							{{ msgErrorProd }}
+						</div>
+					</div>
+					<div class="row my-3">
+						<div class="col-lg-3">
+							{{ "consultaAjustesTranslate.cantidad" | translate }}
+						</div>
+						<div class="col-lg-5">
+							<input id="idCantidad" class="form-control borderAzul" type="text" maxlength="9"
+								(focus)="onFocusTxt('idCantidad')" (blur)="onBlurTxt('idCantidad')"
+								[(ngModel)]="ajuste.cantidad" />
+						</div>
+						<div class="col-lg-4">
+							{{ ajuste.unidadMedidaSeleccionada }} - ({{
+							"consultaAjustesTranslate.quedan" | translate
+							}}
+							{{ ajuste.cantidadPresentacion }}
+							{{ ajuste.unidadMedidaSeleccionada }})
+						</div>
+						<div class="col-lg-12" style="color: red">
+							{{ msgErrorCantidad }}
+						</div>
+					</div>
+					<div class="row my-3">
+						<div class="col-lg-3">
+							{{ "consultaAjustesTranslate.observaciones" | translate }}
+						</div>
+						<div class="col-lg-9">
+							<textarea id="idObservaciones" class="form-control borderAzul" placeholder="{{
+                  'consultaAjustesTranslate.placeTextArea' | translate
+                }}" rows="5" style="width: 100%; resize: none; overflow: hidden" [(ngModel)]="ajuste.observaciones"
+								maxlength="250">
+              </textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="min-height: 62px; display: flex">
+				<button type="button" class="buttonEstiloBlanco wb150" (click)="guardarAjuste()">
+					{{ "producto.guardar" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--MODAL CERTIFICADO REGALO NUEVO -->
+<div id="modalCertificadoRegalo" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalCertificadoRegalo">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>Certificado de Regalo</span>
+
+				<mat-icon matListIcon class="iconosBookipp" data-bs-dismiss="modal"
+					style="cursor: pointer; float: right; margin-top: 4px; width: 24px; height: 24px;"
+					svgIcon="iconCross"></mat-icon>
+
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div class="row my-3">
+					<div class="col-lg-3">Nombre</div>
+					<div class="col-lg-9">
+						<input class="form-control borderAzul" id="nombreCertificadoRegalo" type="text"
+							[(ngModel)]="certificadoRegalo.nombreCertificadoRegalo" style="width: 100%" />
+					</div>
+				</div>
+				<div class="row my-3">
+					<div class="col-lg-3">Cantidad</div>
+					<div class="col-lg-9">
+						<input class="form-control borderAzul" id="cantidadCertificadoRegalo" type="text"
+							[(ngModel)]="certificadoRegalo.cantidadCertificadoRegalo" (keypress)="validarNum($event)"
+							style="width: 100%" />
+					</div>
+				</div>
+				<div class="row my-3">
+					<div class="col-lg-3">Todas las sucursales</div>
+					<div class="col-lg-9">
+						<mat-slide-toggle id="chkEsTodasSucursales" [(ngModel)]="certificadoRegalo.esTodasSucursales">
+						</mat-slide-toggle>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="min-height: 62px; display: flex">
+				<button type="button" class="buttonEstiloBlanco wb150" (click)="validarNuevoCertificadoRegalo()">
+					Guardar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--MODAL CERTIFICADO REGALO EDITAR -->
+<div id="modalCertificadoRegaloEditar" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalCertificadoRegaloEditar">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>Certificado de Regalo</span>
+
+				<mat-icon matListIcon class="iconosBookipp" data-bs-dismiss="modal"
+					style="cursor: pointer; float: right; margin-top: 4px; width: 24px; height: 24px;"
+					svgIcon="iconCross"></mat-icon>
+
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div class="row my-3">
+					<div class="col-lg-3">Nombre</div>
+					<div class="col-lg-9">
+						<input class="form-control borderAzul" id="nombreCertificadoRegaloEditar" type="text"
+							[(ngModel)]="certificadoRegalo.nombreCertificadoRegaloEditar" style="width: 100%" />
+					</div>
+				</div>
+				<div class="row my-3">
+					<div class="col-lg-3">Cantidad</div>
+					<div class="col-lg-9">
+						<input class="form-control borderAzul" id="cantidadCertificadoRegaloEditar" type="text"
+							[(ngModel)]="certificadoRegalo.cantidadCertificadoRegaloEditar"
+							(keypress)="validarNum($event)" style="width: 100%" />
+					</div>
+				</div>
+				<div class="row my-3">
+					<div class="col-lg-3">Observaciones</div>
+					<div class="col-lg-9">
+						<input class="form-control borderAzul" id="observacionesCertificadoRegaloEditar" type="text"
+							[(ngModel)]="
+                certificadoRegalo.observacionesCertificadoRegaloEditar
+              " style="width: 100%" />
+					</div>
+				</div>
+				<div class="row my-3">
+					<div class="col-lg-3">Todas las sucursales</div>
+					<div class="col-lg-9">
+						<mat-slide-toggle id="chkEsTodasSucursalesEditar"
+							[(ngModel)]="certificadoRegalo.esTodasSucursalesEditar">
+						</mat-slide-toggle>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="min-height: 62px; display: flex">
+				<button type="button" class="buttonEstiloBlanco wb150" (click)="validarCertificadoRegaloEditar()">
+					Actualizar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--MODAL ALERTA DE CERTIFICADO -->
+<div id="modalBorrarCertificadoRegalo" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalBorrarCertificadoRegalo">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px">
+				¿Estas seguro que deseas borrar el certificado de regalo
+				<strong>{{ certificadoRegalo.certificadoRegaloNombreBorrar }}</strong>?
+			</div>
+			<div class="modal-footer" style="min-height: 62px; display: flex">
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco wb150">
+					{{ "consultaProductosTranslate.cancelar" | translate }}
+				</button>
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco wb150"
+					(click)="eliminarCertificadoRegalo()">
+					{{ "consultaProductosTranslate.si" | translate }}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--MODAL PRODUCTOS DE MENOR ROTACION -->
+<div id="modalDetalleProductosMenorRotacion" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalDetalleProductosMenorRotacion">
+	<div class="modal-dialog" style="max-width: 1000px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>Productos Menor Rotación - Detalle</span>
+
+				<mat-icon matListIcon class="iconosBookipp" data-bs-dismiss="modal"
+					style="cursor: pointer; float: right; margin-top: 4px; width: 24px; height: 24px;"
+					svgIcon="iconCross"></mat-icon>
+
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div class="mat-elevation-z8 my-2">
+					<table mat-table [dataSource]="dataSourcePMR" style="width: 100%">
+						<ng-container *ngFor="let column of columnsPMR" [matColumnDef]="column.nameCol">
+							<th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+								{{ column.title }}
+							</th>
+							<td mat-cell *matCellDef="let element" [style]="column.styleCssRow">
+								{{ element[column.nameCol] }}
+							</td>
+						</ng-container>
+
+						<tr mat-header-row *matHeaderRowDef="displayedPMR"></tr>
+						<tr mat-row *matRowDef="let row; columns: displayedPMR"></tr>
+					</table>
+					<mat-paginator #paginatorPMR [pageSizeOptions]="[15, 50, 100]" showFirstLastButtons
+						aria-label="Select page of periodic elements">
+					</mat-paginator>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--MODAL PRODUCTOS MAS VENDIDO -->
+<div id="modalDetalleProductosMasVendidos" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalDetalleProductosMasVendidos">
+	<div class="modal-dialog" style="max-width: 1000px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-header">
+				<span>Productos Mas Vendidos Por {{ selectGraficaPMV }} - Detalle</span>
+
+				<mat-icon matListIcon class="iconosBookipp" data-bs-dismiss="modal"
+					style="cursor: pointer; float: right; margin-top: 4px; width: 24px; height: 24px;"
+					svgIcon="iconCross"></mat-icon>
+
+			</div>
+			<div class="modal-body" style="min-height: 50px">
+				<div class="mat-elevation-z8 my-2">
+					<table mat-table [dataSource]="dataSourcePMV" style="width: 100%">
+						<ng-container *ngFor="let column of columnsPMV" [matColumnDef]="column.nameCol">
+							<th mat-header-cell *matHeaderCellDef [style]="column.styleCss">
+								{{ column.title }}
+							</th>
+							<td mat-cell *matCellDef="let element" [style]="column.styleCssRow">
+								{{ element[column.nameCol] }}
+							</td>
+						</ng-container>
+
+						<tr mat-header-row *matHeaderRowDef="displayedPMV"></tr>
+						<tr mat-row *matRowDef="let row; columns: displayedPMV"></tr>
+					</table>
+					<mat-paginator #paginatorPMV [pageSizeOptions]="[15, 50, 100]" showFirstLastButtons
+						aria-label="Select page of periodic elements">
+					</mat-paginator>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

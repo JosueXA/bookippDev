@@ -1,0 +1,116 @@
+<mat-card class="mat-elevation-z8">
+    <mat-card-header>
+        <mat-card-title> {{'equiposTranslate.equipo' | translate}} </mat-card-title>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="irAAgenda()" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="irAAgenda()">{{'consultaClienteTranslate.inicio' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a (click)="irAEquipos()" style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">{{'equiposTranslate.equipos' | translate}}</a>&nbsp;        
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    
+    <mat-card-content>
+        <div style="width: 100%;">
+            <div style="margin: auto">
+                <div class="modal-body" style="min-height: 595px;display: '{{divStyle}};'">
+                    <div style="width: 100%; position: relative; padding-bottom: 0px;">
+                        <div>
+                            <div class="row">
+                                <div class="col-md-12" style="padding: 15px 30px 0px;">                                    
+                                    <div class="row">
+                                        <label class="col-md-2" style="margin-top: 6px;">{{'consultaServicioTranslate.nombre' | translate}}</label>
+                                        <div class="col-lg-4" style="margin-bottom: 6px; min-height: 36px">
+                                            <input id="nombre" style="width: 100%;" type="text" [(ngModel)]="equipo.nombre" class="form-control borderAzul" maxlength="50" (focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" />
+                                        </div>
+                                        <label id="errornombre" class="col-md-6" style=" color: red;"></label>
+                                    </div>                            
+                                </div>
+                                <div class="col-md-12" style="padding: 15px 30px 0px;;">                                    
+                                    <div class="row">
+                                        <label class="col-md-2" style="margin-top: 6px;">{{'consultaPromocionesTranslate.descripcion' | translate}}</label>
+                                        <div class="col-lg-4" style="margin-bottom: 6px; min-height: 36px">
+                                            <input id="descripcion" style="width: 100%;" type="text" [(ngModel)]="equipo.descripcion" class="form-control borderAzul" maxlength="250" (focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" />
+                                        </div>
+                                        <label id="errordescripcion" class="col-md-6" style=" color: red;"></label>
+                                    </div>                                    
+                                </div>
+                                <div class="col-md-12" style="padding: 15px 30px 0px;;">                            
+                                    <div class="row">
+                                        <label class="col-md-2" style="margin-top: 6px;">{{'promocionTranslate.cantidad' | translate}}</label>
+                                        <div class="col-lg-4" style="margin-bottom: 6px; min-height: 36px">
+                                            <input id="cantidad" style="width: 100%;" type="text" [(ngModel)]="equipo.cantidad" class="form-control borderAzul" maxlength="3" (focus)="txtfocus(1, $event, 'f')" (blur)="txtfocus(1, $event, 'b')" />
+                                        </div>
+                                        <label id="errorcantidad" class="col-md-6" style=" color: red;"></label>
+                                    </div>                            
+                                </div>
+                                <div class="col-md-12" style="padding: 15px 30px 0px;;">                                    
+                                        <div class="row">
+                                            <label class="col-md-2" style="margin-top: 6px;">{{'consultaServicioTranslate.servicios' | translate}}</label>
+                                            <div class="col-lg-4" style="margin-bottom: 6px; min-height: 36px">                                                
+                                                <ng-select id="ddlServicios" style="width: 100%;" [multiple]="true" appendTo="#ddlServicios" [searchable]="true"
+                                                    [(ngModel)]="equipo.servicios" [clearable]="false"
+                                                    placeholder="{{'agendaTranslate.placeholderServicio'| translate}}"
+                                                    [items]="equipo.dataServicios" bindLabel="nombre" bindValue="idServicio"
+                                                    (click)="onClickDdl('ddlServicios')">
+                                                </ng-select>
+                                            </div>
+                                        </div>                                    
+                                </div>
+                                <div class="col-md-12" style="padding-top: 15px;">
+                                    <!-- <div class="form-group"> -->
+                                        <div class="col-md-12" style="margin-top: 10px; margin-bottom: 15px; text-align: center">                                                                                        
+                                            <div class="row">
+                                                <div class="col-lg-2">                                            
+                                                </div>
+                                                <div class="col-lg-4 py-1">
+                                                    <div class="col-lg-1"></div>
+                                                    <div class="col-lg-10">
+                                                        <button id="btnGuardar" (click)="validar()" class="buttonEstiloBlanco">{{'excepcionesTranslate.guardar' | translate}}</button>
+                                                    </div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-4 py-1">
+                                                    <div class="col-lg-1"></div>
+                                                    <div class="col-lg-10">
+                                                        <button id="btnCancelar" (click)="cancelarPantalla('configuraciones/consultaEquipos')" class="buttonEstiloBlanco">{{'excepcionesTranslate.regresar' | translate}}</button>
+                                                    </div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-2">                                            
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <!-- </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+
+<!--Modal Confirm-->
+<div id="modal-confirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirm" style="z-index: 500000">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" (click)="modales.modalConfirm.hide()" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'clienteTranslate.cancelar' | translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" data-dismiss="modal" class="buttonEstiloBlanco" (click)="redireccion(); modales.modalConfirm.hide();" style="height: auto;">
+                        {{'clienteTranslate.si' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

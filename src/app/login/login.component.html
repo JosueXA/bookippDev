@@ -1,0 +1,181 @@
+<mat-card style="overflow-y: auto;overflow-x: hidden; height: 700px;">
+    <!-- <mat-card-header class="headerLogin">
+        <label style="font-size:25px; color: #dce6ea !important; width: 100%; text-align: center;" class="ng-binding">
+            {{'loginTranslate.bienvenido'| translate}}
+        </label> 
+    </mat-card-header> -->
+
+    <mat-card-content style="margin-top: 20px;">
+        <img class="mx-auto d-block mb-1" style="margin-top: 30px;" width="200px" src="../../assets/images/system/logo_login.png" alt="image"/>
+        <label style="font-size: 27px; color: black !important; font-weight: bolder; width: 100%; text-align: center;" class="ng-binding">
+            {{'loginTranslate.bienvenido'| translate}}
+        </label>
+
+        <div class="row justify-content-center" style="margin-top: 10px;">
+            <div class="col-8">
+                <!-- <mat-divider [inset]="true" style="margin: 10px 0px 10px 0px !important;"></mat-divider> -->
+                <!-- <button mat-button [disabled]="isApiLoading ? '' : null" class="btn-facebook" type="submit">
+                    <i class="fa-brands fa-square-facebook"></i>
+                    {{!isApiLoading ? 'Iniciar sesión con Facebook' : ''}}
+                </button> -->
+
+                <form [formGroup]='sessionValues'>
+                    <mat-icon class="iconosBookipp" svgIcon="iconCorreo" style="position: absolute; margin: 8px 0px 0px 20px;"></mat-icon>
+                    <input class="form-control imputInicial widthPred" type="email" formControlName="email" required
+                        placeholder="Correo" matInput/>
+
+                    <mat-icon class="iconosBookipp" svgIcon="iconCandado" style="position: absolute; margin: 8px 0px 0px 20px;"></mat-icon>
+                    <input class="form-control imputInicial widthPred" type="password" #passInput formControlName="contrasenia" required
+                        placeholder="Contaseña" matInput (keyup.enter)="signIn()"/>
+                        <i [ngClass]="showPass ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" matSuffix
+                            style="color: #b7c4c9; justify-content: center; height: 20px; width: 20px; position: absolute; top: 345px; right: 110px; cursor: pointer;"
+                            (click)="showPass = !showPass; passInput.type = passInput.type=='password'?'text':'password'">
+                        </i>
+                    <!-- <mat-form-field>
+                        <mat-label>{{'loginTranslate.contrasenaph'| translate}}</mat-label>
+
+                        <input type="password" #passInput formControlName="contrasenia" style="color: rgb(36, 36, 36);"
+                            matInput>
+                        <i [ngClass]="showPass ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'" matSuffix
+                            style="color: black; justify-content: center; height: 20px; width: 20px;"
+                            (click)="showPass = !showPass; passInput.type = passInput.type=='password'?'text':'password'">
+                        </i>
+                    </mat-form-field> -->
+                </form>
+
+                <button type="button" class="buttonEstiloBlancoLogin" style="width: 100%; height: 40px !important;"
+                    [disabled]="isApiLoading ? '' : null" type="submit" 
+                    (click)="signIn()">
+                    Iniciar Sesión
+                </button>
+
+                <div class="row col-12 my-3">
+                    <div class="col-12" style="padding: 0px 0px 0px 10px; justify-content: center;">
+                        <a type="submit" (click)="correoModal()" style="width: 100%; text-align: center; font-weight: bold; color: #20c4e6; cursor: pointer; margin-bottom: 10px;">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                        <!-- <a type="submit" (click)="correoModal()" style="width: 100%; text-align: center; color: blue; cursor: pointer; margin-bottom: 10px;">
+                            {{'loginTranslate.password'| translate}}
+                        </a> -->
+                    </div>
+                </div>
+                <!-- <button mat-button (click)="signIn()" [disabled]="isApiLoading ? '' : null" class="btn-entrar" type="submit">
+                    {{'loginTranslate.entrar'| translate}}
+                </button> -->
+
+                <div class="row col-12 mx-0 my-3">
+                    <div class="col-12 p-0">
+                        <mat-divider [inset]="true" style="margin: 10px 0px 10px 0px !important; padding: 0px;"></mat-divider>
+                    </div>
+                </div>
+
+                <mat-icon class="iconosBookipp" svgIcon="iconFacebook" style="position: absolute; margin: 8px 0px 0px 20px;"></mat-icon>
+                <button mat-button (click)="registroModal()" [disabled]="isApiLoading ? '' : null" class="buttonEstiloBlancoLoginFB">
+                    Registrate Aquí
+                </button>
+
+                <!-- <mat-divider [inset]="true" style="margin: 10px 0px 10px 0px !important;"></mat-divider> -->
+
+                <div style="margin:auto; margin-bottom: 10px; margin-top: 40px; text-align: center;">
+                    {{'loginTranslate.mensajeTerminosC'| translate}}
+                    <a (click)="cargarTyC()" style="cursor: pointer; color: #20c4e6; font-weight: bold;">{{'loginTranslate.terminosConciciones'| translate}}</a>
+                    .
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- MODALES -->
+<!-- Recuperar contraseña -->
+<div id="recuperarContra" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade recuperarContra">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-header">
+                {{'loginTranslate.recuperarContrasena'| translate}}
+                <mat-icon id="btnModalContra" class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="cerrarModalContra()" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+                <!-- <i class="fa-solid fa-xmark" id="btnModalContra" (click)="cerrarModalContra()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i> -->
+            </div>
+            <div class="modal-body" style="min-height: 50px;">
+                <div class="row">
+                    <div class="col-md-12" style="margin-top: 10px;">
+                        <label>{{'loginTranslate.correo'| translate}}</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input id="txtRecContra" [(ngModel)]="recContra" (focus)="validar('txtRecContra','0')" (blur)="validarBlur('txtRecContra',recContra)" type="text" maxlength="100" class="inputUsername form-control ng-pristine ng-valid">
+                            </div>
+                            <div class="col-md-12" style="height: 30px;">
+                                <label id="Label1" style="color: red !important;" class="ng-binding">
+                                    {{ mensaje[0] }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="text-align: center;">
+                        <button id="Button2" class="buttonEstiloBlanco" (click)="recuperarContra()" type="button" style="width: 200px;">
+                            {{'loginTranslate.enviar'| translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Registro Empresa -->
+<div id="registro" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade registro">
+    <div class="modal-dialog" style="max-width: 600px;" role="document">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%;">
+            <div class="modal-header">
+                REGISTRO DE USUARIO
+                <mat-icon id="btnModalContra2" class="iconosBookipp" svgIcon="iconCruzCirculo" (click)="cerrarModalRegistro()" data-bs-dismiss="modal" style="cursor: pointer; float: right; font-size: 16px;"></mat-icon>
+                <!-- <i class="fa-solid fa-xmark" id="btnModalContra2" (click)="cerrarModalRegistro()" style="cursor: pointer;float: right; margin-top: 4px; font-size: 16px;"></i> -->
+            </div>
+
+            <div class="modal-body" style="min-height: 50px;">
+                <div class="row">
+                    <div class="col-md-12" style="height: 66px; margin-block: 10px;">
+                        <label>{{'loginTranslate.nombre'| translate}}</label>
+                        <div>
+                            <div class="col-md-12" style="height: 30px;">
+                                <input id="txtNombre" (focus)="validar('txtNombre','0')" (blur)="validarBlur('txtNombre',registro.nombre)" type="text" [(ngModel)]= "registro.nombre" maxlength="100" class="inputUsername form-control ng-pristine ng-valid">
+                                <label id="nomM" style="color: red !important;" class="ng-binding">{{mensaje[0]}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="height: 66px; margin-block: 10px;" >
+                        <label for="inputEmail">{{'loginTranslate.correo'| translate}}</label>
+                        <div>
+                            <div class="col-md-12" style="height: 30px;">
+                                <input id="txtEmail" (focus)="validar('txtEmail','2')" (blur)="validarBlur('txtEmail',registro.email)" type="text" [(ngModel)]="registro.email" maxlength="100" class="inputPwd form-control ng-pristine ng-valid">
+                                <label id="emM" style="color: red !important;" class="ng-binding">{{mensaje[2]}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="height: 66px; margin-block: 10px;">
+                        <label for="inputAddress">{{'loginTranslate.contrasena'| translate}}</label>
+                        <div>
+                            <div>
+                                <input id="txtContrasenia" (focus)="validar('txtContrasenia', '3')" (blur)="validarBlur('txtContrasenia',registro.contrasenia)" type="password" [(ngModel)]="registro.contrasenia" maxlength="40" class="inputPwdC form-control ng-pristine ng-valid">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="height: 66px; margin-block: 10px;">
+                        <label for="inputAddress">{{'loginTranslate.contrasenaConfirm'| translate}}</label>
+                        <div>
+                            <div>
+                                <input id="txtConfContrasenia" (focus)="validar('txtConfContrasenia','3')" (blur)="validarBlur('txtConfContrasenia',registro.confContrasenia)" type="password" [(ngModel)]="registro.confContrasenia" maxlength="40" class="inputPwdC form-control ng-pristine ng-valid">
+                                <label id="conM" style="color: red !important;" class="ng-binding">{{mensaje[3]}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: block; margin: 0 auto;">
+                <button id="btnEstablecer" (click)="registrarUsuario()" class="buttonEstiloBlanco" type="button" style="width: 200px;">
+                    {{'loginTranslate.registro'| translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

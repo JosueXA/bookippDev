@@ -1,0 +1,85 @@
+{
+	"LANGS":
+	{	
+					"using":	"en",
+					"en-gb":	"English (Great Britain)",
+					"en-us":	"English (United States)",
+					"es-es":	"Spanish (Spain)",
+					"es-mx":	"Spanish (Mexico)"
+	},
+		
+	"correoTranslate":
+	{
+				  "errorEmail":		"Wrong user",
+					 "conecta":		"Connect to your Bookipp account",
+					 "ingresa":		"Enter your username",
+				  "sucursales":		"Branches available on this page",
+					"conectar":		"Conect",
+				  "seleccione":		"Select at least a branch to continue",
+					 "aceptar":		"Accept"
+	},
+
+	"paginaNoConfiguradaTranslate":
+	{
+					  "pagina":		"The page is being configured"
+	},
+
+	"facebookInstallTranslate":
+	{
+					  "agenda":		"Schedule more appointments",
+					  "agrega":		"Add Bookipp APP",
+					  "pagina":		"to your Facebook page"
+	},
+
+	"fbTranslate":
+	{
+					 "ingresa":		"Sign in to give permissions to the application",
+					 "iniciaS":		"Log In"
+	},
+
+	"bookippAppTranslate":
+	{
+				    "sucursal":		"Branch",
+				  "sucursalPH":		"Select a branch",
+		  "seleccionaServicio":		"Select the Service",
+		"seleccionaServicioPH":		"Select a Service",
+					 "agregar":		"(+) Add",
+
+			 "seleccionaFecha":		"Select a Date",
+				  "errorFecha":		"Select a date for the appointment",
+		 "horariosDisponibles":		"Available hours",
+				"errorHorario":		"Select an appointment time",
+						 "hoy":		"Now",
+
+				 "infoCliente":		"Customer Information",
+					  "nombre":		"Full Name",
+					"nombrePH":		"Enter your name",
+				 "errorNombre":		"The name must only contain alphabetic characters",
+					   "email":		"Email",
+					 "emailPH":		"Enter your email",
+				  "errorEmail":		"Email format is invalid",
+				    "telefono":		"Phone",
+				  "telefonoPH":		"Enter your phone number",
+			   "errorTelefono":		"Phone number format is invalid",
+
+				"confirmacion":		"Confirmation",
+					"servicio":		"Service",
+					   "fecha":		"Date",
+						"hora":		"Hour",
+					"duracion":		"Duration",
+					"personal":		"Personal",
+					   "costo":		"Cost",
+					   "total":		"Total:",
+				 
+				 "modalOrigen":		"Unknown source",
+				"modalEmpresa":		"Unregistered Company",
+			   "modalFacebook":		"Facebook not registered",
+
+					"anterior":		"Previous",
+				   "siguiente":		"Next",
+					 "agendar":		"Schedule",
+					 "aceptar":		"Accept",
+				"citaAgendada":		"Appointment scheduled successfully"
+	}
+
+}

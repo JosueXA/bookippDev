@@ -1,0 +1,22 @@
+.tableCustom {
+  thead {
+	tr {
+	  th {
+		min-width: 180px;
+		span{
+			display: block;
+			min-height: 24px;
+			margin-top: 5px;
+		}
+	  }
+	}
+  }
+
+  tbody{
+	tr {
+		td {
+			text-align: end;
+		}
+	}
+  }
+}

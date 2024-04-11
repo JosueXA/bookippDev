@@ -1,0 +1,34 @@
+.imageSucursal {
+    border-radius: 300px !important;
+    margin-bottom: 5px !important;
+    cursor: pointer;
+    width: 70px;
+	height: 70px;
+    border-width: 2px;
+}
+
+.labelSucursal {
+    width: 70px;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.activeSucursal {
+	border-width: 4px;
+    border-color: #20c4e6;
+}
+
+.iconoQuest {
+    font-size: 20px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    color: #20c4e6;
+}
+
+#map_canvas {
+    max-width: 540px;
+    height: 400px;
+}

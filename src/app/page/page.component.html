@@ -1,0 +1,12 @@
+<app-navbar (menuStatus)="isOpenMenu($event)" style="height: 64px;"></app-navbar>
+<mat-sidenav-container [@.disabled]="true" style="height: calc(100% - 64px); background-color: transparent;" autosize>
+    <mat-sidenav (keydown.escape)="clickEsc($event)" opened="true"
+        [ngClass]="menuOpen === true ? 'menu-open' : 'menu-close'" #sidenav [mode]="'side'" role="navigation">
+        <app-sidebar style="height: 100%; display: block; overflow: auto;" [menuOpen]="menuOpen"></app-sidebar>
+    </mat-sidenav>
+    <mat-sidenav-content style="height: 100%; background-color: white;" role="main">
+        <div style="width: 100%; margin-left: 0; margin-right: 0;">
+            <router-outlet main></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

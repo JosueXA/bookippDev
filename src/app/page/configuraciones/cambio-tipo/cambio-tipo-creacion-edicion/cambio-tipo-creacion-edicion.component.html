@@ -1,0 +1,214 @@
+<mat-card class="mat-elevation-z8">
+    <mat-card-header>
+        <div style="width: 100%;">
+            <mat-card-title> {{'cambioTipoTranslate.tipoCambio' | translate}} </mat-card-title>
+        </div>
+        <div style="text-align: right; width: 100%;">
+            <mat-icon class="iconosBookipp" svgIcon="iconCasa1" (click)="irAAgenda()" style="cursor: pointer; height: auto; position: relative;"></mat-icon>
+            <a style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;" (click)="irAAgenda()">{{'cambioTipoTranslate.inicio' | translate}}</a>
+            <mat-icon class="iconosBookipp" svgIcon="iconFlecha1DerechaPeque" style="position: relative;"></mat-icon>
+            <a (click)="irACambioTipo()" style="cursor: pointer; color: #20c4e6; top: -6px; position: relative;">{{'cambioTipoTranslate.tipoCambio' | translate}}</a>&nbsp;        
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    
+    <mat-card-content>
+
+        <div style="width: 100%;">
+            <div id="bodyCambioTipo" class="modal-body" ng-show="dataCambio_tipo.length > 0 || cambio_tipo == 'N'">
+                <div>
+                    <div style="width: 100%; position: relative;">
+                        <div class="row">
+                            
+                            <div style="margin-top: 1%;" id="guardarCambio_tipo" class="col-md-12">
+                                <div id="prueba1" style="padding: 15px 30px 0px;" class="col-md-12">
+                                    <div class="row">
+                                        <div style="margin-top: 0.8%;" class="col-lg-2">
+                                            <label>{{'cambioTipoTranslate.monto' | translate}}</label>
+                                        </div>
+            
+                                        <div class="col-lg-4">
+                                            <input style="width: 100%;" id="txtMonto" type="text" [(ngModel)]="monto" (keypress)="validate($event)" 
+                                                (blur)="blur('txtMonto')" (focus)="focus('txtMonto')" class="form-control borderAzul" maxlength="8"/>
+                                        </div>
+            
+                                        <div style="margin-top: 0.8%; color: red;" class="col-md-7">
+                                            {{mensaje}}
+                                        </div>
+                                    </div>
+        
+                                </div>
+        
+                                <div style="padding: 15px 30px 0px;" class="col-md-12">
+                                    <div class="row">
+                                        <div style="margin-top: 0.8%;" class="col-lg-2">
+                                            <label>{{'cambioTipoTranslate.tipoMoneda' | translate}}</label>
+                                        </div>
+        
+                                        <div class="col-lg-4">
+                                            <div class="col-md-12">
+                                                <ng-select id="ddlMoneda" class="borderAzul"
+                                                    style="width: 100%;" 
+                                                    [multiple]="false" 
+                                                    appendTo="#ddlMoneda" 
+                                                    [searchable]="false"
+                                                    [(ngModel)]="cambio.tipoMonedaSeleccionada" 
+                                                    [clearable]="false"
+                                                    placeholder="{{'cambioTipoTranslate.placeholder'| translate}}"
+                                                    [items]="dataMonedaTipo" 
+                                                    bindLabel="descripcion" 
+                                                    bindValue="idMonedaTipo"
+                                                    (click)="onClickDdl('ddlMoneda')">
+                                                </ng-select>                                                            
+            
+                                            </div>
+        
+                                        </div>
+                                    </div>        
+                                </div>
+        
+                                <div style="padding: 15px 30px 0px;" class="col-md-12">
+                                    <div class="row">
+
+                                        <div class="col-lg-2 page_seccion_campo_label">
+                                            <label class="page_seccion_campo_label_contenido"> {{'cambioTipoTranslate.estaActiva'| translate}} </label>
+                                        </div>
+                                        <div class="col-lg-4 page_seccion_campo_contenido">
+                                            <div class="col-md-12 page_seccion_campo_contenido_valor">
+                                                <mat-slide-toggle id="switch1"
+                                                    [(ngModel)]="estaActivo"
+                                                    (ngModelChange)="validacionMonedaBase()">
+                                                </mat-slide-toggle>
+                                            </div>
+                                        </div>
+                                                    
+                                    </div>        
+                                </div>
+        
+                                <div style="padding: 15px 30px 0px;" class="col-md-12">
+                                    <div class="row">
+
+                                        <div class="col-lg-2 page_seccion_campo_label">
+                                            <label class="page_seccion_campo_label_contenido"> {{'cambioTipoTranslate.esMonedaBase'| translate}} </label>
+                                        </div>
+                                        <div class="col-lg-4 page_seccion_campo_contenido">
+                                            <div class="col-md-12 page_seccion_campo_contenido_valor">
+                                                <mat-slide-toggle id="switch2"
+                                                    [(ngModel)]="monedaBase"
+                                                    [disabled]="inhabilitar2">
+                                                </mat-slide-toggle>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+        
+                                <div style="padding: 15px 30px 0px;" class="col-md-12">
+                                    <div class="row">
+                                        <div style="margin-top: 0.8%;" class="col-lg-2">
+                                            <label>{{'cambioTipoTranslate.prefijo' | translate}}</label>
+                                        </div>
+            
+                                        <div class="col-lg-4">
+                                            <input style="width: 103%;" id="txtPrefijo" type="text" [(ngModel)]="prefijo" 
+                                                (blur)="blur('txtPrefijo')" (focus)="focus('txtPrefijo')" class="form-control borderAzul" maxlength="10" />
+                                        </div>
+            
+                                        <div style="margin-top: 0.8%; color: red;" class="col-md-7">
+                                        </div>
+                                    </div>
+                                </div>
+        
+        
+                                <div id="botones" class="col-md-12" style="text-align: center; margin-top: 45px; margin-bottom: 45px;">
+                                    <div class="row">
+                                        <div class="col-lg-2">                                            
+                                        </div>
+                                        <div class="col-lg-4 py-1">
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-10">
+                                                <button id="botonGuardar" type="button" (click)="accionGuardar()" class="buttonEstiloBlanco">{{'cambioTipoTranslate.guardar' | translate}}</button>
+                                            </div>
+                                            <div class="col-lg-1"></div>
+                                        </div>
+                                        <div class="col-lg-4 py-1">
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-10">
+                                                <button id="botonCancelar" type="button" (click)="accionCancelar('configuraciones/consultaCambioTipo')" class="buttonEstiloBlanco">{{'cambioTipoTranslate.regresar' | translate}}</button>
+                                            </div>
+                                            <div class="col-lg-1"></div>
+                                        </div>
+                                        <div class="col-lg-2">                                            
+                                        </div>
+                                    </div>
+
+                                </div>        
+        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </mat-card-content>
+
+</mat-card>
+
+
+<!-- Modal Alert-->
+<div id="modal-alert" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-alert" style="z-index: 500000">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" (click)="modales.modalAlert.hide()" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'cambioTipoTranslate.aceptar' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Confirm-->
+<div id="modal-confirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-confirm" style="z-index: 500000">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" (click)="modales.modalConfirm.hide()" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'cambioTipoTranslate.cancelar' | translate}}
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" (click)="modales.modalConfirm.hide(); redireccion();" class="buttonEstiloBlanco" style="height: auto;">
+                        {{'cambioTipoTranslate.si' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Alert-->
+<div id="modal-montos" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade modal-montos" style="z-index: 500000">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin: 0 auto; font-weight: 400; max-width: 800px; min-height: 115px;">
+            <div class="modal-body" >
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-3">
+                    <button type="button" class="buttonEstiloBlanco" (click)="redireccionConsulta()" style="height: auto;">
+                        {{'cambioTipoTranslate.aceptar' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

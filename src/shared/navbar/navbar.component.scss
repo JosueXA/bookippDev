@@ -1,0 +1,159 @@
+mat-toolbar {
+    background-color: #20c4e6;
+    color: rgb(0, 0, 0);
+    position: sticky;
+}
+
+.img-menu-open {
+    height: 45%;
+    width: 130px;
+}
+
+.img-menu-close {
+    height: 45%;
+    width: 28px;
+}
+
+mat-icon {
+    //background: #ffffff;
+    width: 30px !important;
+}
+
+mat-sidenav-container {
+    height: calc(100vh - 65px);
+}
+
+mat-menu {
+    background: white;
+}
+
+.dropdown-toggle::after {
+    border: none;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+::ng-deep .user-profile-box {
+    max-width: unset !important;
+    min-width: unset !important;
+    width: 300px;
+}
+
+.user-profile-name {
+    margin-bottom: unset !important;
+    font-size: 17px;
+}
+
+.user-profile-image {
+    font-size: 50px;
+    background: white;
+}
+
+.user {
+    background: white;
+}
+
+.user-profile-circle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.togle-menu {
+    cursor: pointer;
+    margin-right: 13px;
+    margin-left: 2px;
+    color: #ffffff;
+    background-color: transparent;
+}
+
+.btn-salir {
+    cursor: pointer;
+    background-color: transparent;
+    color: #ffffff;
+}
+
+.menu {
+    width: 34px;
+    margin-right: 10px;
+    background: #ffffff;
+    color: rgb(0, 0, 0);
+    border: none;
+
+    &:focus {
+        outline-color: #ffffff;
+        outline-style: none;
+    }
+}
+
+.centro-medico {
+    align-items: center;
+    justify-self: unset;
+    align-content: center;
+    padding: 0;
+}
+
+.icon-toolbar {
+    cursor: pointer;
+    margin-right: 10px;
+    margin-left: 10px;
+    color: #ffffff;
+    background-color: transparent;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.mat-toolbar-multiple-rows {
+    min-height: 50px;
+}
+
+.ngSelectSucursal {
+    width: 100%;
+    max-width: 200px;
+    margin: 0px 10px;
+}
+
+::ng-deep #ddlSucursalesNB {
+    div {
+        .ng-select.ng-select-single .ng-select-container {
+            height: 40px !important;
+        }
+    }
+}
+
+.colorIconosNavbar{
+    stroke: none !important;
+    fill: #ffffff !important;
+    stroke-width: 1 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+}
+
+@media screen and (max-width: 600px){
+    .ocultarBeta{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .eliminarMarginPadding{
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+    .eliminarPaddginLeft{
+        padding-left: 2px !important;
+    }
+}
+
+@media screen and (max-width: 700px){
+    .logopequenio{
+        display: none;
+        width: 0px;
+    }
+}

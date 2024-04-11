@@ -1,0 +1,39 @@
+.labelTopTable {
+    min-height: 22px;
+    display: block;
+    text-align: center;
+    margin: 0px;
+}
+
+.tableCustom {
+	display: grid;
+	min-width: 700px;
+	width: 100%;
+	padding: 0px 6px;
+	margin-bottom: 10px;
+
+	section {
+		width: 100%;
+		display: grid;
+		grid-template-columns: 
+		minmax(100px, 10%) 
+		minmax(200px, 20%) 	
+		minmax(100px, 14%)	
+		minmax(150px, 18%) 
+		minmax(150px, 18%) 
+		minmax(200px, 20%);
+
+		div {
+			padding: 0px 6px;
+			text-align: center;
+		}
+	}
+
+	.bodyTable {
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		min-height: 200px;
+		margin: 10px 0px;
+		padding: 10px 0px;
+	}
+}

@@ -1,0 +1,27 @@
+@media screen and (max-width: 991px){
+    .modAnchoDdl{
+        width: 75%;
+    }
+
+    .ocultarDiv{
+        display: none;
+    }
+
+    .moverIconoBusqueda{
+        position: absolute;
+        top: 650px;
+    }
+}
+
+@media screen and (min-width: 992px){
+    .iconoBusqueda{
+        position: absolute; 
+        top: 14px;
+    }
+}
+
+.suprimirIcono{
+    @media screen and (max-width: 669px){
+        display: none;
+    }
+}

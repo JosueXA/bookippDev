@@ -1,0 +1,45 @@
+.mat-column-acciones {
+    min-width: 100px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-monto {
+    min-width: 221px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    text-align: right;
+}
+
+.mat-column-tipoMoneda {
+    min-width: 220px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-monedaBase {
+    min-width: 220px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mat-column-activa {
+    min-width: 220px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.fillAzulBookipp{
+    fill:#20c4e6;
+}
+
+input, textarea{
+    outline: 1px solid #20c4e6 !important;
+    outline-offset: 0 !important;
+    border: none !important;
+}

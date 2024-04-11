@@ -1,0 +1,135 @@
+<mat-card class="mat-elevation-z8">
+    <mat-card-header class="cardHeaderMaterial">
+        <mat-card-title>
+            {{'consultaFacturaSerieTranslate.facturaSerie' | translate}}
+        </mat-card-title>
+
+        <div class="breadcrumbCustom">
+            <a href="/procesos/agenda">
+                <mat-icon matListIcon class="iconosBookipp iconoSize" style="margin: 0px 0px 3px 0px;"
+                    svgIcon="iconCasita"></mat-icon>
+                <span>{{'consultaClienteTranslate.inicio' | translate}}</span>
+            </a>
+            <a href="#">
+                <mat-icon class="iconosBookipp iconoSize" style="margin: 0px 0px -1px 0px;"
+                    svgIcon="iconFlechaDerecha"></mat-icon>
+            </a>
+            <a href="#" class="active">
+                <span>{{'consultaFacturaSerieTranslate.facturaSerie' | translate}}</span>
+            </a>
+        </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content style="margin-top: 10px">
+        <div class="row mx-auto">
+            <div class="col-12" style="max-width: 700px;">
+                <div class="row mx-auto my-3">
+                    <div class="col-lg-2">
+                        {{'consultaFacturaSerieTranslate.nombre' | translate}}
+                    </div>
+                    <div class="col-lg-10">
+                        <input id="nombre" type="text" maxlength="5" class="form-control borderAzul"
+                            [(ngModel)]="facturaSeries.nombre" (focus)="onFocusTxt('nombre')"
+                            (blur)="onBlurTxt('nombre')" />
+                    </div>
+                    <div class="col-lg-12 text-danger" *ngIf="msgErrorNombre">
+                        {{msgErrorNombre}}
+                    </div>
+                </div>
+
+                <div class="row mx-auto my-3">
+                    <div class="col-lg-2">
+                        {{'consultaFacturaSerieTranslate.contador' | translate}}
+                    </div>
+                    <div class="col-lg-10">
+                        <input id="contador" type="text" maxlength="15" class="form-control borderAzul"
+                            [(ngModel)]="facturaSeries.contador" (focus)="onFocusTxt('contador')"
+                            (blur)="onBlurTxt('contador')" disabled />
+                    </div>
+                    <div class="col-lg-12 text-danger" *ngIf="msgErrorContador">
+                        {{msgErrorContador}}
+                    </div>
+                </div>
+
+                <div class="row mx-auto my-3">
+                    <div class="col-lg-2">
+                        {{'consultaFacturaSerieTranslate.minimo' | translate}}
+                    </div>
+                    <div class="col-lg-10">
+                        <input id="minimo" type="text" maxlength="15" class="form-control borderAzul"
+                            [(ngModel)]="facturaSeries.minimo" (focus)="onFocusTxt('minimo')"
+                            (blur)="onBlurTxt('minimo')" [disabled]="facturaSeries.tipoPantalla != 'N'" />
+                    </div>
+                    <div class="col-lg-12 text-danger" *ngIf="msgErrorMinimo">
+                        {{ msgErrorMinimo }}
+                    </div>
+                </div>
+
+                <div class="row mx-auto my-3">
+                    <div class="col-lg-2">
+                        {{'consultaFacturaSerieTranslate.maximo' | translate}}
+                    </div>
+                    <div class="col-lg-10">
+                        <input id="maximo" type="text" maxlength="15" class="form-control borderAzul"
+                            [(ngModel)]="facturaSeries.maximo" (focus)="onFocusTxt('maximo')"
+                            (blur)="onBlurTxt('maximo')" />
+                    </div>
+                    <div class="col-lg-12 text-danger" *ngIf="msgErrorMaximo">
+                        {{ msgErrorMaximo }}
+                    </div>
+                </div>
+
+                <div class="row mx-auto my-3">
+                    <div class="col-lg-2">
+                        {{'consultaFacturaSerieTranslate.descripcion' | translate}}
+                    </div>
+                    <div class="col-lg-10">
+                        <textarea id="descripcion" class="form-control borderAzul" rows="5"
+                            [(ngModel)]="facturaSeries.descripcion" maxlength="50"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="row mx-auto">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-3 my-2">
+                        <button id="btnGuardar" class="buttonEstiloBlanco" (click)="guardar()" [disabled]="checked">
+                            {{'consultaFacturaSerieTranslate.guardar' | translate}}
+                        </button>
+                    </div>
+                    <div class="col-lg-3 my-2">
+                        <button id="btnRegresar" class="buttonEstiloBlanco" (click)="cancelarPantalla()">
+                            {{'consultaFacturaSerieTranslate.cancelar' | translate}}
+                        </button>
+                    </div>
+                    <div class="col-lg-3"></div>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- Modales -->
+
+<!--MODAL ALERTA DE CERTIFICADO -->
+<div id="modalConfirm" tabindex="-1" role="dialog" aria-hidden="true"
+	class="modal fade modalConfirm">
+	<div class="modal-dialog" style="max-width: 600px" role="document">
+		<div class="modal-content" style="margin: 0 auto; font-weight: 400; width: 100%">
+			<div class="modal-body" style="min-height: 50px">
+				{{ messageModal }}
+			</div>
+			<div class="modal-footer" style="min-height: 62px; display: flex">
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="width: 120px; height: 40px;">
+					{{'consultaFacturaSerieTranslate.cancelar' | translate}}
+				</button>
+				<button type="button" data-bs-dismiss="modal" class="buttonEstiloBlanco" style="width: 120px; height: 40px;"
+					(click)="regresarConsulta()">
+					{{'consultaFacturaSerieTranslate.si' | translate}}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

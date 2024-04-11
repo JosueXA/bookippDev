@@ -1,0 +1,85 @@
+﻿{
+	"LANGS":
+	{
+					"using":	"es",
+					"en-gb":	"Ingles (Gran Bretaña)",
+					"en-us":	"Ingles (Estados Unidos)",
+					"es-es":	"Español (España)",
+					"es-mx":	"Español (México)"
+	},
+		
+	"correoTranslate":
+	{
+				  "errorEmail":		"Usuario incorrecto",
+					 "conecta":		"Conecta a tu cuenta de Bookipp",
+					 "ingresa":		"Ingresa tu usuario",
+				  "sucursales":		"Sucursales disponibles en esta página",
+					"conectar":		"Conectar",
+				  "seleccione":		"Seleccione mínimo una sucursal para continuar",
+					 "aceptar":		"Aceptar"
+	},
+
+	"paginaNoConfiguradaTranslate":
+	{
+					  "pagina":		"La página está siendo configurada"
+	},
+
+	"facebookInstallTranslate":
+	{
+					  "agenda":		"Agenda más citas",
+					  "agrega":		"Agrega Bookipp APP",
+					  "pagina":		"a tu página de Facebook"
+	},
+
+	"fbTranslate":
+	{
+					 "ingresa":		"Ingresa para dar permisos a la aplicación",
+					 "iniciaS":		"Iniciar Sesión"
+	},
+
+	"bookippAppTranslate":
+	{
+				    "sucursal":		"Sucursal",
+				  "sucursalPH":		"Selecciona una sucursal",
+		  "seleccionaServicio":		"Selecciona el Servicio",
+		"seleccionaServicioPH":		"Selecciona un Servicio",
+					 "agregar":		"(+) Agregar",
+
+			 "seleccionaFecha":		"Selecciona la Fecha",
+				  "errorFecha":		"Seleccione una fecha para la cita",
+		 "horariosDisponibles":		"Horarios Disponibles",
+				"errorHorario":		"Seleccione un horario para la cita",
+						 "hoy":		"Hoy",
+
+				 "infoCliente":		"Información del Cliente",
+					  "nombre":		"Nombre Completo",
+					"nombrePH":		"Ingrese su nombre",
+				 "errorNombre":		"El nombre solo debe contener letras",
+					   "email":		"Email",
+					 "emailPH":		"Ingrese su correo electrónico",
+				  "errorEmail":		"El formato del email es inválido",
+				    "telefono":		"Teléfono",
+				  "telefonoPH":		"Ingrese su teléfono",
+			   "errorTelefono":		"El formato del teléfono es inválido",
+
+				"confirmacion":		"Confirmación",
+					"servicio":		"Servicio",
+					   "fecha":		"Fecha",
+						"hora":		"Hora",
+					"duracion":		"Duración",
+					"personal":		"Personal",
+					   "costo":		"Costo",
+					   "total":		"Total:",
+				 
+				 "modalOrigen":		"Origen desconocido",
+				"modalEmpresa":		"Empresa no registrada",
+			   "modalFacebook":		"Facebook no registrado",
+
+					"anterior":		"Anterior",
+				   "siguiente":		"Siguiente",
+					 "agendar":		"Agendar",
+					 "aceptar":		"Aceptar",
+				"citaAgendada":		"Tu cita fue agendada"
+	}
+
+}

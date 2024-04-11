@@ -1,0 +1,49 @@
+.form-check-input:checked {
+    background-color: #20c4e6 ;
+    border-color: #20c4e6;
+}
+
+
+.div-centrado {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.buttonNewImagen {
+  height: 100px;
+  width: 100px;
+  color: #20c4e6 !important;
+  background: #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.buttonNewImagen:hover {
+  color: #ffffff !important;
+  background: #20c4e6;
+  border-color: #20c4e6 !important;
+  transition: all 0.4s ease 0s;
+}
+
+
+.buttonEstiloBlanco {
+  height: 50px;
+  width: 100%;
+  border-radius: 25px;
+  color: #20c4e6 !important;
+  background: #ffffff;
+  border: 3px solid #20c4e6 !important;
+
+  display: inline-block;
+  text-transform: capitalize;
+  text-decoration: none;
+  transition: all 0.4s ease 0s;
+  font-weight: bold;
+}
+
+.buttonEstiloBlanco:hover {
+  color: #ffffff !important;
+  background: #20c4e6;
+  border-color: #20c4e6 !important;
+  transition: all 0.4s ease 0s;
+}
